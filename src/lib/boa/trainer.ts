@@ -9,6 +9,7 @@ export type Vraag = {
   opties: string[];
   juist: number;
   toelichting: string;
+  bron?: string;
 };
 
 export type Casus = {

@@ -390,7 +390,7 @@ function Profiel() {
               await sb.auth.signOut();
               setMelding(
                 error
-                  ? "De lokale kluis is gewist en je bent uitgelogd. Het account zelf bestaat nog tot de databasefunctie delete_own_account is geïnstalleerd. De SQL staat in het colofon."
+                  ? "De lokale kluis is gewist en je bent uitgelogd. Het account bij de aanmelddienst blijft staan als de verwijderfunctie niet antwoordt."
                   : "Account en kluis zijn verwijderd.",
               );
             });

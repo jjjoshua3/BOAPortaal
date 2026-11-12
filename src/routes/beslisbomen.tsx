@@ -4,6 +4,7 @@ import { BOMEN, nodeById, type Tree } from "@/lib/boa/trees";
 import { pastFilter, tagClass, toonClass } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
+import { FeedbackKnop } from "@/components/feedback";
 
 type Search = { boom?: string };
 
@@ -90,6 +91,7 @@ function Runner({ tree }: { tree: Tree }) {
           {node.pv ? <p className="mt-3 whitespace-pre-wrap bg-inset p-3 text-sm">{node.pv}</p> : null}
           <div className="mt-3 flex flex-wrap gap-2">
             {node.pv ? <CopyButton text={node.pv} label="Kopieer PV-zin" /> : null}
+            <FeedbackKnop plek={`/beslisbomen?boom=${tree.id}`} onderwerp={node.titel} />
             <button type="button" className="btn" onClick={() => setPad([tree.start])}>
               Opnieuw
             </button>

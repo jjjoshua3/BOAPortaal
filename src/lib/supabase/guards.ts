@@ -39,10 +39,13 @@ const BLOCKED = new Set([
   "moakt.com",
 ]);
 
+const OWNER = new Set(["joshua.bosma@kpnmail.nl"]);
+
 const DISPOSABLE = /(tempmail|guerrillamail|mailinator|10minutemail|yopmail|trashmail|sharklasers|dispostable|minuteinbox|maildrop)/i;
 
 export function emailDomainError(email: string): string | null {
   const trimmed = email.trim().toLowerCase();
+  if (OWNER.has(trimmed)) return null;
   const match = trimmed.match(/^[^\s@]+@([^\s@]+\.[^\s@]+)$/);
   if (!match) return "Vul een volledig zakelijk of schooladres in.";
   const domain = match[1] ?? "";

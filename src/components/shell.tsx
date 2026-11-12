@@ -4,15 +4,18 @@ import {
   FileText,
   GitBranch,
   GraduationCap,
+  LayoutGrid,
   Lock,
   Menu,
   Moon,
   Scale,
   ScrollText,
   Search,
+  BookOpen,
   Sun,
   X,
 } from "lucide-react";
+import { FeedbackDock } from "@/components/feedback";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
@@ -24,6 +27,7 @@ const ICONS = {
   "/pv": FileText,
   "/trainer": GraduationCap,
   "/kluis": Lock,
+  "/dienst": LayoutGrid,
   "/colofon": Scale,
 } as const;
 
@@ -33,6 +37,7 @@ const ORDER: Record<Rol, Item[]> = {
   boa: [
     { to: "/zakkaart", label: "Zakkaart" },
     { to: "/feitcodes", label: "Feitcodes" },
+    { to: "/dienst", label: "Werkbank" },
     { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/pv", label: "PV-bouwer" },
     { to: "/trainer", label: "Trainer" },
@@ -41,6 +46,7 @@ const ORDER: Record<Rol, Item[]> = {
   student: [
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
+    { to: "/dienst", label: "Werkbank" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },
     { to: "/pv", label: "PV-bouwer" },
@@ -49,6 +55,7 @@ const ORDER: Record<Rol, Item[]> = {
   docent: [
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
+    { to: "/dienst", label: "Werkbank" },
     { to: "/pv", label: "PV-bouwer" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },
@@ -165,6 +172,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             })}
           </ul>
           <div className="border-t border-line p-2">
+            <Link to="/jargon" className={`flex min-h-11 items-center gap-2 px-2 text-sm font-semibold ${path === "/jargon" ? "bg-inset text-ink" : "text-muted"}`}>
+              <BookOpen className="size-4" />
+              Vakjargon
+            </Link>
             <Link to="/colofon" className="flex min-h-11 items-center gap-2 px-2 text-sm font-semibold text-muted">
               <Scale className="size-4" />
               Colofon
@@ -181,6 +192,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             <p className="mt-1">
               <Link to="/privacy" className="underline">
                 Privacy
+              </Link>
+              <span aria-hidden="true"> | </span>
+              <Link to="/jargon" className="underline">
+                Vakjargon
               </Link>
               <span aria-hidden="true"> | </span>
               <Link to="/colofon" className="underline">
@@ -233,8 +248,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {item.label}
                 </Link>
               ))}
+              <Link to="/jargon" className="btn justify-start">
+                Vakjargon
+              </Link>
               <Link to="/colofon" className="btn justify-start">
-                Colofon en database
+                Colofon
               </Link>
               <Link to="/privacy" className="btn justify-start">
                 Privacy
@@ -246,6 +264,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
       ) : null}
+      <FeedbackDock />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CopyButton, PageHead } from "@/components/bits";
-import { SCHEMA_SQL } from "@/lib/supabase/schema-sql";
+import { PageHead } from "@/components/bits";
 
 const BRONNEN = [
   ["Wetboek van Strafrecht", "https://wetten.overheid.nl/BWBR0001903"],
@@ -16,6 +15,10 @@ const BRONNEN = [
   ["Visserijwet 1963", "https://wetten.overheid.nl/BWBR0002416"],
   ["Alcoholwet", "https://wetten.overheid.nl/BWBR0002458"],
   ["Omgevingswet", "https://wetten.overheid.nl/BWBR0037885"],
+  ["Open data RDW", "https://opendata.rdw.nl/"],
+  ["Vermiste personen | politie", "https://www.politie.nl/vermist"],
+  ["NS | uitstel van betaling", "https://www.ns.nl/service-en-contact/betalen/uitstel-van-betaling"],
+  ["AVG | verordeningstekst", "https://eur-lex.europa.eu/legal-content/NL/TXT/?uri=CELEX:32016R0679"],
 ];
 
 export const Route = createFileRoute("/colofon")({
@@ -35,7 +38,7 @@ function ColofonPage() {
           Een boa handelt alleen binnen de akte van opsporing en de toegewezen domeinen. De feitcodes en bedragen in dit portaal zijn die van het Feitenboekje van 1 januari 2026, exclusief € 9 administratiekosten van het CJIB. Artikelnummers van de Alcoholwet zijn de geldende nummers op wetten.overheid.nl. Een lokale verordening noem je met het artikel van díe gemeente. De akte en de wettekst gaan voor op een vuistregel.
         </p>
         <p className="panel p-3">
-          Persoonlijke notities worden in de browser versleuteld met AES-GCM. De sleutel wordt met PBKDF2 afgeleid van het account. Supabase ontvangt alleen cijfertekst. Als de databasefuncties zijn geïnstalleerd, wikkelt pgcrypto die cijfertekst nog een keer. Er horen geen BSN-nummers of namen van burgers in de kluis.
+          Persoonlijke notities, combibonnen en tariefkaarten worden in de browser versleuteld met AES-GCM. De database bewaart die cijfertekst en wikkelt de kluis nog een keer. Overlegberichten staan eveneens als cijfertekst, leesbaar voor aangemelde collega's. Er horen geen BSN-nummers of namen van burgers in.
         </p>
         <section>
           <h2 className="text-lg font-semibold">Bronnen</h2>
@@ -48,16 +51,6 @@ function ColofonPage() {
               </li>
             ))}
           </ul>
-        </section>
-        <section>
-          <h2 className="text-lg font-semibold">Database, eenmalig door de beheerder</h2>
-          <p className="mt-2 text-muted">
-            Voer dit script uit in de SQL-editor van het Supabase-project. Daarna werken de kluis, de dubbele versleuteling, het verwijderen van het eigen account en de blokkade op gratis e-maildomeinen ook aan de serverkant. Zonder dit script blijft de kluis versleuteld op het apparaat en blokkeert de site gratis domeinen alsnog zelf.
-          </p>
-          <div className="mt-2">
-            <CopyButton text={SCHEMA_SQL} label="Kopieer SQL" />
-          </div>
-          <pre className="panel mt-2 max-h-[28rem] overflow-auto p-3 text-xs">{SCHEMA_SQL}</pre>
         </section>
       </div>
     </div>

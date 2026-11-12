@@ -227,16 +227,16 @@ export const FEITEN: Feit[] = [
   {
     id: "d530",
     code: "F 185",
-    titel: "Natuurlijke behoefte doen binnen de bebouwde kom",
+    titel: "Binnen de bebouwde kom op een openbare plaats zijn natuurlijke behoefte doen buiten daarvoor bestemde plaatsen",
     artikel: "APV | feitcode F 185",
     domeinen: ["I"],
     afdoening: "om",
-    afdoeningLabel: "Lokale overtreding",
+    afdoeningLabel: "Politiestrafbeschikking | modaliteit p",
     kwalificatie: "Overtreding",
     leeftijd: "Strafrecht vanaf 12 jaar.",
     bijzonder:
-      "F 185 is de modelcode: binnen de bebouwde kom, buiten een daarvoor bestemde plaats. D 530 is iets anders: openbare dronkenschap, artikel 453 Sr, tarief € 110. De APV moet het feit stellen. Wees feitelijk, niet schofferend.",
-    tarief: "€ 170 | " + BRON,
+      "Dit is de omschrijving uit het Feitenboekje 2026 en de boetebase. Het boetebedrag is € 170, exclusief € 9 administratiekosten van het CJIB. D 530 is een ander feit: openbare dronkenschap, artikel 453 Sr, € 110. In een voertuig of station is de code E 129 ff, ook € 170. De APV van deze gemeente moet het feit stellen. Schrijf feitelijk, niet schofferend.",
+    tarief: "€ 170 | politiestrafbeschikking | " + BRON,
     pv: "Ik zag dat [VERDACHTE] te [PLAATS], binnen de bebouwde kom, zijn natuurlijke behoefte deed buiten een daarvoor bestemde plaats, namelijk [PLEK]. Grondslag: [ARTIKEL APV], feitcode F 185.",
     trefwoorden: "wildplassen urineren natuurlijke behoefte apv f185",
   },
@@ -466,7 +466,7 @@ export const FEITEN: Feit[] = [
     leeftijd: "Vanaf 12 jaar als er een PV komt. Verwijdering kan ook bestuurlijk via de huisregels.",
     bijzonder:
       "De gedraging bepaalt de code: belemmeren van de bediening is E 120 a (€ 290), hinderlijk geluid E 129 a (€ 170), natuurlijke behoefte in het voertuig E 129 ff (€ 170). Vraag of er toestemming van de vervoerder was (art. 52 lid 2 BP 2000). Verwijdering is geen aanhouding.",
-    tarief: "€ 110, € 170 of € 290, afhankelijk van de code | " + BRON,
+    tarief: "€ 290 | politiestrafbeschikking | E 120 a | " + BRON,
     pv: "In [VOERTUIG / STATION] verstoorde [VERDACHTE] de orde door [GEDRAGING]. Ik heb een aanwijzing gegeven om daarmee te stoppen. [VERDACHTE] heeft [WEL / NIET] gevolg gegeven. Maatregel: [VERWIJDERING / VERBLIJFSONTZEGGING / PV] op grond van artikel 72 Wet personenvervoer 2000.",
     trefwoorden: "orde verstoren voertuig station overlast 72",
   },
@@ -609,6 +609,12 @@ export const FEITEN: Feit[] = [
     trefwoorden: "gevaar hinder artikel 5 wvw roekeloos verkeer",
   },
 ];
+
+export function boeteKop(feit: Feit): string {
+  if (!feit.tarief) return "Geen vast bedrag in de boetebase";
+  const kop = feit.tarief.split("|")[0]?.trim() ?? "";
+  return kop || "Geen vast bedrag in de boetebase";
+}
 
 export function zoekFeiten(query: string, lijst: Feit[]): Feit[] {
   const q = query.trim().toLowerCase();

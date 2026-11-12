@@ -4,6 +4,7 @@ dist
 .nitro
 .tanstack
 .vercel
+.netlify
 .env
 .env.*
 .grok

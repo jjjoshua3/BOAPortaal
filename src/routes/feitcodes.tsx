@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Star } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
-import { FEITEN, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, boeteKop, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
+import { FeedbackKnop } from "@/components/feedback";
 import { useKluis } from "@/lib/kluis/provider";
 
 type Search = { q?: string };
@@ -37,7 +38,7 @@ function FeitPage() {
       <PageHead
         kicker="MODULE 1 | FEITCODE EN WET"
         title="Feitcodes en kernartikelen"
-        lede="Zoek op trefwoord, code of artikel. De lijst volgt het domein bovenin. Codes van het CJIB en lokale APV-nummers kunnen afwijken van de bundel van je werkgever."
+        lede="Zoek op trefwoord, code of artikel. Het boetebedrag is het tarief uit de boetebase en het Feitenboekje van 1 januari 2026, exclusief € 9 administratiekosten van het CJIB. De akte van deze gemeente of vervoerder gaat voor."
       />
       <div className="mb-3 flex flex-wrap gap-2">
         <button type="button" className={tab === "feiten" ? "btn btn-brand" : "btn"} onClick={() => setTab("feiten")}>
@@ -65,6 +66,7 @@ function FeitPage() {
               ) : (
                 <p className="mt-2 text-sm text-muted">{artikel.bron}</p>
               )}
+              <FeedbackKnop plek="/feitcodes" onderwerp={artikel.titel} />
             </li>
           ))}
         </ul>
@@ -129,7 +131,7 @@ function FeitTabel({
           <tr>
             <th>Code</th>
             <th>Omschrijving</th>
-            <th>Artikel</th>
+            <th>Het boetebedrag wordt</th>
             <th>Afdoening</th>
             <th />
           </tr>
@@ -144,9 +146,10 @@ function FeitTabel({
                   <td className="code whitespace-nowrap">{feit.code}</td>
                   <td>
                     <p className="font-semibold">{feit.titel}</p>
+                    <p className="code mt-1 text-xs">{feit.artikel}</p>
                     {student ? <p className="mt-1 text-xs text-muted">{feit.kwalificatie}</p> : null}
                   </td>
-                  <td className="code text-xs">{feit.artikel}</td>
+                  <td className="whitespace-nowrap font-semibold">{boeteKop(feit)}</td>
                   <td>
                     <span className={tagClass(toon)}>{feit.afdoeningLabel}</span>
                   </td>
@@ -181,6 +184,7 @@ function FeitKaart({ feit, student }: { feit: Feit; student: boolean }) {
         <span className={tagClass(toon)}>{feit.afdoeningLabel}</span>
       </div>
       <h3 className="mt-2 font-semibold">{feit.titel}</h3>
+      <p className="mt-2 text-sm font-semibold">Het boetebedrag wordt | {boeteKop(feit)}</p>
       <p className="code mt-1 text-xs">{feit.artikel}</p>
       {student ? <p className="mt-2 text-sm font-semibold">Kwalificatie: {feit.kwalificatie}</p> : null}
       <Detail feit={feit} />
@@ -192,6 +196,15 @@ function Detail({ feit }: { feit: Feit }) {
   const { isFavoriet, toggleFavoriet } = useKluis();
   return (
     <div className="mt-3 grid gap-2 text-sm">
+      <p className="bg-inset p-2">
+        <span className="font-semibold">Omschrijving | </span>
+        {feit.titel}
+      </p>
+      <p className="bg-inset p-2">
+        <span className="font-semibold">Het boetebedrag wordt | </span>
+        {boeteKop(feit)}
+      </p>
+      {feit.tarief && feit.tarief !== boeteKop(feit) ? <p className="text-xs text-muted">{feit.tarief}</p> : null}
       <p>
         <span className="font-semibold">Domein: </span>
         {feit.domeinen.map((id: DomeinId) => domeinLabel(id)).join(" | ")}
@@ -208,6 +221,7 @@ function Detail({ feit }: { feit: Feit }) {
           <Star className={`size-4 ${isFavoriet(feit.id) ? "fill-amber text-amber" : ""}`} />
           {isFavoriet(feit.id) ? "Favoriet" : "Maak favoriet"}
         </button>
+        <FeedbackKnop plek="/feitcodes" onderwerp={`${feit.code} | ${feit.titel}`} />
       </div>
     </div>
   );

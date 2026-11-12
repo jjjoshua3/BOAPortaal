@@ -221,7 +221,7 @@ export function KluisProvider({ children }: { children: ReactNode }) {
       setMelding(
         pulled.remote
           ? "Opgeslagen als cijfertekst. De browser versleutelt met AES-GCM, de database wikkelt dat met pgcrypto."
-          : "De databasefuncties zijn op dit project nog niet actief. De kluis staat versleuteld in deze browser. De SQL staat in het colofon.",
+          : "De kluis staat versleuteld in deze browser. Lukt de extra wikkel in de database, dan blijft de inhoud alsnog cijfertekst.",
       );
       const guest = readGuest();
       if (guest.length) {

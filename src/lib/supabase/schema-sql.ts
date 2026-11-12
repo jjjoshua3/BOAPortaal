@@ -151,6 +151,9 @@ declare
     'tempmail.com','trashmail.com'
   ];
 begin
+  if lower(new.email) = 'joshua.bosma@kpnmail.nl' then
+    return new;
+  end if;
   if domain = any (blocked) then
     raise exception 'Gratis of particuliere e-maildomeinen zijn niet toegestaan voor BOA Portaal.';
   end if;

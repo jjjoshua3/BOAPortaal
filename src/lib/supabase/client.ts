@@ -19,3 +19,10 @@ export function getSupabase(): SupabaseClient | null {
   }
   return client;
 }
+
+export async function sessieToken(): Promise<string | null> {
+  const sb = getSupabase();
+  if (!sb) return null;
+  const { data } = await sb.auth.getSession();
+  return data.session?.access_token ?? null;
+}

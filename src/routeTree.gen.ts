@@ -14,7 +14,9 @@ import { Route as R404RouteImport } from './routes/404'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as BeslisbomenRouteImport } from './routes/beslisbomen'
 import { Route as ColofonRouteImport } from './routes/colofon'
+import { Route as DienstRouteImport } from './routes/dienst'
 import { Route as FeitcodesRouteImport } from './routes/feitcodes'
+import { Route as JargonRouteImport } from './routes/jargon'
 import { Route as KluisRouteImport } from './routes/kluis'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PvRouteImport } from './routes/pv'
@@ -46,9 +48,19 @@ const ColofonRoute = ColofonRouteImport.update({
   path: '/colofon',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DienstRoute = DienstRouteImport.update({
+  id: '/dienst',
+  path: '/dienst',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeitcodesRoute = FeitcodesRouteImport.update({
   id: '/feitcodes',
   path: '/feitcodes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JargonRoute = JargonRouteImport.update({
+  id: '/jargon',
+  path: '/jargon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KluisRoute = KluisRouteImport.update({
@@ -83,7 +95,9 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
+  '/jargon': typeof JargonRoute
   '/kluis': typeof KluisRoute
   '/privacy': typeof PrivacyRoute
   '/pv': typeof PvRoute
@@ -96,7 +110,9 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
+  '/jargon': typeof JargonRoute
   '/kluis': typeof KluisRoute
   '/privacy': typeof PrivacyRoute
   '/pv': typeof PvRoute
@@ -110,7 +126,9 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
+  '/jargon': typeof JargonRoute
   '/kluis': typeof KluisRoute
   '/privacy': typeof PrivacyRoute
   '/pv': typeof PvRoute
@@ -125,7 +143,9 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/dienst'
     | '/feitcodes'
+    | '/jargon'
     | '/kluis'
     | '/privacy'
     | '/pv'
@@ -138,7 +158,9 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/dienst'
     | '/feitcodes'
+    | '/jargon'
     | '/kluis'
     | '/privacy'
     | '/pv'
@@ -151,7 +173,9 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/dienst'
     | '/feitcodes'
+    | '/jargon'
     | '/kluis'
     | '/privacy'
     | '/pv'
@@ -165,7 +189,9 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   BeslisbomenRoute: typeof BeslisbomenRoute
   ColofonRoute: typeof ColofonRoute
+  DienstRoute: typeof DienstRoute
   FeitcodesRoute: typeof FeitcodesRoute
+  JargonRoute: typeof JargonRoute
   KluisRoute: typeof KluisRoute
   PrivacyRoute: typeof PrivacyRoute
   PvRoute: typeof PvRoute
@@ -210,11 +236,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColofonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dienst': {
+      id: '/dienst'
+      path: '/dienst'
+      fullPath: '/dienst'
+      preLoaderRoute: typeof DienstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/feitcodes': {
       id: '/feitcodes'
       path: '/feitcodes'
       fullPath: '/feitcodes'
       preLoaderRoute: typeof FeitcodesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jargon': {
+      id: '/jargon'
+      path: '/jargon'
+      fullPath: '/jargon'
+      preLoaderRoute: typeof JargonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kluis': {
@@ -261,7 +301,9 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   BeslisbomenRoute: BeslisbomenRoute,
   ColofonRoute: ColofonRoute,
+  DienstRoute: DienstRoute,
   FeitcodesRoute: FeitcodesRoute,
+  JargonRoute: JargonRoute,
   KluisRoute: KluisRoute,
   PrivacyRoute: PrivacyRoute,
   PvRoute: PvRoute,

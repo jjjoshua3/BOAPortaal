@@ -4,12 +4,14 @@ import { domeinLabel, type DomeinId } from "@/lib/boa/meta";
 export type PvInvoer = {
   soort: "bevindingen" | "aanhouding";
   verbalisant: string;
+  betrokkene: string;
   domein: DomeinId;
   feit: Feit | null;
   datum: string;
   tijd: string;
   plaats: string;
   aanleiding: string;
+  waarmee: string;
   waarneming: string;
   hoedanigheid: "toezicht" | "opsporing";
   cautie: "gegeven" | "nvt" | "niet";
@@ -24,12 +26,14 @@ export function leegPv(domein: DomeinId = "I"): PvInvoer {
   return {
     soort: "bevindingen",
     verbalisant: "",
+    betrokkene: "[VERDACHTE]",
     domein,
     feit: null,
     datum: "",
     tijd: "",
     plaats: "",
     aanleiding: "",
+    waarmee: "",
     waarneming: "",
     hoedanigheid: "opsporing",
     cautie: "gegeven",
@@ -105,29 +109,38 @@ export function bouwPv(invoer: PvInvoer): string {
 
   const delen = [
     titel,
+    "Opgebouwd langs de zeven W's | Wie, Wat, Waar, Wanneer, Waarmee, Waarom, Hoe.",
     "",
-    `Ik, verbalisant ${invoer.verbalisant.trim() || "[NAAM VERBALISANT]"}, buitengewoon opsporingsambtenaar, ${domeinLabel(invoer.domein)}, verklaar het volgende.`,
+    blok(
+      "W1 | Wie",
+      `Verbalisant: ${invoer.verbalisant.trim() || "[NAAM VERBALISANT]"}, buitengewoon opsporingsambtenaar, ${domeinLabel(invoer.domein)}.\nBetrokkene: ${invoer.betrokkene.trim() || "[VERDACHTE]"}. Geen echte naam van een burger in dit portaal.`,
+    ),
     "",
-    `Datum: ${invoer.datum || "[DATUM]"}`,
-    `Tijd: ${invoer.tijd || "[TIJD]"}`,
-    `Plaats: ${invoer.plaats.trim() || "[PLAATS]"}`,
-    `Feit: ${feitregel}`,
+    blok("W2 | Wat", `Soort: ${titel}.\nFeit: ${feitregel}.`),
     "",
-    blok("Aanleiding", invoer.aanleiding),
+    blok("W3 | Waar", invoer.plaats.trim() || "[PLAATS]"),
     "",
-    blok("Waarneming", invoer.waarneming),
+    blok("W4 | Wanneer", `Datum: ${invoer.datum || "[DATUM]"}\nTijd: ${invoer.tijd || "[TIJD]"}`),
     "",
-    blok("Hoedanigheid en bevoegdheid", hoedanigheid),
+    blok("W5 | Waarmee", invoer.waarmee.trim() || "[VOORWERP, VOERTUIG OF MIDDEL]"),
     "",
-    blok("Cautie", cautie),
+    blok("W6 | Waarom", invoer.aanleiding),
     "",
-    blok("Verklaring", invoer.verklaring.trim() ? `[VERDACHTE] verklaarde, zakelijk weergegeven:\n"${invoer.verklaring.trim()}"` : "Er is geen verklaring afgelegd."),
-    "",
-    blok("Middelen", `${boeien}\n${fouille}`),
-    "",
-    blok("Overdracht", overdracht),
-    "",
-    blok("Afloop", invoer.afloop),
+    blok(
+      "W7 | Hoe",
+      [
+        `Waarneming: ${invoer.waarneming.trim() || "[NOG INVULLEN]"}`,
+        hoedanigheid,
+        cautie,
+        invoer.verklaring.trim()
+          ? `${invoer.betrokkene.trim() || "[VERDACHTE]"} verklaarde, zakelijk weergegeven:\n"${invoer.verklaring.trim()}"`
+          : "Er is geen verklaring afgelegd.",
+        boeien,
+        fouille,
+        overdracht,
+        invoer.afloop.trim() ? `Afloop: ${invoer.afloop.trim()}` : "Afloop: [NOG INVULLEN]",
+      ].join("\n"),
+    ),
     "",
     `Waarvan door mij, verbalisant, is opgemaakt dit proces-verbaal, dat ik sloot en ondertekende op ambtseed / ambtsbelofte te ${invoer.plaats.trim() || "[PLAATS]"} op ${invoer.datum || "[DATUM]"}.`,
     "",

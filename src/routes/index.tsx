@@ -13,6 +13,15 @@ const SNEL = [
   { href: "/zakkaart" as const, hash: "id", titel: "ID-vordering", tekst: "Toonplicht vanaf 14 jaar. Geen draagplicht. Onder 14 geen D 517." },
 ];
 
+const DOMEIN_START: { id: DomeinId; boom: "parkeer" | "natuur" | "verzuim" | "ov" | "woning" | "akte"; tekst: string }[] = [
+  { id: "I", boom: "parkeer", tekst: "Parkeren, Wahv en de sfeerovergang als iemand gaat schelden." },
+  { id: "II", boom: "natuur", tekst: "Natuur, vissen, dieren en vuurwerk. Eerst de akte." },
+  { id: "III", boom: "verzuim", tekst: "Absoluut, relatief of luxe. Artikel 21 is vervallen." },
+  { id: "IV", boom: "ov", tekst: "Uitstel van betaling, aanwijzing, verwijdering. Onder de 14 geen D 517." },
+  { id: "V", boom: "woning", tekst: "Inlichtingenplicht en de drempel van de woning." },
+  { id: "VI", boom: "akte", tekst: "Alleen wat de akte noemt. K 055 is een overtreding." },
+];
+
 const AFSPRAKEN = [
   "Personalia vragen is geen verhoor. Een waarom-vraag wel.",
   "Onder 12 jaar geen strafvervolging. De toonplicht van een ID begint bij 14. Een draagplicht is er niet.",
@@ -63,10 +72,28 @@ function Home() {
             <p className="mt-1 text-sm text-muted">{item.tekst}</p>
           </Link>
         ))}
+        <Link to="/jargon" className="panel accent-navy block p-3">
+          <h2 className="font-semibold">Vakjargon</h2>
+          <p className="mt-1 text-sm text-muted">Abri, combibon, UvB, modaliteit. De woorden zoals ze op straat worden gebruikt.</p>
+        </Link>
         <Link to="/beslisbomen" search={{ boom: "sfeer" }} className="panel accent-navy block p-3">
           <h2 className="font-semibold">Sfeerovergang</h2>
           <p className="mt-1 text-sm text-muted">Waar de medewerkingsplicht stopt en de cautie begint.</p>
         </Link>
+      </section>
+
+      <section className="mt-6">
+        <h2 className="text-lg font-semibold">Zes domeinen, dezelfde diepte</h2>
+        <ul className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {DOMEIN_START.map((item) => (
+            <li key={item.id}>
+              <Link to="/beslisbomen" search={{ boom: item.boom }} className="panel block h-full p-3">
+                <p className="font-mono text-xs text-muted">DOMEIN {item.id}</p>
+                <p className="mt-1 text-sm">{item.tekst}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-6">

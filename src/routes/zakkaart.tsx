@@ -3,6 +3,7 @@ import { KAARTEN } from "@/lib/boa/zakkaart";
 import { pastFilter, toonClass } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
+import { FeedbackKnop } from "@/components/feedback";
 
 export const Route = createFileRoute("/zakkaart")({
   component: ZakPage,
@@ -47,6 +48,9 @@ function ZakPage() {
               ))}
             </ul>
             <p className="accent-stop panel mt-3 p-3 text-sm">{kaart.niet}</p>
+            <div className="mt-3">
+              <FeedbackKnop plek={`/zakkaart#${kaart.id}`} onderwerp={kaart.titel} />
+            </div>
           </article>
         ))}
       </div>

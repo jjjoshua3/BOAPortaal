@@ -4,6 +4,8 @@ import { ABCD, BEGINSELEN, CASUSSEN, LSD, MATRIX, STAPPEN, filterVragen } from "
 import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
+import { FeedbackKnop } from "@/components/feedback";
+import { WEEKSETS, weeksetOp } from "@/lib/boa/weken";
 
 export const Route = createFileRoute("/trainer")({
   component: TrainerPage,
@@ -15,6 +17,7 @@ function TrainerPage() {
   const rol = usePrefs((state) => state.rol);
   const domein = usePrefs((state) => state.domein);
   const vragen = useMemo(() => filterVragen(rol, domein, "alle"), [rol, domein]);
+  const week = useMemo(() => weeksetOp(new Date()), []);
   const casussen = CASUSSEN.filter((casus) => pastFilter(casus.domeinen, domein));
 
   return (
@@ -22,9 +25,19 @@ function TrainerPage() {
       <PageHead
         kicker="MODULE 4 | EXTH EN GBT"
         title={rol === "docent" ? "Casussen en beoordeling" : rol === "student" ? "Rechtskennis en gesprek" : "Toets en oefencasus"}
-        lede="Oefenmateriaal bij de ExTH-eisen en gespreks- en benaderingstechnieken. Een score hier is geen examenresultaat."
+        lede="Oefenmateriaal bij de ExTH-eisen en gespreks- en benaderingstechnieken. Een score hier is geen examenresultaat. Elke week een andere set van twintig. Het juiste antwoord blijft de wettekst."
       />
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold">
+          Week {week.week} van {week.jaar} | set {week.set} van {WEEKSETS.length}
+        </h2>
+        <p className="mt-1 text-sm text-muted">Twintig vragen. De set wisselt met het weeknummer. Bron onder het antwoord.</p>
+        <div className="mt-3">
+          <Quiz vragen={week.vragen} />
+        </div>
+      </section>
       {rol === "docent" ? <Matrix /> : null}
+      <h2 className="mb-3 text-lg font-semibold">Vaste oefenset voor deze rol</h2>
       <Quiz vragen={vragen} />
       <section className="mt-8">
         <h2 className="text-lg font-semibold">Gesprek</h2>
@@ -147,8 +160,15 @@ function Quiz({ vragen }: { vragen: ReturnType<typeof filterVragen> }) {
         })}
       </div>
       {gekozen !== null ? <p className="mt-3 text-sm">{vraag.toelichting}</p> : null}
+      {gekozen !== null && vraag.bron ? (
+        <a className="mt-2 inline-block text-sm underline" href={vraag.bron} target="_blank" rel="noreferrer">
+          Bron
+        </a>
+      ) : null}
       {gekozen !== null ? (
-        <button
+        <div className="mt-3 flex flex-wrap gap-2">
+          <FeedbackKnop plek="/trainer" onderwerp={vraag.vraag.slice(0, 80)} />
+          <button
           type="button"
           className="btn btn-brand mt-3"
           onClick={() => {
@@ -161,6 +181,7 @@ function Quiz({ vragen }: { vragen: ReturnType<typeof filterVragen> }) {
         >
           {index + 1 >= vragen.length ? "Resultaat" : "Volgende"}
         </button>
+        </div>
       ) : null}
     </section>
   );
