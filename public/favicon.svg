@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="BOA Portaal">
+  <rect width="32" height="32" rx="7" fill="#0F2537"/>
+  <path fill="#8C9BA5" d="M16 2.8 26.6 6.8v9.4c0 6-4.4 10.5-10.6 12.8C9.8 26.7 5.4 22.2 5.4 16.2V6.8Z"/>
+  <path fill="#F4F6F8" d="M16 6 23.4 8.8v7.2c0 4.2-3.1 7.4-7.4 9-4.3-1.6-7.4-4.8-7.4-9V8.8Z"/>
+  <rect x="14.5" y="15" width="3" height="8" fill="#0F2537"/>
+  <rect x="12" y="12.6" width="8" height="3.2" fill="#0F2537"/>
+  <rect x="11.4" y="10.2" width="9.2" height="2.6" fill="#0F2537"/>
+  <rect x="10" y="12.2" width="2.2" height="3" fill="#D97706"/>
+</svg>
