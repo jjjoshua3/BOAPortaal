@@ -6,7 +6,7 @@ import { Meter } from "@/components/recovery-modal";
 import { PageHead } from "@/components/bits";
 import { useKluis } from "@/lib/kluis/provider";
 import { useBoaAuth } from "@/lib/supabase/auth";
-import { getSupabase } from "@/lib/supabase/client";
+import { getSupabase, registreerAccount } from "@/lib/supabase/client";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
 
 export const Route = createFileRoute("/account")({
@@ -74,7 +74,7 @@ function LoginForm() {
         setFout("");
         void sb.auth.signInWithPassword({ email: email.trim(), password }).then(({ error }) => {
           setBezig(false);
-          if (error) setFout(mapAuthError(error.message));
+          if (error) setFout(mapAuthError(error.message, email));
         });
       }}
     >
@@ -113,29 +113,28 @@ function RegisterForm() {
       onSubmit={(event) => {
         event.preventDefault();
         if (disabled) return;
-        const sb = getSupabase();
-        if (!sb) return;
         setBezig(true);
         setFout("");
         setOk("");
-        void sb.auth
-          .signUp({
-            email: email.trim(),
-            password,
-            options: {
-              emailRedirectTo: `${window.location.origin}/account`,
-              data: { naam, domein, rol },
-            },
-          })
-          .then(({ data, error }) => {
-            setBezig(false);
-            if (error) {
-              setFout(mapAuthError(error.message));
-              return;
-            }
-            if (data.session) setOk("Account aangemaakt. Je bent aangemeld.");
-            else setOk("Account aangemaakt. Bevestig het adres via de mail van je organisatie en log daarna in.");
-          });
+        void registreerAccount({
+          email,
+          password,
+          naam,
+          domein,
+          rol,
+          redirectTo: `${window.location.origin}/account`,
+        }).then((result) => {
+          setBezig(false);
+          if ("fout" in result) {
+            setFout(mapAuthError(result.fout, email));
+            return;
+          }
+          setOk(
+            result.ok === "session"
+              ? "Account aangemaakt. Je bent aangemeld."
+              : "Account aangemaakt. Bevestig het adres via de mail en log daarna in.",
+          );
+        });
       }}
     >
       <label className="field">
@@ -219,7 +218,7 @@ function ResetForm() {
         void sb.auth.resetPasswordForEmail(email.trim(), { redirectTo }).then(({ error }) => {
           setBezig(false);
           if (error && !/user|not found|signups?/i.test(error.message)) {
-            setFout(mapAuthError(error.message));
+            setFout(mapAuthError(error.message, email));
             return;
           }
           setOk("Als dit zakelijke adres bij ons bekend is, staat de herstelmail onderweg. Open de link op dit apparaat. Het scherm om een nieuw wachtwoord te kiezen opent dan vanzelf.");
@@ -242,6 +241,9 @@ function Mail({ email, setEmail, fout }: { email: string; setEmail: (value: stri
       Zakelijk of schooladres
       <input type="email" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} required />
       {fout ? <span className="text-xs font-medium text-stop">{fout}</span> : null}
+      {email.trim().toLowerCase() === "joshua.bosma@kpnmail.nl" ? (
+        <span className="text-xs text-muted">Beheeradres. De database moet dit adres vóór de kpnmail-blokkade met return new; doorlaten. Een raise op dit adres houdt de registratie dicht.</span>
+      ) : null}
     </label>
   );
 }

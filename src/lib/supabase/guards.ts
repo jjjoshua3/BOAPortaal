@@ -72,13 +72,14 @@ export function passwordScore(password: string): number {
   return 4 - passwordIssues(password).length;
 }
 
-export function mapAuthError(message: string): string {
+export function mapAuthError(message: string, email = ""): string {
   const m = message.toLowerCase();
+  const eigen = email.trim().toLowerCase() === "joshua.bosma@kpnmail.nl";
   if (m.includes("invalid login") || m.includes("invalid credentials")) {
     return "Onjuist e-mailadres of wachtwoord.";
   }
   if (m.includes("email not confirmed")) {
-    return "Bevestig eerst het adres via de link in je zakelijke postvak.";
+    return "Bevestig eerst het adres via de link in je postvak.";
   }
   if (m.includes("already registered") || m.includes("already been registered")) {
     return "Dit adres is al geregistreerd. Log in of stel het wachtwoord opnieuw in.";
@@ -86,14 +87,24 @@ export function mapAuthError(message: string): string {
   if (m.includes("rate") || m.includes("too many")) {
     return "Te veel pogingen. Wacht even en probeer het opnieuw.";
   }
+  if (m.includes("database error saving new user") || m.includes("unexpected_failure")) {
+    if (eigen) {
+      return "Niet aangemaakt. De database wijst joshua.bosma@kpnmail.nl zelf af. In reject_free_email moet dat adres return new; doen, vóór de blokkade op kpnmail.nl. Nu staat daar een raise.";
+    }
+    return "Niet aangemaakt. Dit adres wordt door de database geweigerd. Gebruik het domein van je organisatie, vervoerder of school.";
+  }
   if (m.includes("password")) {
     return "Het wachtwoord voldoet niet aan de eisen van de server of van dit portaal.";
   }
-  if (m.includes("gratis") || m.includes("not allowed") || m.includes("domain")) {
-    return "Dit e-maildomein is niet toegestaan.";
+  if (m.includes("gratis") || m.includes("niet toegestaan") || m.includes("registratie geweigerd") || m.includes("not allowed") || m.includes("domain")) {
+    const zin = message.trim();
+    if (eigen) {
+      return `${zin} De insert in auth.users wordt door reject_free_email afgebroken. Dat adres moet daar return new; zijn. Een raise blokkeert ook een SQL-insert.`;
+    }
+    return zin || "Dit e-maildomein is niet toegestaan.";
   }
   if (m.includes("network") || m.includes("fetch")) {
-    return "Geen verbinding met het accountysteem. Probeer het opnieuw.";
+    return "Geen verbinding met het accountsysteem. Probeer het opnieuw.";
   }
-  return "Het accountysteem weigerde het verzoek. Controleer het adres en probeer het opnieuw.";
+  return message.trim() || "Het accountsysteem weigerde het verzoek. Controleer het adres en probeer het opnieuw.";
 }
