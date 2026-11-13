@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { PageHead } from "@/components/bits";
 import { pastFilter } from "@/lib/boa/meta";
-import { lijstOverleg, plaatsOverleg, verwijderOverleg, type OverlegBericht } from "@/lib/boa/overleg.functions";
+import { lijstOverleg, plaatsOverleg, stemOverleg, verwijderOverleg, type OverlegBericht } from "@/lib/boa/overleg.functions";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
 import { useBoaAuth } from "@/lib/supabase/auth";
@@ -92,7 +92,7 @@ function CommunityPage() {
         {!ready ? <p className="mt-2 text-sm text-muted">Account laden.</p> : null}
         {ready && !user ? (
           <p className="panel mt-3 p-3 text-sm">
-            Meeschrijven kan met een geverifieerd organisatie- of schooladres. Gratis mailboxen worden geweigerd.{" "}
+            Voor dit onderdeel dient u ingelogd te zijn.{" "}
             <Link to="/account" className="font-semibold underline">
               Aanmelden
             </Link>
@@ -112,6 +112,8 @@ function Bord() {
   const [tekst, setTekst] = useState("");
   const [soort, setSoort] = useState<"overleg" | "correctie">("overleg");
   const [bezig, setBezig] = useState(false);
+  const [reageerOp, setReageerOp] = useState<string | null>(null);
+  const [reactieTekst, setReactieTekst] = useState("");
 
   async function vernieuw() {
     const token = await sessieToken();
@@ -131,17 +133,30 @@ function Bord() {
     void vernieuw();
   }, []);
 
-  async function plaats(event: FormEvent) {
+  async function plaats(event: FormEvent, parentId: string | null = null) {
     event.preventDefault();
     setBezig(true);
     try {
       const token = await sessieToken();
       if (!token) throw new Error("Log eerst in.");
+      const isReply = !!parentId;
       await plaatsOverleg({
-        data: { token, soort, titel, tekst, domein: domein === "alle" ? "algemeen" : domein },
+        data: {
+          token,
+          soort: isReply ? "correctie" : soort,
+          titel: isReply ? "Reactie" : titel,
+          tekst: isReply ? reactieTekst : tekst,
+          domein: domein === "alle" ? "algemeen" : domein,
+          parent_id: parentId,
+        },
       });
-      setTitel("");
-      setTekst("");
+      if (isReply) {
+        setReactieTekst("");
+        setReageerOp(null);
+      } else {
+        setTitel("");
+        setTekst("");
+      }
       await vernieuw();
     } catch (error) {
       setFout(error instanceof Error ? error.message : "Plaatsen lukte niet.");
@@ -150,57 +165,177 @@ function Bord() {
     }
   }
 
+  async function stem(id: string, waarde: 1 | -1) {
+    const token = await sessieToken();
+    if (!token) return;
+    const huidig = lijst.find((b) => b.id === id);
+    const nieuwe = huidig?.mijn_stem === waarde ? null : waarde;
+    try {
+      const result = await stemOverleg({ data: { token, id, waarde: nieuwe } });
+      setLijst((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, score: result.score, mijn_stem: result.mijn_stem } : b)),
+      );
+    } catch (error) {
+      setFout(error instanceof Error ? error.message : "Stemmen lukte niet.");
+    }
+  }
+
+  const roots = lijst.filter((b) => !b.parent_id);
+  const kinderen = new Map<string, OverlegBericht[]>();
+  for (const b of lijst) {
+    if (b.parent_id) {
+      const arr = kinderen.get(b.parent_id) ?? [];
+      arr.push(b);
+      kinderen.set(b.parent_id, arr);
+    }
+  }
+
+  function relatief(iso: string) {
+    const geplaatst = new Date(iso);
+    const minuten = Math.round((Date.now() - geplaatst.getTime()) / 60000);
+    if (minuten < 1) return "zojuist";
+    if (minuten < 60) return `${minuten} min geleden`;
+    if (minuten < 1440) return `${Math.round(minuten / 60)} uur geleden`;
+    return geplaatst.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
+  }
+
+  function BerichtKaart({ bericht, diep = false }: { bericht: OverlegBericht; diep?: boolean }) {
+    const replies = (kinderen.get(bericht.id) ?? []).sort(
+      (a, b) => new Date(a.gemaakt).getTime() - new Date(b.gemaakt).getTime(),
+    );
+    return (
+      <li className={diep ? "ml-6 border-l border-line pl-3" : ""}>
+        <div className="overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
+          <div className="flex items-start gap-3 p-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-inset text-xs font-semibold text-ink">
+              {(bericht.weergave || "C").slice(0, 1).toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-muted">
+                <span className="font-semibold text-ink">{bericht.weergave || "collega"}</span>
+                <span>·</span>
+                <span>{bericht.organisatie}</span>
+                <span>·</span>
+                <span>{relatief(bericht.gemaakt)}</span>
+                <span className="rounded-full bg-inset px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
+                  {bericht.soort === "correctie" ? "Antwoord" : "Vraag"}
+                </span>
+                {bericht.domein !== "algemeen" ? (
+                  <span className="rounded-full bg-inset px-1.5 py-0.5 text-[10px]">Domein {bericht.domein}</span>
+                ) : null}
+              </div>
+              <h3 className="mt-1.5 text-base font-semibold leading-snug">{bericht.titel}</h3>
+              <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-ink/90">{bericht.tekst}</p>
+              <div className="mt-3 flex items-center gap-1">
+                <button
+                  type="button"
+                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${bericht.mijn_stem === 1 ? "bg-inset font-semibold text-ink" : "text-muted hover:bg-inset"}`}
+                  onClick={() => void stem(bericht.id, 1)}
+                  aria-label="Nuttig"
+                >
+                  ▲ {bericht.score > 0 ? bericht.score : ""}
+                </button>
+                <button
+                  type="button"
+                  className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs ${bericht.mijn_stem === -1 ? "bg-inset font-semibold text-ink" : "text-muted hover:bg-inset"}`}
+                  onClick={() => void stem(bericht.id, -1)}
+                  aria-label="Niet nuttig"
+                >
+                  ▼
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted hover:bg-inset"
+                  onClick={() => {
+                    setReageerOp(reageerOp === bericht.id ? null : bericht.id);
+                    setReactieTekst("");
+                  }}
+                >
+                  💬 Reageren{replies.length ? ` (${replies.length})` : ""}
+                </button>
+                {bericht.eigen ? (
+                  <button
+                    type="button"
+                    className="ml-auto rounded-md px-2 py-1 text-xs text-stop hover:bg-inset"
+                    onClick={() => {
+                      void (async () => {
+                        const token = await sessieToken();
+                        if (!token) return;
+                        await verwijderOverleg({ data: { token, id: bericht.id } });
+                        await vernieuw();
+                      })();
+                    }}
+                  >
+                    Verwijder
+                  </button>
+                ) : null}
+              </div>
+              {reageerOp === bericht.id ? (
+                <form className="mt-3 grid gap-2" onSubmit={(e) => void plaats(e, bericht.id)}>
+                  <textarea
+                    value={reactieTekst}
+                    onChange={(e) => setReactieTekst(e.target.value)}
+                    rows={3}
+                    placeholder="Jouw reactie…"
+                    className="w-full border border-line bg-paper px-2 py-1.5 text-sm"
+                    required
+                  />
+                  <div className="flex gap-2">
+                    <button type="submit" className="btn btn-brand" disabled={bezig}>
+                      {bezig ? "Plaatsen…" : "Reageren"}
+                    </button>
+                    <button type="button" className="btn" onClick={() => setReageerOp(null)}>
+                      Annuleer
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+            </div>
+          </div>
+        </div>
+        {replies.length ? (
+          <ul className="mt-2 grid gap-2">
+            {replies.map((r) => (
+              <BerichtKaart key={r.id} bericht={r} diep />
+            ))}
+          </ul>
+        ) : null}
+      </li>
+    );
+  }
+
   return (
     <div className="mt-3 grid gap-3">
-      <form className="panel grid gap-3 p-3" onSubmit={(event) => void plaats(event)}>
+      <form className="panel grid gap-3 p-3" onSubmit={(e) => void plaats(e)}>
         <label className="field">
           Soort
-          <select value={soort} onChange={(event) => setSoort(event.target.value as "overleg" | "correctie")}>
+          <select value={soort} onChange={(e) => setSoort(e.target.value as "overleg" | "correctie")}>
             <option value="overleg">Vraag of tip</option>
             <option value="correctie">Antwoord</option>
           </select>
         </label>
         <label className="field">
           Onderwerp
-          <input value={titel} onChange={(event) => setTitel(event.target.value)} maxLength={120} required />
+          <input value={titel} onChange={(e) => setTitel(e.target.value)} maxLength={120} required />
         </label>
         <label className="field">
           Bericht
-          <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={4} required />
+          <textarea value={tekst} onChange={(e) => setTekst(e.target.value)} rows={4} required />
         </label>
         <button className="btn btn-brand w-fit" type="submit" disabled={bezig}>
           {bezig ? "Plaatsen…" : "Plaatsen"}
         </button>
       </form>
       {fout ? <p className="text-sm text-stop">{fout}</p> : null}
-      <ul className="grid gap-2">
-        {lijst.map((bericht) => (
-          <li key={bericht.id} className="border border-line bg-panel p-3">
-            <p className="font-mono text-xs text-muted">
-              {bericht.soort === "correctie" ? "Antwoord" : "Vraag"} · domein {bericht.domein} · {bericht.weergave} · {bericht.organisatie}
-            </p>
-            <h3 className="mt-1 font-semibold">{bericht.titel}</h3>
-            <p className="mt-1 text-sm">{bericht.tekst}</p>
-            <p className="mt-2 font-mono text-xs text-muted">{new Date(bericht.gemaakt).toLocaleString("nl-NL")}</p>
-            {bericht.eigen ? (
-              <button
-                type="button"
-                className="btn mt-2"
-                onClick={() => {
-                  void (async () => {
-                    const token = await sessieToken();
-                    if (!token) return;
-                    await verwijderOverleg({ data: { token, id: bericht.id } });
-                    await vernieuw();
-                  })();
-                }}
-              >
-                Verwijder
-              </button>
-            ) : null}
-          </li>
+      <ul className="grid gap-3">
+        {roots.map((bericht) => (
+          <BerichtKaart key={bericht.id} bericht={bericht} />
         ))}
-        {lijst.length === 0 && !fout ? <li className="text-sm text-muted">Nog geen berichten op het bord.</li> : null}
+        {roots.length === 0 && !fout ? (
+          <li className="rounded-lg border border-dashed border-line p-6 text-center text-sm text-muted">
+            Nog geen berichten. Wees de eerste die een praktijkvraag of tip plaatst.
+          </li>
+        ) : null}
       </ul>
     </div>
   );

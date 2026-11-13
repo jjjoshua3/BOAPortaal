@@ -136,7 +136,7 @@ function DienstPage() {
           <h2 className="mb-2 mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Dienst, ook de combibon</h2>
           <ModuleGrid items={dienstModules} onKies={(id) => void navigate({ search: { werk: id } })} />
           {ready && !user ? (
-            <p className="mt-3 text-sm text-muted">Combibon, kenteken en tarieven openen na aanmelden met een organisatie- of schooladres.</p>
+            <p className="mt-3 text-sm text-muted">Combibon, kenteken en tarieven openen na inloggen.</p>
           ) : null}
         </>
       )}
@@ -147,7 +147,7 @@ function DienstPage() {
       {werk && !straat && !ready ? <p className="text-sm text-muted">Account laden.</p> : null}
       {werk && !straat && ready && !user ? (
         <div className="panel p-4">
-          <p className="text-sm">Dit onderdeel staat achter een zakelijk of schooladres.</p>
+          <p className="text-sm">Voor dit onderdeel dient u ingelogd te zijn.</p>
           <Link to="/account" className="btn btn-brand mt-3">
             Aanmelden
           </Link>
