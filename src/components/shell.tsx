@@ -223,7 +223,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
       <div className="flex min-h-0 flex-1 flex-col">
         <main className="min-w-0 flex-1">{children}</main>
-        <footer className="no-print border-t border-line px-4 py-3 text-xs text-muted mb-[4.5rem] lg:mb-0">
+        <footer className="no-print mb-[4.5rem] border-t border-line px-4 py-3 text-xs text-muted">
           <p>Onafhankelijke naslag. Geen publicatie van het OM, de politie of een gemeente. De akte en de geldende wettekst gaan voor.</p>
           <p className="mt-1">
             <Link to="/privacy" className="underline">
@@ -245,14 +245,14 @@ export function AppShell({ children }: { children: ReactNode }) {
           </p>
         </footer>
       </div>
-      <nav className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-line bg-panel lg:hidden">
+      <nav className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-[#0F172A] text-white" aria-label="Hoofdnavigatie">
         <ul className="grid grid-cols-5">
           {items.slice(0, 4).map((item) => {
             const Icon = ICONS[item.to];
             const active = path === item.to;
             return (
               <li key={item.to}>
-                <Link to={item.to} className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${active ? "text-ink" : "text-muted"}`}>
+                <Link to={item.to} className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${active ? "text-white" : "text-slate-300"}`}>
                   <Icon className="size-4" />
                   {item.label}
                 </Link>
@@ -260,7 +260,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             );
           })}
           <li>
-            <button type="button" className="flex min-h-14 w-full flex-col items-center justify-center gap-0.5 text-xs font-semibold text-muted" onClick={() => setMeer(true)}>
+            <button type="button" className="flex min-h-14 w-full flex-col items-center justify-center gap-0.5 text-xs font-semibold text-slate-300" onClick={() => setMeer(true)}>
               <Menu className="size-4" />
               Meer
             </button>
@@ -268,7 +268,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </ul>
       </nav>
       {meer ? (
-        <div className="fixed inset-0 z-40 lg:hidden">
+        <div className="fixed inset-0 z-40">
           <button type="button" className="absolute inset-0 bg-brand/70" aria-label="Sluit menu" onClick={() => setMeer(false)} />
           <div className="panel absolute inset-x-3 bottom-20 p-3">
             <div className="mb-2 flex items-center justify-between">
@@ -278,6 +278,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               </button>
             </div>
             <div className="grid gap-1">
+              <Link to="/dienst" search={{ werk: "combi" }} className="btn btn-brand justify-start">
+                Combibon invullen
+              </Link>
               {items.slice(4).map((item) => (
                 <Link key={item.to} to={item.to} className="btn justify-start">
                   {item.label}

@@ -112,24 +112,24 @@ function DienstPage() {
         title={module ? module.titel : "Werkbank"}
         lede={module ? module.regel : "Timer, leeftijd, checklist en kladblok blijven op dit apparaat. Combibon, kenteken en het bord vragen een zakelijk account."}
       />
-      {werk ? (
-        <button type="button" className="btn mb-4" onClick={() => void navigate({ search: {}, replace: true })}>
-          Alle onderdelen
+      <div className="mb-4 flex flex-wrap gap-2">
+        {werk ? (
+          <button type="button" className="btn" onClick={() => void navigate({ search: {}, replace: true })}>
+            Alle onderdelen
+          </button>
+        ) : null}
+        <button type="button" className="btn btn-brand" onClick={() => void navigate({ search: { werk: "combi" } })}>
+          Combibon invullen
         </button>
-      ) : (
+      </div>
+      {werk ? null : (
         <>
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">Op straat</h2>
           <ModuleGrid items={straatModules} onKies={(id) => void navigate({ search: { werk: id } })} />
-          <h2 className="mb-2 mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Met account</h2>
-          {!ready ? <p className="text-sm text-muted">Account laden.</p> : null}
-          {ready && user ? <ModuleGrid items={dienstModules} onKies={(id) => void navigate({ search: { werk: id } })} /> : null}
+          <h2 className="mb-2 mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Dienst, ook de combibon</h2>
+          <ModuleGrid items={dienstModules} onKies={(id) => void navigate({ search: { werk: id } })} />
           {ready && !user ? (
-            <div className="panel p-4">
-              <p className="text-sm">Combibon, kenteken, tarieven van de dienst en het bord zijn voor een organisatie- of schooladres.</p>
-              <Link to="/account" className="btn btn-brand mt-3">
-                Aanmelden
-              </Link>
-            </div>
+            <p className="mt-3 text-sm text-muted">Combibon, kenteken en tarieven openen na aanmelden met een organisatie- of schooladres.</p>
           ) : null}
         </>
       )}
