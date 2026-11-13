@@ -242,7 +242,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Personalia",
-    uitleg: "Naam, voornamen, geboortedatum, geboorteplaats en adres. Geen verhoor. Geen cautie nodig. Geen BSN in dit portaal.",
+    uitleg: "Naam, voornamen, geboortedatum, geboorteplaats en adres. Geen verhoor. Geen cautie nodig.",
   },
   {
     term: "Peur",

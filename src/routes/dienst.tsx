@@ -178,7 +178,7 @@ function Vak({ titel, kinderen, plek }: { titel: string; kinderen: string; plek:
       <p className="text-sm">{kinderen}</p>
       <label className="field">
         {titel}
-        <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={5} placeholder="Geen naam, geen BSN, geen telefoon." />
+        <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={5} />
       </label>
       <div className="flex flex-wrap gap-2">
         <button
@@ -771,7 +771,7 @@ function Overleg() {
 
   return (
     <section className="mt-4 grid gap-4">
-      <p className="text-sm">Vragen, tips en antwoorden voor collega's. Geen namen van burgers, geen BSN, geen zaaknummers.</p>
+      <p className="text-sm">Vragen, tips en antwoorden voor collega's.</p>
       <form className="panel grid gap-3 p-3" onSubmit={(event) => void plaats(event)}>
         <label className="field">
           Soort

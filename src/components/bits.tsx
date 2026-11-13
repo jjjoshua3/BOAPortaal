@@ -52,9 +52,6 @@ export function PiiPanel({
   const zacht = [...new Set(scan.zacht.map((hit) => hit.label))];
   return (
     <div className="grid gap-2">
-      <p className="accent-amber panel p-3 text-sm">
-        Geen persoonsgegevens van burgers in dit portaal. Gebruik de placeholders [VERDACHTE], [GETUIGE] en [ADRES]. Een BSN hoort in het bronsysteem, niet hier.
-      </p>
       {hard.length ? <p className="accent-stop panel p-3 text-sm">Geblokkeerd: {hard.join(", ")}.</p> : null}
       {zacht.length ? (
         <label className="panel flex items-start gap-2 p-3 text-sm">

@@ -28,7 +28,6 @@ const AFSPRAKEN = [
   "Een parkeerbon op kenteken is Wahv, geen staandehouding.",
   "Een aangehouden verdachte draag je onverwijld over aan de politie.",
   "Handboeien alleen bij vluchtgevaar of direct gevaar, met de reden in het PV.",
-  "Geen BSN en geen namen van burgers in dit portaal.",
 ];
 
 function Home() {

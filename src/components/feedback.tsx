@@ -136,7 +136,7 @@ function MeldingVenster({ plek, onderwerp, onSluit }: { plek: string; onderwerp:
         <p className="text-xs font-semibold tracking-wide text-muted">MELDING | {plek}</p>
         <h2 className="mt-1 text-lg font-semibold">{onderwerp}</h2>
         <p className="mt-1 text-sm text-muted">
-          Iets klopt niet, of je wilt een werkwijze doorzetten. Geen namen van burgers, geen BSN, geen zaaknummer.
+          Iets klopt niet, of je wilt een werkwijze doorzetten.
         </p>
         <label className="field mt-3">
           Wat moet er anders
