@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f4f6f8;
+  --color-paper: #f8fafc;
   --color-panel: #ffffff;
-  --color-ink: #0f2537;
-  --color-muted: #4b5c6b;
-  --color-line: #cbd5e1;
-  --color-brand: #0f2537;
-  --color-brand-2: #1b3b5a;
-  --color-silver: #8c9ba5;
+  --color-ink: #0f172a;
+  --color-muted: #475569;
+  --color-line: #e2e8f0;
+  --color-brand: #0f172a;
+  --color-brand-2: #1e293b;
+  --color-silver: #94a3b8;
   --color-amber: #d97706;
-  --color-ok: #15803d;
+  --color-ok: #059669;
   --color-stop: #b91c1c;
-  --color-inset: #eef2f6;
+  --color-inset: #f1f5f9;
+  --color-accent: #1d4ed8;
   --color-ok-soft: #e7f5ec;
   --color-stop-soft: #fdecec;
   --color-amber-soft: #fef4e6;
@@ -68,6 +69,7 @@ html.night {
     background: var(--color-panel);
     border: 1px solid var(--color-line);
     border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   }
   fieldset.panel {
     margin: 0;
@@ -93,8 +95,8 @@ html.night {
     cursor: not-allowed;
   }
   .btn-brand {
-    background: var(--color-brand);
-    border-color: var(--color-brand);
+    background: #1d4ed8;
+    border-color: #1d4ed8;
     color: var(--color-on-brand);
   }
   .btn-stop {

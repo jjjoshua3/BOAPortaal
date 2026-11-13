@@ -1,18 +1,18 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
+  BookOpen,
   FileText,
   GitBranch,
   GraduationCap,
   LayoutGrid,
   Lock,
   Menu,
+  MessageSquare,
   Moon,
   Scale,
   ScrollText,
   Search,
-  BookOpen,
-  MessageSquare,
   Sun,
   X,
 } from "lucide-react";
@@ -40,36 +40,37 @@ const ORDER: Record<Rol, Item[]> = {
     { to: "/zakkaart", label: "Zakkaart" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/dienst", label: "Werkbank" },
-    { to: "/community", label: "Community" },
-    { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/pv", label: "PV-bouwer" },
+    { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/trainer", label: "Trainer" },
+    { to: "/community", label: "Community" },
     { to: "/kluis", label: "Kluis" },
   ],
   student: [
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
-    { to: "/dienst", label: "Werkbank" },
-    { to: "/community", label: "Community" },
-    { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },
+    { to: "/feitcodes", label: "Feitcodes" },
+    { to: "/dienst", label: "Werkbank" },
     { to: "/pv", label: "PV-bouwer" },
+    { to: "/community", label: "Community" },
     { to: "/kluis", label: "Kluis" },
   ],
   docent: [
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
-    { to: "/dienst", label: "Werkbank" },
-    { to: "/community", label: "Community" },
     { to: "/pv", label: "PV-bouwer" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },
+    { to: "/dienst", label: "Werkbank" },
+    { to: "/community", label: "Community" },
     { to: "/kluis", label: "Kluis" },
   ],
 };
 
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (state) => state.location.pathname });
+  const navigate = useNavigate();
   const rol = usePrefs((state) => state.rol);
   const domein = usePrefs((state) => state.domein);
   const theme = usePrefs((state) => state.theme);
@@ -78,8 +79,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const toggleTheme = usePrefs((state) => state.toggleTheme);
   const { user, ready } = useBoaAuth();
   const [meer, setMeer] = useState(false);
+  const [zoekOpen, setZoekOpen] = useState(false);
+  const [weergave, setWeergave] = useState(false);
+  const [q, setQ] = useState("");
   const items = ORDER[rol];
-  const rolTekst = ROLLEN.find((item) => item.id === rol)?.kort;
 
   useEffect(() => {
     let stop = false;
@@ -103,117 +106,104 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="no-print bg-brand text-on-brand">
-        <div className="flex h-14 items-center gap-3 border-b border-white/15 px-3">
+      <header className="no-print sticky top-0 z-30 border-b border-line bg-panel">
+        <div className="flex h-14 items-center gap-3 px-3">
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <img src="/boa-mark.png" alt="" className="size-8 shrink-0" />
-            <span className="truncate font-semibold tracking-tight">BOA Portaal</span>
+            <span className="truncate font-semibold tracking-tight text-ink">BOA Portaal</span>
+            <span className="hidden rounded-sm border border-line px-1.5 py-0.5 font-mono text-[10px] text-muted sm:inline">Domein I–VI</span>
           </Link>
-          <span className="hidden text-silver sm:inline" aria-hidden="true">
-            |
-          </span>
-          <span className="hidden truncate text-sm text-silver md:inline">Naslag domein I–VI</span>
+          <nav className="ml-2 hidden items-center gap-0.5 lg:flex">
+            {items.slice(0, 5).map((item) => (
+              <Link key={item.to} to={item.to} className={`px-2 py-1 text-sm font-semibold ${path === item.to ? "text-ink" : "text-muted"}`}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
           <div className="ml-auto flex items-center gap-2">
-            <button type="button" className="btn min-h-10 border-white/20 bg-transparent px-2 text-on-brand" onClick={toggleTheme}>
-              {theme === "night" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-              <span className="hidden sm:inline">{theme === "night" ? "Dag" : "Nachtdienst"}</span>
+            <button type="button" className="btn min-h-10 px-2" onClick={() => setZoekOpen((open) => !open)}>
+              <Search className="size-4" />
+              <span className="hidden sm:inline">Zoeken</span>
             </button>
-            <span className="text-silver" aria-hidden="true">
-              |
-            </span>
-            <Link to="/account" className="btn min-h-10 border-white/20 bg-transparent px-2 text-on-brand">
+            <button type="button" className="btn min-h-10 px-2" onClick={toggleTheme} aria-label="Thema">
+              {theme === "night" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            </button>
+            <button type="button" className="btn min-h-10 px-2" onClick={() => setWeergave((open) => !open)}>
+              Weergave
+            </button>
+            <Link to="/account" className="btn btn-brand min-h-10 px-3">
               {ready && user?.email ? user.email.split("@")[0] : "Account"}
             </Link>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2 bg-brand-2 px-3 py-2">
-          <label className="grid gap-1 text-xs font-semibold text-silver">
-            Domein
-            <select
-              className="mast-select max-w-[16rem] sm:max-w-xs"
-              value={domein}
-              onChange={(event) => setDomein(event.target.value as DomeinFilter)}
-            >
-              {FILTERS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <span className="mt-4 hidden text-silver sm:inline" aria-hidden="true">
-            |
-          </span>
-          <label className="grid gap-1 text-xs font-semibold text-silver">
-            Rol
-            <select className="mast-select" value={rol} onChange={(event) => setRol(event.target.value as Rol)}>
-              {ROLLEN.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <p className="mt-4 hidden max-w-md text-sm text-silver lg:block">{rolTekst}</p>
-        </div>
-      </header>
-      <div className="flex min-h-0 flex-1">
-        <nav className="no-print hidden w-52 shrink-0 border-r border-line bg-panel lg:block">
-          <ul className="grid gap-1 p-2">
-            {items.map((item) => {
-              const Icon = ICONS[item.to];
-              const active = path === item.to;
-              return (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
-                    className={`flex min-h-11 items-center gap-2 px-2 text-sm font-semibold ${active ? "bg-inset text-ink" : "text-muted"}`}
-                  >
-                    <Icon className="size-4" />
+        {zoekOpen ? (
+          <form
+            className="flex gap-2 border-t border-line px-3 py-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setZoekOpen(false);
+              void navigate({ to: "/feitcodes", search: q.trim() ? { q: q.trim() } : {} });
+            }}
+          >
+            <input
+              className="min-h-10 flex-1 border border-line bg-paper px-3 text-sm"
+              value={q}
+              onChange={(event) => setQ(event.target.value)}
+              placeholder="Zoek op feitcode, vakjargon of onderwerp"
+            />
+            <button className="btn btn-brand" type="submit">
+              Zoek
+            </button>
+          </form>
+        ) : null}
+        {weergave ? (
+          <div className="flex flex-wrap gap-3 border-t border-line bg-inset px-3 py-2">
+            <label className="grid gap-1 text-xs font-semibold text-muted">
+              Domein
+              <select className="min-h-10 border border-line bg-panel px-2 text-sm text-ink" value={domein} onChange={(event) => setDomein(event.target.value as DomeinFilter)}>
+                {FILTERS.map((item) => (
+                  <option key={item.id} value={item.id}>
                     {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          <div className="border-t border-line p-2">
-            <Link to="/jargon" className={`flex min-h-11 items-center gap-2 px-2 text-sm font-semibold ${path === "/jargon" ? "bg-inset text-ink" : "text-muted"}`}>
-              <BookOpen className="size-4" />
-              Vakjargon
-            </Link>
-            <Link to="/colofon" className="flex min-h-11 items-center gap-2 px-2 text-sm font-semibold text-muted">
-              <Scale className="size-4" />
-              Colofon
-            </Link>
-            <Link to="/privacy" className={`flex min-h-11 items-center gap-2 px-2 text-sm font-semibold ${path === "/privacy" ? "bg-inset text-ink" : "text-muted"}`}>
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-1 text-xs font-semibold text-muted">
+              Rol
+              <select className="min-h-10 border border-line bg-panel px-2 text-sm text-ink" value={rol} onChange={(event) => setRol(event.target.value as Rol)}>
+                {ROLLEN.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        ) : null}
+      </header>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <main className="min-w-0 flex-1">{children}</main>
+        <footer className="no-print border-t border-line px-4 py-3 text-xs text-muted mb-[4.5rem] lg:mb-0">
+          <p>Onafhankelijke naslag. Geen publicatie van het OM, de politie of een gemeente. De akte en de geldende wettekst gaan voor.</p>
+          <p className="mt-1">
+            <Link to="/privacy" className="underline">
               Privacy
             </Link>
-          </div>
-        </nav>
-        <div className="flex min-w-0 flex-1 flex-col">
-          <main className="min-w-0 flex-1">{children}</main>
-          <footer className="no-print border-t border-line px-4 py-3 text-xs text-muted mb-[4.5rem] lg:mb-0">
-            <p>Onafhankelijke naslag. Geen publicatie van het OM, de politie of een gemeente. De akte en de geldende wettekst gaan voor.</p>
-            <p className="mt-1">
-              <Link to="/privacy" className="underline">
-                Privacy
-              </Link>
-              <span aria-hidden="true"> | </span>
-              <Link to="/jargon" className="underline">
-                Vakjargon
-              </Link>
-              <span aria-hidden="true"> | </span>
-              <Link to="/colofon" className="underline">
-                Colofon
-              </Link>
-              <span aria-hidden="true"> | </span>
-              Ontworpen door{" "}
-              <a className="underline" href="https://jjjoshua3.netlify.app/" target="_blank" rel="noreferrer">
-                Joshua
-              </a>
-            </p>
-          </footer>
-        </div>
+            {" · "}
+            <Link to="/jargon" className="underline">
+              Vakjargon
+            </Link>
+            {" · "}
+            <Link to="/colofon" className="underline">
+              Colofon
+            </Link>
+            {" · "}
+            Ontworpen door{" "}
+            <a className="underline" href="https://jjjoshua3.netlify.app/" target="_blank" rel="noreferrer">
+              Joshua
+            </a>
+          </p>
+        </footer>
       </div>
       <nav className="no-print fixed inset-x-0 bottom-0 z-30 border-t border-line bg-panel lg:hidden">
         <ul className="grid grid-cols-5">
@@ -254,6 +244,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               ))}
               <Link to="/jargon" className="btn justify-start">
+                <BookOpen className="size-4" />
                 Vakjargon
               </Link>
               <Link to="/colofon" className="btn justify-start">
@@ -261,9 +252,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
               <Link to="/privacy" className="btn justify-start">
                 Privacy
-              </Link>
-              <Link to="/account" className="btn justify-start">
-                Account
               </Link>
             </div>
           </div>
