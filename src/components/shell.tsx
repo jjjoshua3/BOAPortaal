@@ -12,6 +12,7 @@ import {
   ScrollText,
   Search,
   BookOpen,
+  MessageSquare,
   Sun,
   X,
 } from "lucide-react";
@@ -28,6 +29,7 @@ const ICONS = {
   "/trainer": GraduationCap,
   "/kluis": Lock,
   "/dienst": LayoutGrid,
+  "/community": MessageSquare,
   "/colofon": Scale,
 } as const;
 
@@ -38,6 +40,7 @@ const ORDER: Record<Rol, Item[]> = {
     { to: "/zakkaart", label: "Zakkaart" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/dienst", label: "Werkbank" },
+    { to: "/community", label: "Community" },
     { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/pv", label: "PV-bouwer" },
     { to: "/trainer", label: "Trainer" },
@@ -47,6 +50,7 @@ const ORDER: Record<Rol, Item[]> = {
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/dienst", label: "Werkbank" },
+    { to: "/community", label: "Community" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },
     { to: "/pv", label: "PV-bouwer" },
@@ -56,6 +60,7 @@ const ORDER: Record<Rol, Item[]> = {
     { to: "/trainer", label: "Trainer" },
     { to: "/beslisbomen", label: "Beslisbomen" },
     { to: "/dienst", label: "Werkbank" },
+    { to: "/community", label: "Community" },
     { to: "/pv", label: "PV-bouwer" },
     { to: "/feitcodes", label: "Feitcodes" },
     { to: "/zakkaart", label: "Zakkaart" },

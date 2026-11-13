@@ -11,6 +11,7 @@ export type VoertuigKaart = {
   brandstof: string;
   apk: string;
   apkStatus: "geldig" | "verlopen" | "onbekend";
+  wam: "ja" | "nee" | "onbekend";
   toelating: string;
   massa: string;
 };
@@ -25,6 +26,13 @@ function datum(waarde: string | number | null | undefined): string {
   const tekst = String(waarde ?? "");
   if (!/^\d{8}$/.test(tekst)) return "";
   return `${tekst.slice(6, 8)}-${tekst.slice(4, 6)}-${tekst.slice(0, 4)}`;
+}
+
+function wamStatus(waarde: string | number | null | undefined): VoertuigKaart["wam"] {
+  const tekst = String(waarde ?? "").toLowerCase();
+  if (tekst === "ja" || tekst === "j") return "ja";
+  if (tekst === "nee" || tekst === "n") return "nee";
+  return "onbekend";
 }
 
 function apkStatus(waarde: string | number | null | undefined): VoertuigKaart["apkStatus"] {
@@ -68,6 +76,7 @@ export const zoekKenteken = createServerFn({ method: "POST" })
       brandstof: brandstoffen.join(" | "),
       apk: datum(rij.vervaldatum_apk),
       apkStatus: apkStatus(rij.vervaldatum_apk),
+      wam: wamStatus(rij.wam_verzekerd),
       toelating: datum(rij.datum_eerste_toelating),
       massa: rij.massa_ledig_voertuig == null ? "" : `${rij.massa_ledig_voertuig} kg ledig`,
     };

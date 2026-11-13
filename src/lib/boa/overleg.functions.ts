@@ -124,34 +124,39 @@ function leesInvoer(data: unknown): {
 export const lijstOverleg = createServerFn({ method: "POST" })
   .validator((data: unknown) => data)
   .handler(async ({ data }): Promise<OverlegBericht[]> => {
-    const token = data && typeof data === "object" && typeof (data as { token?: unknown }).token === "string" ? (data as { token: string }).token : "";
-    const user = await gebruiker(token);
-    if (!user) throw new Error("Meld je aan met een zakelijk of schooladres.");
-    const key = await sleutel();
-    const sql = await getSql();
-    const rijen = await sql<{ id: string; user_id: string; iv: string; tag: string; cipher: string; created_at: string | Date }>`
-      select id, user_id, iv, tag, cipher, created_at
-      from boa_overleg
-      order by created_at desc
-      limit 80
-    `;
-    const uit: OverlegBericht[] = [];
-    for (const rij of rijen) {
-      const payload = open(key, rij.iv, rij.tag, rij.cipher);
-      if (!payload) continue;
-      uit.push({
-        id: rij.id,
-        eigen: rij.user_id === user.id,
-        soort: payload.soort,
-        domein: payload.domein,
-        titel: payload.titel,
-        tekst: payload.tekst,
-        organisatie: payload.organisatie,
-        weergave: payload.weergave,
-        gemaakt: new Date(rij.created_at).toISOString(),
-      });
+    try {
+      const token = data && typeof data === "object" && typeof (data as { token?: unknown }).token === "string" ? (data as { token: string }).token : "";
+      const user = await gebruiker(token);
+      if (!user) throw new Error("Meld je aan met een zakelijk of schooladres.");
+      const key = await sleutel();
+      const sql = await getSql();
+      const rijen = await sql<{ id: string; user_id: string; iv: string; tag: string; cipher: string; created_at: string | Date }>`
+        select id, user_id, iv, tag, cipher, created_at
+        from boa_overleg
+        order by created_at desc
+        limit 80
+      `;
+      const uit: OverlegBericht[] = [];
+      for (const rij of rijen) {
+        const payload = open(key, rij.iv, rij.tag, rij.cipher);
+        if (!payload) continue;
+        uit.push({
+          id: rij.id,
+          eigen: rij.user_id === user.id,
+          soort: payload.soort,
+          domein: payload.domein,
+          titel: payload.titel,
+          tekst: payload.tekst,
+          organisatie: payload.organisatie,
+          weergave: payload.weergave,
+          gemaakt: new Date(rij.created_at).toISOString(),
+        });
+      }
+      return uit;
+    } catch (error) {
+      const bericht = error instanceof Error ? error.message : "Het bord is niet bereikbaar.";
+      throw new Error(bericht);
     }
-    return uit;
   });
 
 export const plaatsOverleg = createServerFn({ method: "POST" })

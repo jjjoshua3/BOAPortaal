@@ -69,7 +69,7 @@ const MODULES: { id: Werk; titel: string; regel: string; icoon: LucideIcon }[] =
   { id: "vermist", titel: "Vermist", regel: "Alleen korter dan drie weken", icoon: Search },
   { id: "delen", titel: "Delen", regel: "Politie, jongerenwerk, zorg", icoon: Users },
   { id: "tarief", titel: "Tarieven", regel: "Feitenboekje, NS, jouw werkgever", icoon: Scale },
-  { id: "overleg", titel: "Overleg", regel: "Prikbord voor collega's", icoon: MessageSquare },
+  { id: "overleg", titel: "Community", regel: "Vragen, tips en antwoorden", icoon: MessageSquare },
   { id: "wetten", titel: "Wetteksten", regel: "Controle tegen wetten.overheid.nl", icoon: BookOpen },
 ];
 
@@ -120,11 +120,7 @@ function DienstPage() {
       <PageHead
         kicker="WERKBANK | DOMEIN I–VI"
         title={module ? module.titel : "Systeem"}
-        lede={
-          module
-            ? module.regel
-            : "Eigen werkscherm. Geen scanauto. Geen bevolkingsregister. Kentekens komen uit de open data van de RDW. Een bon die je hier maakt is een concept voor je bronsysteem."
-        }
+        lede={module ? module.regel : "Combibon, kenteken, tarieven, community en de rest van je dienst."}
       />
       {module ? (
         <button type="button" className="btn mb-4" onClick={() => void navigate({ search: {}, replace: true })}>
@@ -261,34 +257,47 @@ function Combibon() {
   const filter = usePrefs((state) => state.domein);
   const feiten = FEITEN.filter((feit) => pastFilter(feit.domeinen, filter));
   const { saveSjabloon } = useKluis();
-  const [org, setOrg] = useState("");
-  const [datum, setDatum] = useState(() => new Date().toISOString().slice(0, 10));
-  const [tijd, setTijd] = useState("12:00");
-  const [plaats, setPlaats] = useState("");
-  const [kenteken, setKenteken] = useState("");
-  const [soort, setSoort] = useState("beide");
-  const [feit, setFeit] = useState<Feit | null>(null);
-  const [naheffing, setNaheffing] = useState("");
-  const [gedraging, setGedraging] = useState("");
+  const [a, setA] = useState("");
+  const [b, setB] = useState(() => new Date().toISOString().slice(0, 10));
+  const [c, setC] = useState("12:00");
+  const [d, setD] = useState("");
+  const [e, setE] = useState("");
+  const [f, setF] = useState("");
+  const [g, setG] = useState<Feit | null>(null);
+  const [h, setH] = useState("");
+  const [i, setI] = useState("");
+  const [j, setJ] = useState("");
+  const [k, setK] = useState("");
+  const [l, setL] = useState("");
+  const [m, setM] = useState("");
+  const [n, setN] = useState("");
+  const [o, setO] = useState("");
+  const [p, setP] = useState("");
+  const [q, setQ] = useState("");
   const [melding, setMelding] = useState("");
 
   const regels = useMemo(
     () => [
-      "CONCEPT COMBIBON | geen aanslag en geen beschikking",
-      "Overnemen in het bronsysteem van de gemeente of de vervoerder.",
-      `Organisatie: ${org || "[ORGANISATIE]"}`,
-      `Datum: ${datum} | Tijd: ${tijd}`,
-      `Plaats: ${plaats || "[PLAATS]"}`,
-      `Kenteken: ${kenteken.toUpperCase().replace(/[^A-Z0-9-]/g, "") || "[KENTEKEN]"}`,
-      `Kolom: ${soort === "beide" ? "naheffing parkeerbelasting én Wahv" : soort === "naheffing" ? "alleen naheffing parkeerbelasting" : "alleen Wahv"}`,
-      `Feitcode Wahv: ${feit ? `${feit.code} | ${feit.titel}` : "geen"}`,
-      `Artikel: ${feit?.artikel ?? "niet gekozen"}`,
-      `Tarief uit deze naslag: ${feit?.tarief ?? "niet van toepassing"}`,
-      `Naheffingsbedrag volgens de verordening: ${naheffing || "[INVULLEN UIT DE VERORDENING]"}`,
-      `Waarneming: ${gedraging || "[WAT JE ZAG]"}`,
-      "Geen naam van een burger in dit concept. De kentekenhouder komt uit je eigen systeem, niet uit de open data van de RDW.",
+      "COMBIBON",
+      `A Kenteken          ${a.toUpperCase().replace(/[^A-Z0-9-]/g, "") || ""}`,
+      `B Datum             ${b}`,
+      `C Tijd              ${c}`,
+      `D Gemeente          ${d}`,
+      `E Straat / plaats   ${e}`,
+      `F Huisnr / zone     ${f}`,
+      `G Feitcode          ${g ? g.code : ""}`,
+      `H Artikel           ${g?.artikel ?? h}`,
+      `I Gedraging         ${i}`,
+      `J Naheffing €       ${j}`,
+      `K Wahv €            ${k}`,
+      `L Verbalisant      ${l}`,
+      `M BOA-nummer        ${m}`,
+      `N Merk / soort      ${n}`,
+      `O Kleur             ${o}`,
+      `P Opmerkingen       ${p}`,
+      `Q Paraaf / akkoord  ${q}`,
     ],
-    [datum, feit, gedraging, kenteken, naheffing, org, plaats, soort, tijd],
+    [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q],
   );
 
   function bewaar(alsPdf: boolean) {
@@ -298,60 +307,54 @@ function Combibon() {
       setMelding("Geblokkeerd. Haal telefoon, e-mail, IBAN of BSN eruit.");
       return;
     }
-    if (alsPdf) downloadTekstPdf("combibon-concept.pdf", regels);
-    void saveSjabloon(`COMBIBON | ${kenteken || plaats || datum}`, tekst).then((fout) => {
-      setMelding(fout ?? (alsPdf ? "PDF gedownload en versleuteld in de kluis." : "Versleuteld in de kluis."));
+    if (alsPdf) downloadTekstPdf("combibon.pdf", regels);
+    void saveSjabloon(`COMBIBON | ${a || e || b}`, tekst).then((fout) => {
+      setMelding(fout ?? (alsPdf ? "PDF gedownload en in de kluis." : "In de kluis."));
     });
   }
 
+  const vak = (letter: string, label: string, value: string, set: (v: string) => void, extra?: { type?: string; placeholder?: string; rows?: number }) => (
+    <label className="field" key={letter}>
+      <span className="font-mono text-xs font-bold text-muted">{letter}</span> {label}
+      {extra?.rows ? (
+        <textarea value={value} onChange={(event) => set(event.target.value)} rows={extra.rows} placeholder={extra.placeholder} />
+      ) : (
+        <input type={extra?.type ?? "text"} value={value} onChange={(event) => set(event.target.value)} placeholder={extra?.placeholder} />
+      )}
+    </label>
+  );
+
   return (
-    <div className="mt-4 grid gap-3 lg:grid-cols-2">
+    <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_20rem]">
       <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
-        <label className="field">
-          Gemeente of werkgever
-          <input value={org} onChange={(event) => setOrg(event.target.value)} />
-        </label>
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="field">
-            Datum
-            <input type="date" value={datum} onChange={(event) => setDatum(event.target.value)} />
-          </label>
-          <label className="field">
-            Tijd
-            <input type="time" value={tijd} onChange={(event) => setTijd(event.target.value)} />
-          </label>
+          {vak("A", "Kenteken", a, (v) => setA(v.toUpperCase()), { placeholder: "AB-123-C" })}
+          {vak("B", "Datum", b, setB, { type: "date" })}
+          {vak("C", "Tijd", c, setC, { type: "time" })}
+          {vak("D", "Gemeente", d, setD)}
+          {vak("E", "Straat of plaats", e, setE)}
+          {vak("F", "Huisnummer of zone", f, setF)}
         </div>
-        <label className="field">
-          Plaats
-          <input value={plaats} onChange={(event) => setPlaats(event.target.value)} placeholder="Straat of zone, geen huisadres van een bewoner" />
-        </label>
-        <label className="field">
-          Kenteken
-          <input value={kenteken} onChange={(event) => setKenteken(event.target.value.toUpperCase())} placeholder="AB-123-C" />
-        </label>
-        <label className="field">
-          Kolommen
-          <select value={soort} onChange={(event) => setSoort(event.target.value)}>
-            <option value="beide">Naheffing én Wahv</option>
-            <option value="naheffing">Alleen naheffing parkeerbelasting</option>
-            <option value="wahv">Alleen Wahv</option>
-          </select>
-        </label>
-        <FeitVeld feiten={feiten} feit={feit} onKies={setFeit} />
-        <label className="field">
-          Bedrag naheffing uit de verordening
-          <input value={naheffing} onChange={(event) => setNaheffing(event.target.value)} placeholder="Alleen als je het uit de verordening haalt" />
-        </label>
-        <label className="field">
-          Wat je zag
-          <textarea value={gedraging} onChange={(event) => setGedraging(event.target.value)} rows={4} />
-        </label>
+        <FeitVeld feiten={feiten} feit={g} onKies={setG} />
+        <p className="text-xs text-muted">G Feitcode | H Artikel komt uit de gekozen feitcode, of vul H zelf in.</p>
+        {vak("H", "Artikel (als je het zelf invult)", h, setH)}
+        {vak("I", "Gedraging / wat je zag", i, setI, { rows: 3 })}
+        <div className="grid gap-3 sm:grid-cols-2">
+          {vak("J", "Naheffing €", j, setJ, { placeholder: "uit de verordening" })}
+          {vak("K", "Wahv €", k, setK, { placeholder: "uit het Feitenboekje" })}
+          {vak("L", "Verbalisant", l, setL)}
+          {vak("M", "BOA-nummer", m, setM)}
+          {vak("N", "Merk / soort voertuig", n, setN)}
+          {vak("O", "Kleur", o, setO)}
+        </div>
+        {vak("P", "Opmerkingen", p, setP, { rows: 2 })}
+        {vak("Q", "Paraaf of akkoord", q, setQ)}
       </form>
       <div>
-        <pre className="panel max-h-[32rem] overflow-auto whitespace-pre-wrap p-3 text-sm">{regels.join("\n")}</pre>
+        <pre className="panel max-h-[40rem] overflow-auto whitespace-pre-wrap p-3 font-mono text-sm">{regels.join("\n")}</pre>
         <div className="mt-3 flex flex-wrap gap-2">
           <button type="button" className="btn btn-brand" onClick={() => bewaar(true)}>
-            PDF en versleuteld bewaren
+            PDF en in de kluis
           </button>
           <button type="button" className="btn" onClick={() => bewaar(false)}>
             Alleen in de kluis
@@ -443,9 +446,7 @@ function Voertuig() {
 
   return (
     <section className="mt-4 grid gap-3">
-      <p className="text-sm">
-        Bron: open data RDW, datasets gekentekende voertuigen en brandstof. Geen naam en geen adres van de houder. Die staan niet in deze bron. Scanauto zit hier niet in: je vult een kenteken in dat je zelf hebt gezien.
-      </p>
+      <p className="text-sm">Kenteken uit de open data van de RDW. Geen naam of adres van de houder.</p>
       <form className="flex flex-col gap-2 sm:flex-row" onSubmit={(event) => void zoek(event)}>
         <label className="field flex-1">
           Kenteken
@@ -458,8 +459,17 @@ function Voertuig() {
       {fout ? <p className="text-sm">{fout}</p> : null}
       {kaart ? (
         <div className="panel p-3">
+          {kaart.apkStatus === "verlopen" ? (
+            <p className="mb-3 border border-stop bg-stop/10 p-3 text-base font-bold text-stop">APK VERLOPEN | {kaart.apk || "geen datum"}</p>
+          ) : null}
+          {kaart.wam === "nee" ? (
+            <p className="mb-3 border border-stop bg-stop/10 p-3 text-base font-bold text-stop">GEEN WAM | niet verzekerd volgens de open data</p>
+          ) : null}
           <p className={`text-sm font-semibold ${kaart.apkStatus === "verlopen" ? "text-stop" : ""}`}>
-            APK: {kaart.apkStatus === "geldig" ? "datum ligt niet voor vandaag" : kaart.apkStatus === "verlopen" ? "datum ligt voor vandaag" : "geen datum in de open data"}
+            APK: {kaart.apkStatus === "geldig" ? `geldig tot ${kaart.apk}` : kaart.apkStatus === "verlopen" ? `verlopen sinds ${kaart.apk}` : "geen datum in de open data"}
+          </p>
+          <p className={`mt-1 text-sm font-semibold ${kaart.wam === "nee" ? "text-stop" : ""}`}>
+            WAM: {kaart.wam === "ja" ? "verzekerd" : kaart.wam === "nee" ? "niet verzekerd" : "niet in de open data"}
           </p>
           <dl className="mt-3 grid gap-2 sm:grid-cols-2">
             {velden.map(([label, waarde]) => (
@@ -469,7 +479,6 @@ function Voertuig() {
               </div>
             ))}
           </dl>
-          <p className="mt-3 text-xs text-muted">Een verlopen APK-datum is een signaal om de feitcode in je eigen pakket na te kijken, geen automatische bon.</p>
           <div className="mt-3">
             <FeedbackKnop plek="/dienst?werk=voertuig" onderwerp={`Kenteken ${kaart.kenteken}`} />
           </div>
@@ -499,7 +508,7 @@ function Notities() {
     <Vak
       titel="MELDING"
       plek="/dienst?werk=notities"
-      kinderen="Een korte notitie van je dienst, versleuteld in de kluis. Dit is geen melding bij de meldkamer en geen registratie van een burger."
+      kinderen="Korte notitie van je dienst. Versleuteld in de kluis."
     />
   );
 }
@@ -712,19 +721,21 @@ function Overleg() {
   const [fout, setFout] = useState("");
   const [titel, setTitel] = useState("");
   const [tekst, setTekst] = useState("");
+  const [soort, setSoort] = useState<"overleg" | "correctie">("overleg");
   const [bezig, setBezig] = useState(false);
 
   async function vernieuw() {
     const token = await sessieToken();
     if (!token) {
-      setFout("Geen sessie.");
+      setFout("Log eerst in.");
       return;
     }
     try {
       setLijst(await lijstOverleg({ data: { token } }));
       setFout("");
     } catch (error) {
-      setFout(error instanceof Error ? error.message : "Het bord is niet bereikbaar.");
+      const bericht = error instanceof Error ? error.message : "Het bord is niet bereikbaar.";
+      setFout(bericht.includes("unknown") ? "Het bord is even niet bereikbaar. Probeer het opnieuw." : bericht);
     }
   }
 
@@ -737,11 +748,11 @@ function Overleg() {
     setBezig(true);
     try {
       const token = await sessieToken();
-      if (!token) throw new Error("Geen sessie.");
+      if (!token) throw new Error("Log eerst in.");
       await plaatsOverleg({
         data: {
           token,
-          soort: "overleg",
+          soort,
           titel,
           tekst,
           domein: domein === "alle" ? "algemeen" : domein,
@@ -751,7 +762,8 @@ function Overleg() {
       setTekst("");
       await vernieuw();
     } catch (error) {
-      setFout(error instanceof Error ? error.message : "Plaatsen lukte niet.");
+      const bericht = error instanceof Error ? error.message : "Plaatsen lukte niet.";
+      setFout(bericht.includes("unknown") ? "Plaatsen lukte niet. Probeer het opnieuw." : bericht);
     } finally {
       setBezig(false);
     }
@@ -759,54 +771,58 @@ function Overleg() {
 
   return (
     <section className="mt-4 grid gap-4">
-      <p className="text-sm">
-        Blijf bij de werkwijze. Geen namen van burgers, geen BSN, geen zaak uit een bronsysteem. De tekst wordt versleuteld bewaard en is leesbaar voor collega's met een account.
-      </p>
+      <p className="text-sm">Vragen, tips en antwoorden voor collega's. Geen namen van burgers, geen BSN, geen zaaknummers.</p>
       <form className="panel grid gap-3 p-3" onSubmit={(event) => void plaats(event)}>
         <label className="field">
+          Soort
+          <select value={soort} onChange={(event) => setSoort(event.target.value as "overleg" | "correctie")}>
+            <option value="overleg">Vraag of tip</option>
+            <option value="correctie">Antwoord of correctie</option>
+          </select>
+        </label>
+        <label className="field">
           Onderwerp
-          <input value={titel} onChange={(event) => setTitel(event.target.value)} maxLength={120} />
+          <input value={titel} onChange={(event) => setTitel(event.target.value)} maxLength={120} required />
         </label>
         <label className="field">
           Bericht
-          <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={4} maxLength={1200} />
+          <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={4} required />
         </label>
         <button className="btn btn-brand w-fit" type="submit" disabled={bezig}>
-          Plaatsen
+          {bezig ? "Plaatsen…" : "Plaatsen"}
         </button>
       </form>
-      {fout ? <p className="text-sm">{fout}</p> : null}
-      <ul className="grid gap-2">
+      {fout ? <p className="text-sm text-stop">{fout}</p> : null}
+      <ul className="grid gap-3">
         {lijst.map((bericht) => (
-          <li key={bericht.id} className="panel p-3 text-sm">
-            <p className="text-xs text-muted">
-              {bericht.soort === "correctie" ? "CORRECTIE" : "OVERLEG"} | domein {bericht.domein} | {bericht.weergave} | {bericht.organisatie}
+          <li key={bericht.id} className="panel p-3">
+            <p className="text-xs font-semibold text-muted">
+              {bericht.soort === "correctie" ? "Antwoord" : "Vraag / tip"} | Domein {bericht.domein} | {bericht.weergave}
             </p>
             <h3 className="mt-1 font-semibold">{bericht.titel}</h3>
-            <p className="mt-2 whitespace-pre-wrap">{bericht.tekst}</p>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <FeedbackKnop plek="/dienst?werk=overleg" onderwerp={bericht.titel} />
-              {bericht.eigen ? (
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => {
-                    void (async () => {
-                      const token = await sessieToken();
-                      if (!token) return;
-                      await verwijderOverleg({ data: { token, id: bericht.id } });
-                      await vernieuw();
-                    })();
-                  }}
-                >
-                  Verwijder
-                </button>
-              ) : null}
-            </div>
+            <p className="mt-1 text-sm">{bericht.tekst}</p>
+            <p className="mt-2 text-xs text-muted">{new Date(bericht.gemaakt).toLocaleString("nl-NL")}</p>
+            {bericht.eigen ? (
+              <button
+                type="button"
+                className="btn mt-2"
+                onClick={() => {
+                  void (async () => {
+                    const token = await sessieToken();
+                    if (!token) return;
+                    await verwijderOverleg({ data: { token, id: bericht.id } });
+                    await vernieuw();
+                  })();
+                }}
+              >
+                Verwijder
+              </button>
+            ) : null}
           </li>
         ))}
+        {lijst.length === 0 && !fout ? <li className="text-sm text-muted">Nog geen berichten.</li> : null}
       </ul>
-      {lijst.length === 0 && !fout ? <p className="text-sm text-muted">Nog geen berichten.</p> : null}
+      <FeedbackKnop plek="/dienst?werk=overleg" onderwerp="Community" />
     </section>
   );
 }

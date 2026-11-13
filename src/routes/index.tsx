@@ -76,9 +76,9 @@ function Home() {
           <h2 className="font-semibold">Vakjargon</h2>
           <p className="mt-1 text-sm text-muted">Abri, combibon, UvB, modaliteit. De woorden zoals ze op straat worden gebruikt.</p>
         </Link>
-        <Link to="/beslisbomen" search={{ boom: "sfeer" }} className="panel accent-navy block p-3">
-          <h2 className="font-semibold">Sfeerovergang</h2>
-          <p className="mt-1 text-sm text-muted">Waar de medewerkingsplicht stopt en de cautie begint.</p>
+        <Link to="/community" className="panel accent-navy block p-3">
+          <h2 className="font-semibold">Community</h2>
+          <p className="mt-1 text-sm text-muted">Vragen stellen, tips delen en antwoorden geven. Alleen voor aangemelde collega's.</p>
         </Link>
       </section>
 
