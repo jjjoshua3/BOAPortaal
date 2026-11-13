@@ -137,6 +137,35 @@ $$;
 revoke all on function public.delete_own_account() from public;
 grant execute on function public.delete_own_account() to authenticated;
 
+create table if not exists public.boa_community (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  soort text not null check (soort in ('overleg', 'correctie')),
+  domein text not null,
+  titel text not null,
+  tekst text not null,
+  weergave text not null,
+  organisatie text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.boa_community enable row level security;
+
+drop policy if exists boa_community_select on public.boa_community;
+create policy boa_community_select on public.boa_community
+  for select to authenticated
+  using (true);
+
+drop policy if exists boa_community_insert on public.boa_community;
+create policy boa_community_insert on public.boa_community
+  for insert to authenticated
+  with check (auth.uid() = user_id);
+
+drop policy if exists boa_community_delete on public.boa_community;
+create policy boa_community_delete on public.boa_community
+  for delete to authenticated
+  using (auth.uid() = user_id);
+
 create or replace function public.reject_free_email()
 returns trigger
 language plpgsql

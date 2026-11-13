@@ -735,7 +735,7 @@ function Overleg() {
       setFout("");
     } catch (error) {
       const bericht = error instanceof Error ? error.message : "Het bord is niet bereikbaar.";
-      setFout(bericht.includes("unknown") ? "Het bord is even niet bereikbaar. Probeer het opnieuw." : bericht);
+      setFout(bericht);
     }
   }
 
@@ -763,7 +763,7 @@ function Overleg() {
       await vernieuw();
     } catch (error) {
       const bericht = error instanceof Error ? error.message : "Plaatsen lukte niet.";
-      setFout(bericht.includes("unknown") ? "Plaatsen lukte niet. Probeer het opnieuw." : bericht);
+      setFout(bericht);
     } finally {
       setBezig(false);
     }
