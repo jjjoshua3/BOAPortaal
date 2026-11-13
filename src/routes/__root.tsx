@@ -8,7 +8,7 @@ import { KluisProvider } from "@/lib/kluis/provider";
 import { BoaAuthProvider } from "@/lib/supabase/auth";
 import appCss from "../styles.css?url";
 
-const THEME_BOOT = `try{var raw=localStorage.getItem("boa-prefs");if(raw&&JSON.parse(raw).state.theme==="night")document.documentElement.classList.add("night");}catch(e){}`;
+const THEME_BOOT = `try{var raw=localStorage.getItem("boa-prefs");if(raw){var s=JSON.parse(raw).state;if(s&&s.theme==="night")document.documentElement.classList.add("night");if(s&&s.tekst==="groot")document.documentElement.classList.add("lees-groot");}}catch(e){}`;
 
 export const Route = createRootRoute({
   head: () => ({

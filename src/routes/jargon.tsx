@@ -4,7 +4,13 @@ import { PageHead } from "@/components/bits";
 import { JARGON, type Woord } from "@/lib/boa/jargon";
 import { useKluis } from "@/lib/kluis/provider";
 
+type Search = { q?: string };
+
 export const Route = createFileRoute("/jargon")({
+  validateSearch: (search: Record<string, unknown>): Search => {
+    if (typeof search.q === "string" && search.q.length > 0) return { q: search.q };
+    return {};
+  },
   component: JargonPage,
 });
 
@@ -32,12 +38,17 @@ function leesSterren(): string[] {
 }
 
 function JargonPage() {
-  const [q, setQ] = useState("");
+  const uitUrl = Route.useSearch().q ?? "";
+  const [q, setQ] = useState(uitUrl);
   const [letter, setLetter] = useState("alle");
   const [categorie, setCategorie] = useState<(typeof CATEGORIEEN)[number]>("Alle");
   const [sterren, setSterren] = useState<string[]>([]);
   const { saveNote } = useKluis();
   const [melding, setMelding] = useState("");
+
+  useEffect(() => {
+    setQ(uitUrl);
+  }, [uitUrl]);
 
   useEffect(() => {
     setSterren(leesSterren());

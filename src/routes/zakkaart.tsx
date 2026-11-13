@@ -1,15 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KAARTEN, type Kaart } from "@/lib/boa/zakkaart";
 import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
 import { useKluis } from "@/lib/kluis/provider";
-
-export const Route = createFileRoute("/zakkaart")({
-  component: ZakPage,
-});
 
 const TABS = [
   { id: "alle", label: "Alle" },
@@ -20,7 +16,22 @@ const TABS = [
   { id: "jeugd", label: "Jeugd en HALT" },
 ] as const;
 
-function tabVan(id: string): (typeof TABS)[number]["id"] {
+type TabId = (typeof TABS)[number]["id"];
+type Search = { tab?: TabId };
+
+function isTab(value: unknown): value is TabId {
+  return typeof value === "string" && TABS.some((item) => item.id === value);
+}
+
+export const Route = createFileRoute("/zakkaart")({
+  validateSearch: (search: Record<string, unknown>): Search => {
+    if (isTab(search.tab) && search.tab !== "alle") return { tab: search.tab };
+    return {};
+  },
+  component: ZakPage,
+});
+
+function tabVan(id: string): TabId {
   if (id === "cautie" || id === "staand" || id === "mulder") return "cautie";
   if (id === "id" || id === "ov-id" || id === "plicht") return "id";
   if (id === "aanhouding" || id === "fouille" || id === "boeien" || id === "overdracht" || id === "woning") return "aanhouding";
@@ -31,14 +42,25 @@ function tabVan(id: string): (typeof TABS)[number]["id"] {
 
 function ZakPage() {
   const domein = usePrefs((state) => state.domein);
-  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("alle");
+  const tabUitUrl = Route.useSearch().tab ?? "alle";
+  const navigate = Route.useNavigate();
+  const [tab, setTab] = useState<TabId>(tabUitUrl);
+  useEffect(() => {
+    setTab(tabUitUrl);
+  }, [tabUitUrl]);
   const kaarten = KAARTEN.filter((kaart) => pastFilter(kaart.domeinen, domein)).filter((kaart) => tab === "alle" || tabVan(kaart.id) === tab);
+
+  function kies(id: TabId) {
+    setTab(id);
+    void navigate({ search: id === "alle" ? {} : { tab: id }, replace: true });
+  }
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
       <PageHead kicker="ZAKKAART" title="Zakkaart" lede="Spreektekst, stappen en valkuil. Gemaakt voor het scherm op straat." />
       <div className="mb-4 flex flex-wrap gap-2">
         {TABS.map((item) => (
-          <button key={item.id} type="button" className={tab === item.id ? "btn btn-brand" : "btn"} onClick={() => setTab(item.id)}>
+          <button key={item.id} type="button" className={tab === item.id ? "btn btn-brand" : "btn"} onClick={() => kies(item.id)}>
             {item.label}
           </button>
         ))}

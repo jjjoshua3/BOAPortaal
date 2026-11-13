@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { FeedbackDock } from "@/components/feedback";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
-import { usePrefs } from "@/lib/boa/prefs";
+import { usePrefs, pasWeergave } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
 
 const ICONS = {
@@ -74,8 +74,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const rol = usePrefs((state) => state.rol);
   const domein = usePrefs((state) => state.domein);
   const theme = usePrefs((state) => state.theme);
+  const tekst = usePrefs((state) => state.tekst);
   const setRol = usePrefs((state) => state.setRol);
   const setDomein = usePrefs((state) => state.setDomein);
+  const setTekst = usePrefs((state) => state.setTekst);
   const toggleTheme = usePrefs((state) => state.toggleTheme);
   const { user, ready } = useBoaAuth();
   const [meer, setMeer] = useState(false);
@@ -89,10 +91,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     const result = usePrefs.persist.rehydrate?.();
     void Promise.resolve(result).then(() => {
       if (stop) return;
-      document.documentElement.classList.toggle("night", usePrefs.getState().theme === "night");
+      pasWeergave(usePrefs.getState());
     });
     const unsub = usePrefs.subscribe((state) => {
-      document.documentElement.classList.toggle("night", state.theme === "night");
+      pasWeergave(state);
     });
     return () => {
       stop = true;
@@ -111,7 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/" className="flex min-w-0 items-center gap-2">
             <img src="/boa-mark.png" alt="" className="size-8 shrink-0" />
             <span className="truncate font-semibold tracking-tight text-ink">BOA Portaal</span>
-            <span className="hidden rounded-sm border border-line px-1.5 py-0.5 font-mono text-[10px] text-muted sm:inline">Domein I–VI</span>
+            <span className="hidden rounded-sm border border-line px-1.5 py-0.5 font-mono text-xs text-muted sm:inline">Domein I–VI</span>
           </Link>
           <nav className="ml-2 hidden items-center gap-0.5 lg:flex">
             {items.slice(0, 5).map((item) => (
@@ -125,8 +127,35 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Search className="size-4" />
               <span className="hidden sm:inline">Zoeken</span>
             </button>
-            <button type="button" className="btn min-h-10 px-2" onClick={toggleTheme} aria-label="Thema">
-              {theme === "night" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+            <div className="flex overflow-hidden rounded-sm border border-line" role="group" aria-label="Leesgrootte">
+              <button
+                type="button"
+                className={`min-h-10 px-2 text-sm font-semibold ${tekst === "normaal" ? "bg-inset text-ink" : "bg-panel text-muted"}`}
+                onClick={() => setTekst("normaal")}
+                aria-pressed={tekst === "normaal"}
+                title="Standaard leesgrootte"
+              >
+                A
+              </button>
+              <button
+                type="button"
+                className={`min-h-10 border-l border-line px-2 text-base font-semibold ${tekst === "groot" ? "bg-inset text-ink" : "bg-panel text-muted"}`}
+                onClick={() => setTekst("groot")}
+                aria-pressed={tekst === "groot"}
+                title="Grote leesgrootte, 110 procent"
+              >
+                A+
+              </button>
+            </div>
+            <button
+              type="button"
+              className="btn min-h-10 px-2"
+              onClick={toggleTheme}
+              title={theme === "night" ? "Nachtdienst. Klik voor Dag" : "Dag. Klik voor Nachtdienst"}
+              aria-label={theme === "night" ? "Nachtdienst aan. Schakel naar Dag" : "Dag aan. Schakel naar Nachtdienst"}
+            >
+              {theme === "night" ? <Moon className="size-4" /> : <Sun className="size-4" />}
+              <span className="hidden xl:inline">{theme === "night" ? "Nachtdienst" : "Dag"}</span>
             </button>
             <button type="button" className="btn min-h-10 px-2" onClick={() => setWeergave((open) => !open)}>
               Weergave
@@ -167,6 +196,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                   </option>
                 ))}
               </select>
+            </label>
+            <label className="grid gap-1 text-xs font-semibold text-muted">
+              Leesgrootte
+              <span className="flex overflow-hidden rounded-sm border border-line">
+                <button type="button" className={`min-h-10 px-3 text-sm ${tekst === "normaal" ? "bg-panel font-semibold text-ink" : "bg-inset text-muted"}`} onClick={() => setTekst("normaal")}>
+                  Standaard
+                </button>
+                <button type="button" className={`min-h-10 border-l border-line px-3 text-sm ${tekst === "groot" ? "bg-panel font-semibold text-ink" : "bg-inset text-muted"}`} onClick={() => setTekst("groot")}>
+                  Groot
+                </button>
+              </span>
             </label>
             <label className="grid gap-1 text-xs font-semibold text-muted">
               Rol

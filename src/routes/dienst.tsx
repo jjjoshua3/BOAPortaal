@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   Accessibility,
   Bike,
@@ -23,15 +23,13 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { CombiChecklist, DienstKlad, LeeftijdReken, ParkeerTimer } from "@/components/straat-tools";
+import { CombibonBlad } from "@/components/combibon-blad";
 import { FeedbackKnop } from "@/components/feedback";
-import { FeitVeld } from "@/components/feit-veld";
 import { PageHead } from "@/components/bits";
 import { controleerBronnen, type BronUitslag } from "@/lib/boa/bron.functions";
-import { FEITEN, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, pastFilter } from "@/lib/boa/meta";
-import { downloadTekstPdf } from "@/lib/boa/pdf";
 import { usePrefs } from "@/lib/boa/prefs";
-import { scanPii } from "@/lib/boa/privacy";
 import { lijstOverleg, plaatsOverleg, verwijderOverleg, type OverlegBericht } from "@/lib/boa/overleg.functions";
 import { zoekKenteken, type VoertuigKaart } from "@/lib/boa/rdw.functions";
 import { laadVermisten, type VermistPersoon } from "@/lib/boa/vermist.functions";
@@ -151,7 +149,7 @@ function DienstPage() {
       {user && werk === "taken" ? <Taken /> : null}
       {user && werk === "naheffing" ? <Naheffing /> : null}
       {user && werk === "recht" ? <Parkeerrecht /> : null}
-      {user && werk === "combi" ? <Combibon /> : null}
+      {user && werk === "combi" ? <CombibonBlad /> : null}
       {user && werk === "waar" ? <Waarneming /> : null}
       {user && werk === "persoon" ? <Persoon /> : null}
       {user && werk === "gpk" ? <Gpk /> : null}
@@ -177,11 +175,11 @@ function ModuleGrid({ items, onKies }: { items: typeof MODULES; onKies: (id: Wer
         return (
           <li key={item.id}>
             <button type="button" className="panel flex h-full w-full flex-col items-start gap-2 p-3 text-left" onClick={() => onKies(item.id)}>
-              <span className="grid size-10 place-items-center border border-line bg-inset text-brand">
+              <span className="grid size-10 place-items-center rounded-md bg-slate-100 text-[#1D4ED8]">
                 <Icoon className="size-5" aria-hidden="true" />
               </span>
               <span className="font-semibold">{item.titel}</span>
-              <span className="text-xs text-muted">{item.regel}</span>
+              <span className="text-sm leading-relaxed text-muted">{item.regel}</span>
             </button>
           </li>
         );
@@ -271,120 +269,6 @@ function Parkeerrecht() {
       </ul>
       <FeedbackKnop plek="/dienst?werk=recht" onderwerp="Parkeerrecht" />
     </section>
-  );
-}
-
-function Combibon() {
-  const filter = usePrefs((state) => state.domein);
-  const feiten = FEITEN.filter((feit) => pastFilter(feit.domeinen, filter));
-  const { saveSjabloon } = useKluis();
-  const [a, setA] = useState("");
-  const [b, setB] = useState(() => new Date().toISOString().slice(0, 10));
-  const [c, setC] = useState("12:00");
-  const [d, setD] = useState("");
-  const [e, setE] = useState("");
-  const [f, setF] = useState("");
-  const [g, setG] = useState<Feit | null>(null);
-  const [h, setH] = useState("");
-  const [i, setI] = useState("");
-  const [j, setJ] = useState("");
-  const [k, setK] = useState("");
-  const [l, setL] = useState("");
-  const [m, setM] = useState("");
-  const [n, setN] = useState("");
-  const [o, setO] = useState("");
-  const [p, setP] = useState("");
-  const [q, setQ] = useState("");
-  const [melding, setMelding] = useState("");
-
-  const regels = useMemo(
-    () => [
-      "COMBIBON",
-      `A Kenteken          ${a.toUpperCase().replace(/[^A-Z0-9-]/g, "") || ""}`,
-      `B Datum             ${b}`,
-      `C Tijd              ${c}`,
-      `D Gemeente          ${d}`,
-      `E Straat / plaats   ${e}`,
-      `F Huisnr / zone     ${f}`,
-      `G Feitcode          ${g ? g.code : ""}`,
-      `H Artikel           ${g?.artikel ?? h}`,
-      `I Gedraging         ${i}`,
-      `J Naheffing €       ${j}`,
-      `K Wahv €            ${k}`,
-      `L Verbalisant      ${l}`,
-      `M BOA-nummer        ${m}`,
-      `N Merk / soort      ${n}`,
-      `O Kleur             ${o}`,
-      `P Opmerkingen       ${p}`,
-      `Q Paraaf / akkoord  ${q}`,
-    ],
-    [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q],
-  );
-
-  function bewaar(alsPdf: boolean) {
-    const tekst = regels.join("\n");
-    const scan = scanPii(tekst);
-    if (scan.hard.length) {
-      setMelding("Geblokkeerd. Haal telefoon, e-mail, IBAN of BSN eruit.");
-      return;
-    }
-    if (alsPdf) downloadTekstPdf("combibon.pdf", regels);
-    void saveSjabloon(`COMBIBON | ${a || e || b}`, tekst).then((fout) => {
-      setMelding(fout ?? (alsPdf ? "PDF gedownload en in de kluis." : "In de kluis."));
-    });
-  }
-
-  const vak = (letter: string, label: string, value: string, set: (v: string) => void, extra?: { type?: string; placeholder?: string; rows?: number }) => (
-    <label className="field" key={letter}>
-      <span className="font-mono text-xs font-bold text-muted">{letter}</span> {label}
-      {extra?.rows ? (
-        <textarea value={value} onChange={(event) => set(event.target.value)} rows={extra.rows} placeholder={extra.placeholder} />
-      ) : (
-        <input type={extra?.type ?? "text"} value={value} onChange={(event) => set(event.target.value)} placeholder={extra?.placeholder} />
-      )}
-    </label>
-  );
-
-  return (
-    <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_20rem]">
-      <form className="grid gap-3" onSubmit={(event) => event.preventDefault()}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {vak("A", "Kenteken", a, (v) => setA(v.toUpperCase()), { placeholder: "AB-123-C" })}
-          {vak("B", "Datum", b, setB, { type: "date" })}
-          {vak("C", "Tijd", c, setC, { type: "time" })}
-          {vak("D", "Gemeente", d, setD)}
-          {vak("E", "Straat of plaats", e, setE)}
-          {vak("F", "Huisnummer of zone", f, setF)}
-        </div>
-        <FeitVeld feiten={feiten} feit={g} onKies={setG} />
-        <p className="text-xs text-muted">G Feitcode | H Artikel komt uit de gekozen feitcode, of vul H zelf in.</p>
-        {vak("H", "Artikel (als je het zelf invult)", h, setH)}
-        {vak("I", "Gedraging / wat je zag", i, setI, { rows: 3 })}
-        <div className="grid gap-3 sm:grid-cols-2">
-          {vak("J", "Naheffing €", j, setJ, { placeholder: "uit de verordening" })}
-          {vak("K", "Wahv €", k, setK, { placeholder: "uit het Feitenboekje" })}
-          {vak("L", "Verbalisant", l, setL)}
-          {vak("M", "BOA-nummer", m, setM)}
-          {vak("N", "Merk / soort voertuig", n, setN)}
-          {vak("O", "Kleur", o, setO)}
-        </div>
-        {vak("P", "Opmerkingen", p, setP, { rows: 2 })}
-        {vak("Q", "Paraaf of akkoord", q, setQ)}
-      </form>
-      <div>
-        <pre className="panel max-h-[40rem] overflow-auto whitespace-pre-wrap p-3 font-mono text-sm">{regels.join("\n")}</pre>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button type="button" className="btn btn-brand" onClick={() => bewaar(true)}>
-            PDF en in de kluis
-          </button>
-          <button type="button" className="btn" onClick={() => bewaar(false)}>
-            Alleen in de kluis
-          </button>
-          <FeedbackKnop plek="/dienst?werk=combi" onderwerp="Combibon" />
-        </div>
-        {melding ? <p className="mt-2 text-sm">{melding}</p> : null}
-      </div>
-    </div>
   );
 }
 
