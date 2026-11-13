@@ -1,59 +1,97 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { KAARTEN } from "@/lib/boa/zakkaart";
-import { pastFilter, toonClass } from "@/lib/boa/meta";
+import { useState } from "react";
+import { KAARTEN, type Kaart } from "@/lib/boa/zakkaart";
+import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
+import { useKluis } from "@/lib/kluis/provider";
 
 export const Route = createFileRoute("/zakkaart")({
   component: ZakPage,
 });
 
+const TABS = [
+  { id: "alle", label: "Alle" },
+  { id: "cautie", label: "Cautie en verhoor" },
+  { id: "id", label: "ID-vordering" },
+  { id: "aanhouding", label: "Aanhouding (art. 53 Sv)" },
+  { id: "sfeer", label: "Sfeerovergang" },
+  { id: "jeugd", label: "Jeugd en HALT" },
+] as const;
+
+function tabVan(id: string): (typeof TABS)[number]["id"] {
+  if (id === "cautie" || id === "staand" || id === "mulder") return "cautie";
+  if (id === "id" || id === "ov-id" || id === "plicht") return "id";
+  if (id === "aanhouding" || id === "fouille" || id === "boeien" || id === "overdracht" || id === "woning") return "aanhouding";
+  if (id === "sfeer") return "sfeer";
+  if (id === "leer" || id === "natuur") return "jeugd";
+  return "alle";
+}
+
 function ZakPage() {
   const domein = usePrefs((state) => state.domein);
-  const kaarten = KAARTEN.filter((kaart) => pastFilter(kaart.domeinen, domein));
+  const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("alle");
+  const kaarten = KAARTEN.filter((kaart) => pastFilter(kaart.domeinen, domein)).filter((kaart) => tab === "alle" || tabVan(kaart.id) === tab);
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
-      <PageHead
-        kicker="MODULE 2 | ZAKKAART"
-        title="Woordelijke formuleringen"
-        lede="Gemaakt voor de telefoon op straat. Links de zin die je uitspreekt, daaronder de zin voor het PV. Zet nachtdienst aan in het voertuig."
-      />
+      <PageHead kicker="ZAKKAART" title="Zakkaart" lede="Spreektekst, stappen en valkuil. Gemaakt voor het scherm op straat." />
+      <div className="mb-4 flex flex-wrap gap-2">
+        {TABS.map((item) => (
+          <button key={item.id} type="button" className={tab === item.id ? "btn btn-brand" : "btn"} onClick={() => setTab(item.id)}>
+            {item.label}
+          </button>
+        ))}
+      </div>
       <div className="grid gap-3">
         {kaarten.map((kaart) => (
-          <article key={kaart.id} id={kaart.id} className={`panel p-3 ${toonClass("navy")}`}>
-            <p className="code text-xs text-muted">{kaart.artikel}</p>
-            <h2 className="mt-1 text-xl font-semibold">{kaart.titel}</h2>
-            <div className="mt-3 grid gap-3 lg:grid-cols-2">
-              <div className="bg-inset p-3">
-                <p className="text-xs font-semibold tracking-wide text-muted">SPREEKTAAL</p>
-                <p className="mt-2 text-lg font-semibold leading-snug">{kaart.spreek}</p>
-                <div className="mt-3">
-                  <CopyButton text={kaart.spreek} label="Kopieer spreektaal" />
-                </div>
-              </div>
-              <div className="bg-inset p-3">
-                <p className="text-xs font-semibold tracking-wide text-muted">PV-TEKST</p>
-                <p className="mt-2 text-sm leading-relaxed">{kaart.pv}</p>
-                <div className="mt-3">
-                  <CopyButton text={kaart.pv} label="Kopieer PV-tekst" />
-                </div>
-              </div>
-            </div>
-            <ul className="mt-3 grid gap-2 text-sm">
-              {kaart.regels.map((regel) => (
-                <li key={regel} className="border-l border-line pl-3">
-                  {regel}
-                </li>
-              ))}
-            </ul>
-            <p className="accent-stop panel mt-3 p-3 text-sm">{kaart.niet}</p>
-            <div className="mt-3">
-              <FeedbackKnop plek={`/zakkaart#${kaart.id}`} onderwerp={kaart.titel} />
-            </div>
-          </article>
+          <KaartBlok key={kaart.id} kaart={kaart} />
         ))}
       </div>
     </div>
+  );
+}
+
+function KaartBlok({ kaart }: { kaart: Kaart }) {
+  const { saveNote } = useKluis();
+  const [melding, setMelding] = useState("");
+  return (
+    <article id={kaart.id} className="panel p-3">
+      <p className="font-mono text-xs text-muted">{kaart.artikel}</p>
+      <h2 className="mt-1 text-lg font-semibold">{kaart.titel}</h2>
+      <div className="mt-3 border border-line bg-inset p-3">
+        <p className="text-xs font-semibold text-muted">Spreektekst</p>
+        <p className="mt-2 text-base font-semibold leading-snug">{kaart.spreek}</p>
+        <div className="mt-3">
+          <CopyButton text={kaart.spreek} label="Kopieer spreektekst" />
+        </div>
+      </div>
+      <ol className="mt-3 grid gap-1 text-sm">
+        {kaart.regels.map((regel, index) => (
+          <li key={regel} className="grid grid-cols-[1.5rem_1fr] gap-2 border-b border-line py-1.5 last:border-0">
+            <span className="font-mono text-muted">{index + 1}</span>
+            <span>{regel}</span>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-3 border border-[#FDE68A] bg-[#FEF3C7] p-3 text-sm text-[#92400E]">{kaart.niet}</p>
+      <p className="mt-3 text-sm text-muted">{kaart.pv}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <CopyButton text={kaart.pv} label="Kopieer PV-tekst" />
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            void saveNote({ titel: `Zakkaart | ${kaart.titel}`, body: `${kaart.spreek}\n\n${kaart.pv}`, zachtAkkoord: true }).then((fout) => {
+              setMelding(fout ?? "In de kluis.");
+            });
+          }}
+        >
+          Bewaar in kluis
+        </button>
+        <FeedbackKnop plek={`/zakkaart#${kaart.id}`} onderwerp={kaart.titel} />
+      </div>
+      {melding ? <p className="mt-2 text-sm">{melding}</p> : null}
+    </article>
   );
 }

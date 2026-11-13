@@ -14,6 +14,7 @@ import { Route as R404RouteImport } from './routes/404'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as BeslisbomenRouteImport } from './routes/beslisbomen'
 import { Route as ColofonRouteImport } from './routes/colofon'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as DienstRouteImport } from './routes/dienst'
 import { Route as FeitcodesRouteImport } from './routes/feitcodes'
 import { Route as JargonRouteImport } from './routes/jargon'
@@ -46,6 +47,11 @@ const BeslisbomenRoute = BeslisbomenRouteImport.update({
 const ColofonRoute = ColofonRouteImport.update({
   id: '/colofon',
   path: '/colofon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DienstRoute = DienstRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/community': typeof CommunityRoute
   '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
   '/jargon': typeof JargonRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/community': typeof CommunityRoute
   '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
   '/jargon': typeof JargonRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/beslisbomen': typeof BeslisbomenRoute
   '/colofon': typeof ColofonRoute
+  '/community': typeof CommunityRoute
   '/dienst': typeof DienstRoute
   '/feitcodes': typeof FeitcodesRoute
   '/jargon': typeof JargonRoute
@@ -143,6 +152,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/community'
     | '/dienst'
     | '/feitcodes'
     | '/jargon'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/community'
     | '/dienst'
     | '/feitcodes'
     | '/jargon'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/beslisbomen'
     | '/colofon'
+    | '/community'
     | '/dienst'
     | '/feitcodes'
     | '/jargon'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   BeslisbomenRoute: typeof BeslisbomenRoute
   ColofonRoute: typeof ColofonRoute
+  CommunityRoute: typeof CommunityRoute
   DienstRoute: typeof DienstRoute
   FeitcodesRoute: typeof FeitcodesRoute
   JargonRoute: typeof JargonRoute
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/colofon'
       fullPath: '/colofon'
       preLoaderRoute: typeof ColofonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dienst': {
@@ -301,6 +321,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   BeslisbomenRoute: BeslisbomenRoute,
   ColofonRoute: ColofonRoute,
+  CommunityRoute: CommunityRoute,
   DienstRoute: DienstRoute,
   FeitcodesRoute: FeitcodesRoute,
   JargonRoute: JargonRoute,

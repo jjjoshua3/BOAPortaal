@@ -4,10 +4,14 @@ import {
   Accessibility,
   Bike,
   BookOpen,
+  Calculator,
   Car,
   ClipboardList,
+  Clock,
   Eye,
+  ListChecks,
   MessageSquare,
+  NotebookPen,
   ParkingCircle,
   Receipt,
   Scale,
@@ -18,6 +22,7 @@ import {
   Wine,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { CombiChecklist, DienstKlad, LeeftijdReken, ParkeerTimer } from "@/components/straat-tools";
 import { FeedbackKnop } from "@/components/feedback";
 import { FeitVeld } from "@/components/feit-veld";
 import { PageHead } from "@/components/bits";
@@ -35,6 +40,10 @@ import { useBoaAuth } from "@/lib/supabase/auth";
 import { sessieToken } from "@/lib/supabase/client";
 
 type Werk =
+  | "timer"
+  | "leeftijd"
+  | "checklist"
+  | "klad"
   | "taken"
   | "naheffing"
   | "recht"
@@ -53,7 +62,13 @@ type Werk =
   | "overleg"
   | "wetten";
 
+const STRAAT = new Set<Werk>(["timer", "leeftijd", "checklist", "klad"]);
+
 const MODULES: { id: Werk; titel: string; regel: string; icoon: LucideIcon }[] = [
+  { id: "timer", titel: "Parkeertimer", regel: "Kenteken, ventielstand, eerste waarneming", icoon: Clock },
+  { id: "leeftijd", titel: "Leeftijd", regel: "Regime op de pleegdatum", icoon: Calculator },
+  { id: "checklist", titel: "Combibon-check", regel: "Verplichte velden afvinken", icoon: ListChecks },
+  { id: "klad", titel: "Kladblok", regel: "Tijdstempels, wissen na de dienst", icoon: NotebookPen },
   { id: "taken", titel: "Taken", regel: "Dienstlijst van je eigen domein", icoon: ClipboardList },
   { id: "naheffing", titel: "Naheffing", regel: "Fiscale parkeerbelasting, geen Wahv", icoon: Receipt },
   { id: "recht", titel: "Parkeerrecht", regel: "Wat je wel en niet kunt nagaan", icoon: ParkingCircle },
@@ -88,84 +103,90 @@ function DienstPage() {
   const werk = Route.useSearch().werk;
   const navigate = Route.useNavigate();
   const module = MODULES.find((item) => item.id === werk);
-
-  if (!ready) {
-    return (
-      <div className="mx-auto w-full max-w-3xl px-4 py-5">
-        <p className="text-sm text-muted">Account laden.</p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="mx-auto w-full max-w-3xl px-4 py-5">
-        <PageHead
-          kicker="WERKBANK"
-          title="Alleen met een zakelijk of schooladres"
-          lede="Feitcodes, zakkaart en beslisbomen blijven open. De werkbank is voor aangemelde boa's, studenten en docenten: combibon, kenteken, tarieven van je dienst, overleg en de lijst vermiste personen."
-        />
-        <div className="panel p-4">
-          <p className="text-sm">Gratis mailboxen zijn geblokkeerd. Je organisatie- of schooldomein is de sleutel.</p>
-          <Link to="/account" className="btn btn-brand mt-3">
-            Aanmelden
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const straat = Boolean(werk && STRAAT.has(werk));
+  const straatModules = MODULES.filter((item) => STRAAT.has(item.id));
+  const dienstModules = MODULES.filter((item) => !STRAAT.has(item.id));
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
       <PageHead
-        kicker="WERKBANK | DOMEIN I–VI"
-        title={module ? module.titel : "Systeem"}
-        lede={module ? module.regel : "Combibon, kenteken, tarieven, community en de rest van je dienst."}
+        kicker="WERKBANK"
+        title={module ? module.titel : "Werkbank"}
+        lede={module ? module.regel : "Timer, leeftijd, checklist en kladblok blijven op dit apparaat. Combibon, kenteken en het bord vragen een zakelijk account."}
       />
-      {module ? (
+      {werk ? (
         <button type="button" className="btn mb-4" onClick={() => void navigate({ search: {}, replace: true })}>
           Alle onderdelen
         </button>
       ) : (
-        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-          {MODULES.map((item) => {
-            const Icoon = item.icoon;
-            return (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  className="panel flex h-full w-full flex-col items-start gap-2 p-3 text-left"
-                  onClick={() => void navigate({ search: { werk: item.id } })}
-                >
-                  <span className="grid size-10 place-items-center border border-line bg-inset text-brand">
-                    <Icoon className="size-5" aria-hidden="true" />
-                  </span>
-                  <span className="font-semibold">{item.titel}</span>
-                  <span className="text-xs text-muted">{item.regel}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <>
+          <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">Op straat</h2>
+          <ModuleGrid items={straatModules} onKies={(id) => void navigate({ search: { werk: id } })} />
+          <h2 className="mb-2 mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Met account</h2>
+          {!ready ? <p className="text-sm text-muted">Account laden.</p> : null}
+          {ready && user ? <ModuleGrid items={dienstModules} onKies={(id) => void navigate({ search: { werk: id } })} /> : null}
+          {ready && !user ? (
+            <div className="panel p-4">
+              <p className="text-sm">Combibon, kenteken, tarieven van de dienst en het bord zijn voor een organisatie- of schooladres.</p>
+              <Link to="/account" className="btn btn-brand mt-3">
+                Aanmelden
+              </Link>
+            </div>
+          ) : null}
+        </>
       )}
-      {werk === "taken" ? <Taken /> : null}
-      {werk === "naheffing" ? <Naheffing /> : null}
-      {werk === "recht" ? <Parkeerrecht /> : null}
-      {werk === "combi" ? <Combibon /> : null}
-      {werk === "waar" ? <Waarneming /> : null}
-      {werk === "persoon" ? <Persoon /> : null}
-      {werk === "gpk" ? <Gpk /> : null}
-      {werk === "voertuig" ? <Voertuig /> : null}
-      {werk === "alcohol" ? <Alcohol /> : null}
-      {werk === "notities" ? <Notities /> : null}
-      {werk === "fiets" ? <Fiets /> : null}
-      {werk === "aanhouding" ? <Aanhouding /> : null}
-      {werk === "vermist" ? <Vermist /> : null}
-      {werk === "delen" ? <Delen /> : null}
-      {werk === "tarief" ? <Tarieven /> : null}
-      {werk === "overleg" ? <Overleg /> : null}
-      {werk === "wetten" ? <Wetten /> : null}
+      {werk === "timer" ? <ParkeerTimer /> : null}
+      {werk === "leeftijd" ? <LeeftijdReken /> : null}
+      {werk === "checklist" ? <CombiChecklist /> : null}
+      {werk === "klad" ? <DienstKlad /> : null}
+      {werk && !straat && !ready ? <p className="text-sm text-muted">Account laden.</p> : null}
+      {werk && !straat && ready && !user ? (
+        <div className="panel p-4">
+          <p className="text-sm">Dit onderdeel staat achter een zakelijk of schooladres.</p>
+          <Link to="/account" className="btn btn-brand mt-3">
+            Aanmelden
+          </Link>
+        </div>
+      ) : null}
+      {user && werk === "taken" ? <Taken /> : null}
+      {user && werk === "naheffing" ? <Naheffing /> : null}
+      {user && werk === "recht" ? <Parkeerrecht /> : null}
+      {user && werk === "combi" ? <Combibon /> : null}
+      {user && werk === "waar" ? <Waarneming /> : null}
+      {user && werk === "persoon" ? <Persoon /> : null}
+      {user && werk === "gpk" ? <Gpk /> : null}
+      {user && werk === "voertuig" ? <Voertuig /> : null}
+      {user && werk === "alcohol" ? <Alcohol /> : null}
+      {user && werk === "notities" ? <Notities /> : null}
+      {user && werk === "fiets" ? <Fiets /> : null}
+      {user && werk === "aanhouding" ? <Aanhouding /> : null}
+      {user && werk === "vermist" ? <Vermist /> : null}
+      {user && werk === "delen" ? <Delen /> : null}
+      {user && werk === "tarief" ? <Tarieven /> : null}
+      {user && werk === "overleg" ? <Overleg /> : null}
+      {user && werk === "wetten" ? <Wetten /> : null}
     </div>
+  );
+}
+
+function ModuleGrid({ items, onKies }: { items: typeof MODULES; onKies: (id: Werk) => void }) {
+  return (
+    <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      {items.map((item) => {
+        const Icoon = item.icoon;
+        return (
+          <li key={item.id}>
+            <button type="button" className="panel flex h-full w-full flex-col items-start gap-2 p-3 text-left" onClick={() => onKies(item.id)}>
+              <span className="grid size-10 place-items-center border border-line bg-inset text-brand">
+                <Icoon className="size-5" aria-hidden="true" />
+              </span>
+              <span className="font-semibold">{item.titel}</span>
+              <span className="text-xs text-muted">{item.regel}</span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

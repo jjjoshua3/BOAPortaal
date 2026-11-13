@@ -253,6 +253,8 @@ function Profiel() {
   const kluis = useKluis();
   const setDomein = usePrefs((state) => state.setDomein);
   const setRol = usePrefs((state) => state.setRol);
+  const theme = usePrefs((state) => state.theme);
+  const setTheme = usePrefs((state) => state.setTheme);
   const meta = (user?.user_metadata ?? {}) as { naam?: string; domein?: DomeinId; rol?: Rol };
   const [naam, setNaam] = useState(meta.naam ?? "");
   const [domein, setDomeinVeld] = useState<DomeinId>(meta.domein ?? "I");
@@ -273,6 +275,17 @@ function Profiel() {
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-5">
       <PageHead kicker="ACCOUNT" title="Profiel" lede={user?.email ?? ""} />
+      <div className="mb-4">
+        <p className="text-xs font-semibold text-muted">Weergave</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button type="button" className={theme === "day" ? "btn btn-brand" : "btn"} onClick={() => setTheme("day")}>
+            Licht
+          </button>
+          <button type="button" className={theme === "night" ? "btn btn-brand" : "btn"} onClick={() => setTheme("night")}>
+            Nachtdienst
+          </button>
+        </div>
+      </div>
       <form
         className="grid gap-3"
         onSubmit={(event) => {

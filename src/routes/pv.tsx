@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { FEITEN } from "@/lib/boa/feitcodes";
-import { DOMEIN_INFO, pastFilter, type DomeinId } from "@/lib/boa/meta";
+import { DOMEIN_INFO, domeinLabel, pastFilter, type DomeinId } from "@/lib/boa/meta";
 import { bouwPv, leegPv, pvWaarschuwingen, stempelNu, type PvInvoer } from "@/lib/boa/pv";
 import { usePrefs } from "@/lib/boa/prefs";
 import { scanPii } from "@/lib/boa/privacy";
@@ -38,9 +38,47 @@ function PvPage() {
     }));
   }, [filter, user]);
 
+  useEffect(() => {
+    const id = sessionStorage.getItem("boa-pv-feit");
+    if (!id) return;
+    sessionStorage.removeItem("boa-pv-feit");
+    const gekozen = FEITEN.find((item) => item.id === id);
+    if (!gekozen) return;
+    setForm((huidig) => ({
+      ...huidig,
+      feit: gekozen,
+      waarneming: huidig.waarneming.trim() ? huidig.waarneming : gekozen.pv,
+    }));
+  }, []);
+
   function set<K extends keyof PvInvoer>(key: K, value: PvInvoer[K]) {
     setForm((huidig) => ({ ...huidig, [key]: value }));
   }
+
+  function plak(zin: string) {
+    setForm((huidig) => ({
+      ...huidig,
+      waarneming: huidig.waarneming.trim() ? `${huidig.waarneming.trimEnd()} ${zin}` : zin,
+    }));
+  }
+
+  function aanhef() {
+    setForm((huidig) => {
+      const zin = `Ik, ${huidig.verbalisant.trim() || "[NAAM VERBALISANT]"}, buitengewoon opsporingsambtenaar, ${domeinLabel(huidig.domein)}, doe deze bevinding op uit eigen waarneming.`;
+      if (huidig.aanleiding.trim()) return huidig;
+      return { ...huidig, aanleiding: zin };
+    });
+  }
+
+  const wChecklist = [
+    ["Wie", Boolean(form.verbalisant.trim() && form.betrokkene.trim())],
+    ["Wat", Boolean(form.feit)],
+    ["Waar", Boolean(form.plaats.trim())],
+    ["Wanneer", Boolean(form.datum && form.tijd)],
+    ["Waarmee", Boolean(form.waarmee.trim())],
+    ["Waarom", Boolean(form.aanleiding.trim())],
+    ["Hoe", Boolean(form.waarneming.trim())],
+  ] as const;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
@@ -112,6 +150,9 @@ function PvPage() {
           </fieldset>
           <fieldset className="panel grid gap-3 p-3">
             <legend className="px-1 text-xs font-semibold tracking-wide">W6 | Waarom</legend>
+            <button type="button" className="btn w-fit" onClick={aanhef}>
+              Vul ambtseed-aanhef
+            </button>
             <label className="field">
               Aanleiding
               <textarea value={form.aanleiding} onChange={(event) => set("aanleiding", event.target.value)} placeholder="Melding, surveillance of controle. Geen oordeel." />
@@ -119,6 +160,28 @@ function PvPage() {
           </fieldset>
           <fieldset className="panel grid gap-3 p-3">
             <legend className="px-1 text-xs font-semibold tracking-wide">W7 | Hoe</legend>
+            <p className="text-xs text-muted">Feitelijk wat je waarnam. Geen aanname over opzet of karakter.</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                ["Ik zag dat", "Ik zag dat "],
+                ["Ik hoorde dat", "Ik hoorde dat "],
+                ["Ik rook dat", "Ik rook dat "],
+                ["Ik stelde vast dat", "Ik stelde vast dat "],
+              ].map(([label, zin]) => (
+                <button key={label} type="button" className="btn" onClick={() => plak(zin)}>
+                  {label}
+                </button>
+              ))}
+              <button type="button" className="btn" onClick={() => plak("De identiteit is vastgesteld via een ter inzage getoond document (paspoort, identiteitskaart of rijbewijs).")}>
+                ID vastgesteld
+              </button>
+              <button type="button" className="btn" onClick={() => set("cautie", "gegeven")}>
+                Cautie gegeven
+              </button>
+              <button type="button" className="btn" onClick={() => plak("Na cautie is een verklaring opgenomen.")}>
+                Verklaring opgenomen
+              </button>
+            </div>
             <label className="field">
               Waarneming
               <textarea value={form.waarneming} onChange={(event) => set("waarneming", event.target.value)} placeholder="Wat je zag, in de volgorde waarin het gebeurde" />
@@ -171,7 +234,14 @@ function PvPage() {
             </p>
           ))}
           <PiiPanel text={tekst} akkoord={akkoord} onAkkoord={setAkkoord} />
-          <pre className="panel max-h-[40rem] overflow-auto whitespace-pre-wrap p-3 text-sm">{tekst}</pre>
+          <ul className="panel grid grid-cols-2 gap-1 p-3 text-sm sm:grid-cols-4">
+            {wChecklist.map(([label, ok]) => (
+              <li key={label} className="font-mono">
+                <span className={ok ? "text-[#059669]" : "text-muted"}>{ok ? "●" : "○"}</span> {label}
+              </li>
+            ))}
+          </ul>
+          <pre className="panel max-h-[40rem] overflow-auto whitespace-pre-wrap p-3 font-mono text-sm">{tekst}</pre>
           <div className="flex flex-wrap gap-2">
             <CopyButton text={tekst} label="Kopieer concept" disabled={blokkade} />
             <button

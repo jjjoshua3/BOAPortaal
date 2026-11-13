@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { FEITEN, boeteKop } from "@/lib/boa/feitcodes";
 import { ABCD, BEGINSELEN, CASUSSEN, LSD, MATRIX, STAPPEN, filterVragen } from "@/lib/boa/trainer";
 import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
@@ -12,81 +13,234 @@ export const Route = createFileRoute("/trainer")({
 });
 
 const CIJFERS = ["onvoldoende", "matig", "voldoende", "goed"];
+type Modus = "kennis" | "flits" | "straat";
+
+const CASUS_KEUZE: Record<string, { label: string; goed: boolean; waarom: string }[]> = {
+  c1: [
+    {
+      label: "Eerst alleen de waarneming noemen",
+      goed: true,
+      waarom: "Het afvalfeit kan nog in het toezicht of de APV. De vraag naar het waarom is al een verhoor.",
+    },
+    {
+      label: "Meteen vragen waarom het blikje op de grond ligt",
+      goed: false,
+      waarom: "Dat is een verhoorvraag. Zonder cautie is de verklaring kwetsbaar (art. 29 lid 2 Sv).",
+    },
+    {
+      label: "Aanhouden voordat er iets is gezegd",
+      goed: false,
+      waarom: "Er is nog geen misdrijf in heterdaad. Aanhouding vraagt een feit dat de akte toestaat.",
+    },
+  ],
+  c2: [
+    {
+      label: "Het afvalfeit houden, geen D 517",
+      goed: true,
+      waarom: "De toonplicht begint bij 14 jaar. Op 13 jaar levert het ontbreken van een pas geen artikel 447e Sr op.",
+    },
+    {
+      label: "Aanhouden omdat er geen ID is",
+      goed: false,
+      waarom: "Geen draagplicht, en onder 14 geen D 517. Identiteit vaststellen kan zonder die route.",
+    },
+    {
+      label: "Halt aanbieden aan een 11-jarige",
+      goed: false,
+      waarom: "Halt begint bij 12. Onder 12 jaar is er geen strafvervolging (art. 486 Sv).",
+    },
+  ],
+  c3: [
+    {
+      label: "Eerst uitstel van betaling aanbieden",
+      goed: true,
+      waarom: "Artikel 70 Wp2000 begint in de praktijk bij het UvB van de vervoerder. Artikel 73 is een ander feit.",
+    },
+    {
+      label: "Meteen artikel 73 verbaliseren",
+      goed: false,
+      waarom: "Artikel 73 is het niet opvolgen van een aanwijzing, niet het ontbreken van een vervoerbewijs.",
+    },
+    {
+      label: "D 517 zonder leeftijd en waarschuwing",
+      goed: false,
+      waarom: "Artikel 447e Sr vraagt een duidelijke vordering, een waarschuwing, en een persoon van 14 jaar of ouder.",
+    },
+  ],
+  c4: [
+    {
+      label: "Doel noemen en zeggen dat binnenlaten niet verplicht is",
+      goed: true,
+      waarom: "Zonder machtiging alleen vrije, specifieke toestemming. Die mag worden ingetrokken.",
+    },
+    {
+      label: "Blijven staan omdat de uitkering anders stopt",
+      goed: false,
+      waarom: "De uitkering is geen drukmiddel om in de woning te blijven. Intrekken betekent: naar buiten.",
+    },
+    {
+      label: "De slaapkamer in lopen op de eerste 'kom maar'",
+      goed: false,
+      waarom: "Toestemming is specifiek. Een kier en een algemene zin dekken niet elke ruimte.",
+    },
+  ],
+  c5: [
+    {
+      label: "Eerst de vrijstelling of het besluit van de school nakijken",
+      goed: true,
+      waarom: "Luxe verzuim staat of valt met het ontbreken van vrijstelling. Geen PV voordat dat vaststaat.",
+    },
+    {
+      label: "Direct een PV omdat de ouder zijn stem verheft",
+      goed: false,
+      waarom: "Volume is geen feit. Zolang je alleen een document vraagt, is er ook geen cautie nodig.",
+    },
+    {
+      label: "De leerling zelf als enige normadressaat behandelen",
+      goed: false,
+      waarom: "Bij luxe verzuim is de ouder of verzorger in de regel de normadressaat, niet de leerling alleen.",
+    },
+  ],
+};
 
 function TrainerPage() {
   const rol = usePrefs((state) => state.rol);
   const domein = usePrefs((state) => state.domein);
-  const vragen = useMemo(() => filterVragen(rol, domein, "alle"), [rol, domein]);
+  const [modus, setModus] = useState<Modus>("kennis");
+  const vragen = useMemo(() => filterVragen(rol, domein, "rechtskennis").slice(0, 10), [rol, domein]);
   const week = useMemo(() => weeksetOp(new Date()), []);
+  const kaarten = useMemo(() => FEITEN.filter((feit) => pastFilter(feit.domeinen, domein)).slice(0, 12), [domein]);
   const casussen = CASUSSEN.filter((casus) => pastFilter(casus.domeinen, domein));
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
       <PageHead
-        kicker="MODULE 4 | EXTH EN GBT"
-        title={rol === "docent" ? "Casussen en beoordeling" : rol === "student" ? "Rechtskennis en gesprek" : "Toets en oefencasus"}
-        lede="Oefenmateriaal bij de ExTH-eisen en gespreks- en benaderingstechnieken. Een score hier is geen examenresultaat. Elke week een andere set van twintig. Het juiste antwoord blijft de wettekst."
+        kicker="TRAINER"
+        title="Kennis en casus"
+        lede="Tien vragen, flitskaarten of een straatsituatie. Een score hier is geen examenresultaat. De wettekst blijft het antwoord."
       />
-      <section className="mb-8">
-        <h2 className="text-lg font-semibold">
-          Week {week.week} van {week.jaar} | set {week.set} van {WEEKSETS.length}
-        </h2>
-        <p className="mt-1 text-sm text-muted">Twintig vragen. De set wisselt met het weeknummer. Bron onder het antwoord.</p>
-        <div className="mt-3">
-          <Quiz vragen={week.vragen} />
-        </div>
-      </section>
-      {rol === "docent" ? <Matrix /> : null}
-      <h2 className="mb-3 text-lg font-semibold">Vaste oefenset voor deze rol</h2>
-      <Quiz vragen={vragen} />
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">Gesprek</h2>
-        <div className="mt-3 grid gap-3 lg:grid-cols-3">
-          <Kader titel="ABCD-gedragsmodel" items={ABCD.map((item) => `${item.letter} | ${item.titel}. ${item.tekst}`)} />
-          <Kader titel="Vijf stappen bij slecht nieuws" items={STAPPEN.map((item) => `${item.n}. ${item.titel}. ${item.tekst}`)} />
-          <Kader titel="LSD" items={LSD.map((item) => `${item.titel}. ${item.tekst}`)} />
-        </div>
-      </section>
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">Vaste lijnen uit de praktijk</h2>
-        <ul className="mt-3 grid gap-3 md:grid-cols-2">
-          {BEGINSELEN.map((item) => (
-            <li key={item.titel} className="panel p-3">
-              <h3 className="font-semibold">{item.titel}</h3>
-              <p className="mt-1 text-sm text-muted">{item.tekst}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">Rollenspel</h2>
-        <div className="mt-3 grid gap-3">
+      <div className="mb-4 flex flex-wrap gap-2">
+        {(
+          [
+            ["kennis", "Rechtskennis"],
+            ["flits", "Feitcodes"],
+            ["straat", "Straatcasus"],
+          ] as const
+        ).map(([id, label]) => (
+          <button key={id} type="button" className={modus === id ? "btn btn-brand" : "btn"} onClick={() => setModus(id)}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {modus === "kennis" ? (
+        <section>
+          <p className="mb-3 text-sm text-muted">
+            Tien vragen voor dit domein. Week {week.week} van {week.jaar} hoort bij set {week.set} van {WEEKSETS.length}. Bron onder het antwoord.
+          </p>
+          <Quiz key={vragen.map((item) => item.id).join("-")} vragen={vragen} />
+          {rol === "docent" ? (
+            <div className="mt-6">
+              <h2 className="mb-2 text-lg font-semibold">Beoordelingsmatrix</h2>
+              <Matrix />
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+      {modus === "flits" ? <Flits kaarten={kaarten} /> : null}
+      {modus === "straat" ? (
+        <section className="grid gap-3">
           {casussen.map((casus) => (
-            <details key={casus.id} className="panel p-3" open={rol === "docent"}>
-              <summary className="cursor-pointer font-semibold">{casus.titel}</summary>
-              <p className="mt-2 text-sm">Doel: {casus.doel}</p>
-              <p className="mt-2 text-sm">Setting: {casus.setting}</p>
-              <p className="mt-2 text-sm">Rol boa of student: {casus.boa}</p>
-              <p className="mt-2 text-sm">Rol burger: {casus.burger}</p>
-              <ul className="mt-2 list-disc pl-5 text-sm">
-                {casus.debrief.map((regel) => (
-                  <li key={regel}>{regel}</li>
-                ))}
-              </ul>
-              {rol === "docent" ? <p className="accent-navy panel mt-3 p-3 text-sm">{casus.docent}</p> : null}
-            </details>
+            <StraatCasus key={casus.id} casus={casus} docent={rol === "docent"} />
           ))}
-        </div>
-      </section>
-      {rol !== "docent" ? (
-        <details className="panel mt-6 p-3">
-          <summary className="cursor-pointer font-semibold">Beoordelingsmatrix</summary>
-          <div className="mt-3">
-            <Matrix />
+          <div className="grid gap-3 lg:grid-cols-3">
+            <Kader titel="ABCD" items={ABCD.map((item) => `${item.letter}. ${item.titel}. ${item.tekst}`)} />
+            <Kader titel="Vijf stappen" items={STAPPEN.map((item) => `${item.n}. ${item.titel}. ${item.tekst}`)} />
+            <Kader titel="LSD" items={LSD.map((item) => `${item.titel}. ${item.tekst}`)} />
           </div>
-        </details>
+          <ul className="grid gap-2 md:grid-cols-2">
+            {BEGINSELEN.map((item) => (
+              <li key={item.titel} className="panel p-3">
+                <h3 className="font-semibold">{item.titel}</h3>
+                <p className="mt-1 text-sm text-muted">{item.tekst}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       ) : null}
     </div>
+  );
+}
+
+function Flits({ kaarten }: { kaarten: typeof FEITEN }) {
+  const [index, setIndex] = useState(0);
+  const [open, setOpen] = useState(false);
+  const kaart = kaarten[index];
+  if (!kaart) return <p className="text-sm text-muted">Geen feitcodes in dit domein.</p>;
+  return (
+    <section className="panel p-4">
+      <p className="font-mono text-xs text-muted">
+        KAART {index + 1} / {kaarten.length}
+      </p>
+      <h2 className="mt-2 text-lg font-semibold">{open ? kaart.code : kaart.titel}</h2>
+      {open ? (
+        <div className="mt-3 grid gap-1 text-sm">
+          <p className="font-mono">{kaart.artikel}</p>
+          <p className="font-mono font-semibold">{boeteKop(kaart)}</p>
+          <p className="text-muted">excl. € 9 administratiekosten CJIB, tenzij er geen vast bedrag is.</p>
+          <p>{kaart.bijzonder}</p>
+        </div>
+      ) : (
+        <p className="mt-3 text-sm text-muted">Welke code, en welk bedrag?</p>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" className="btn btn-brand" onClick={() => setOpen((huidig) => !huidig)}>
+          {open ? "Situatie" : "Code en tarief"}
+        </button>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            setIndex((huidig) => (huidig + 1) % kaarten.length);
+            setOpen(false);
+          }}
+        >
+          Volgende
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function StraatCasus({ casus, docent }: { casus: (typeof CASUSSEN)[number]; docent: boolean }) {
+  const [gekozen, setGekozen] = useState<number | null>(null);
+  const opties = CASUS_KEUZE[casus.id] ?? [];
+  return (
+    <article className="panel p-3">
+      <h2 className="font-semibold">{casus.titel}</h2>
+      <p className="mt-1 text-sm text-muted">{casus.doel}</p>
+      <p className="mt-2 text-sm">{casus.setting}</p>
+      <div className="mt-3 grid gap-2">
+        {opties.map((optie, index) => {
+          const toon = gekozen === null ? "" : optie.goed ? "btn-ok" : index === gekozen ? "btn-stop" : "";
+          return (
+            <button key={optie.label} type="button" className={`btn justify-start text-left ${toon}`} disabled={gekozen !== null} onClick={() => setGekozen(index)}>
+              {optie.label}
+            </button>
+          );
+        })}
+      </div>
+      {gekozen !== null && opties[gekozen] ? (
+        <p className={`mt-3 p-3 text-sm ${opties[gekozen].goed ? "border border-[#A7F3D0] bg-[#D1FAE5]" : "border border-[#FDE68A] bg-[#FEF3C7]"}`}>
+          {opties[gekozen].waarom}
+        </p>
+      ) : null}
+      <ul className="mt-3 list-disc pl-5 text-sm text-muted">
+        {casus.debrief.map((regel) => (
+          <li key={regel}>{regel}</li>
+        ))}
+      </ul>
+      {docent ? <p className="mt-3 border border-line bg-inset p-3 text-sm">{casus.docent}</p> : null}
+    </article>
   );
 }
 

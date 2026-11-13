@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Star } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
@@ -26,7 +26,23 @@ function FeitPage() {
   const rol = usePrefs((state) => state.rol);
   const [tab, setTab] = useState<"feiten" | "artikelen">("feiten");
   const [open, setOpen] = useState<string | null>(null);
-  const gevonden = useMemo(() => zoekFeiten(q, FEITEN), [q]);
+  const [groepFilter, setGroepFilter] = useState("alle");
+  const gevonden = useMemo(() => {
+    const basis = zoekFeiten(q, FEITEN);
+    if (groepFilter === "alle") return basis;
+    const woorden: Record<string, string[]> = {
+      afval: ["afval", "zwerf", "hond", "milieu"],
+      parkeren: ["parkeer", "stilstand", "bord", "kenteken", "rvv"],
+      orde: ["apv", "orde", "samenschol", "alcohol", "wild"],
+      ov: ["vervoer", "trein", "wp2000", "zwartrijd", "aanwijzing"],
+      natuur: ["natuur", "vis", "vuurwerk", "dier"],
+    };
+    const keys = woorden[groepFilter] ?? [];
+    return basis.filter((feit) => {
+      const hay = `${feit.titel} ${feit.trefwoorden} ${feit.artikel}`.toLowerCase();
+      return keys.some((woord) => hay.includes(woord));
+    });
+  }, [groepFilter, q]);
   const groepen = DOMEIN_INFO.filter((info) => {
     if (domein === "alle") return true;
     return info.id === domein || info.id === "algemeen";
@@ -72,7 +88,7 @@ function FeitPage() {
         </ul>
       ) : (
         <>
-          <label className="field mb-4 max-w-xl">
+          <label className="field mb-3 max-w-xl">
             Zoeken
             <input
               value={q}
@@ -83,6 +99,20 @@ function FeitPage() {
               placeholder="D 517, wildplassen, artikel 70"
             />
           </label>
+          <div className="mb-4 flex flex-wrap gap-2">
+            {[
+              ["alle", "Alle"],
+              ["afval", "Afval en milieu"],
+              ["parkeren", "Parkeren en stilstand"],
+              ["orde", "Openbare orde / APV"],
+              ["ov", "Openbaar vervoer"],
+              ["natuur", "Natuur en buitengebied"],
+            ].map(([id, label]) => (
+              <button key={id} type="button" className={groepFilter === id ? "btn btn-brand" : "btn"} onClick={() => setGroepFilter(id)}>
+                {label}
+              </button>
+            ))}
+          </div>
           {(() => {
             const gezien = new Set<string>();
             return volgorde.map((groep) => {
@@ -193,7 +223,9 @@ function FeitKaart({ feit, student }: { feit: Feit; student: boolean }) {
 }
 
 function Detail({ feit }: { feit: Feit }) {
-  const { isFavoriet, toggleFavoriet } = useKluis();
+  const { isFavoriet, toggleFavoriet, saveNote } = useKluis();
+  const navigate = useNavigate();
+  const [melding, setMelding] = useState("");
   return (
     <div className="mt-3 grid gap-2 text-sm">
       <p className="bg-inset p-2">
@@ -203,6 +235,7 @@ function Detail({ feit }: { feit: Feit }) {
       <p className="bg-inset p-2">
         <span className="font-semibold">Het boetebedrag wordt | </span>
         {boeteKop(feit)}
+        <span className="mt-1 block text-xs font-normal text-muted">excl. € 9 administratiekosten CJIB</span>
       </p>
       {feit.tarief && feit.tarief !== boeteKop(feit) ? <p className="text-xs text-muted">{feit.tarief}</p> : null}
       <p>
@@ -214,15 +247,40 @@ function Detail({ feit }: { feit: Feit }) {
         {feit.leeftijd}
       </p>
       <p>{feit.bijzonder}</p>
-      <p className="whitespace-pre-wrap bg-inset p-2">{feit.pv}</p>
+      <p>
+        <span className="font-semibold">PV-aandachtspunt | </span>
+        {feit.pv}
+      </p>
       <div className="flex flex-wrap gap-2">
         <CopyButton text={feit.pv} label="Kopieer PV-formulering" />
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            sessionStorage.setItem("boa-pv-feit", feit.id);
+            void navigate({ to: "/pv" });
+          }}
+        >
+          Open in PV-bouwer
+        </button>
+        <button
+          type="button"
+          className="btn"
+          onClick={() => {
+            void saveNote({ titel: `${feit.code} | ${feit.titel}`, body: `${feit.artikel}\n${feit.pv}`, zachtAkkoord: true }).then((fout) => {
+              setMelding(fout ?? "In de kluis.");
+            });
+          }}
+        >
+          Bewaar in kluis
+        </button>
         <button type="button" className="btn" onClick={() => void toggleFavoriet(feit.id)}>
           <Star className={`size-4 ${isFavoriet(feit.id) ? "fill-amber text-amber" : ""}`} />
           {isFavoriet(feit.id) ? "Favoriet" : "Maak favoriet"}
         </button>
         <FeedbackKnop plek="/feitcodes" onderwerp={`${feit.code} | ${feit.titel}`} />
       </div>
+      {melding ? <p>{melding}</p> : null}
     </div>
   );
 }

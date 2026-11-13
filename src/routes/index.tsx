@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { DOMEIN_INFO, type DomeinFilter, type Rol } from "@/lib/boa/meta";
+import { type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { TELLEN, recenteUpdates } from "@/lib/boa/updates";
 
@@ -93,13 +93,13 @@ function Home() {
               Stel jouw weergave in
             </a>
             <a href="#inhoud" className="btn border-white/30 bg-transparent text-white">
-              Ontdek wat erin zit
+              Inhoud
             </a>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-16">
+      <section id="start" className="mx-auto w-full max-w-5xl px-4 py-16">
         <h2 className="text-2xl font-semibold tracking-tight">Voor wie is BOA Portaal?</h2>
         <ul className="mt-6 grid gap-3 lg:grid-cols-3">
           {[
@@ -141,9 +141,9 @@ function Home() {
           <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-muted">Op straat en in de dienst</h3>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             <Kaart titel="Zakkaart" label="Direct op straat" tekst="Cautie, ID-vordering en aanhouding." to="/zakkaart" pills={[{ t: "Cautie" }, { t: "ID" }, { t: "Aanhouding" }]} />
-            <Kaart titel="Feitcodes" label="Zoek en tarieven" tekst="Code, artikel of situatie, met het bedrag uit het Feitenboekje." to="/feitcodes" />
-            <Kaart titel="Werkbank" label="Dienst-tools" tekst="Combibon, kenteken en tarieven van je dienst." to="/dienst" />
-            <Kaart titel="PV-bouwer" label="7 W's" tekst="Stap voor stap, klaar om over te nemen in het bronsysteem." to="/pv" />
+            <Kaart titel="Feitcodes" label="Zoek en tarieven" tekst="Code, artikel of situatie, met het bedrag uit het Feitenboekje." to="/feitcodes" pills={[{ t: "Code" }, { t: "Artikel" }, { t: "Tarief" }]} />
+            <Kaart titel="Werkbank" label="Dienst-tools" tekst="Combibon, kenteken en tarieven van je dienst." to="/dienst" pills={[{ t: "Kenteken" }, { t: "Timer" }, { t: "Leeftijd" }]} />
+            <Kaart titel="PV-bouwer" label="7 W's" tekst="Stap voor stap, klaar om over te nemen in het bronsysteem." to="/pv" pills={[{ t: "Wie" }, { t: "Waarneming" }, { t: "Cautie" }]} />
           </ul>
 
           <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-muted">Kennis, oefenen en delen</h3>
@@ -187,34 +187,6 @@ function Home() {
             </li>
           ))}
         </ul>
-      </section>
-
-      <section id="start" className="border-t border-line bg-inset">
-        <div className="mx-auto w-full max-w-3xl px-4 py-16">
-          <h2 className="text-2xl font-semibold tracking-tight">Stel jouw weergave in</h2>
-          <p className="mt-2 text-muted">Rol en domein bepalen wat je als eerste ziet. Je kunt dit later altijd wijzigen via Weergave.</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {(["boa", "student", "docent"] as const).map((keuze) => (
-              <button key={keuze} type="button" className={`btn ${rol === keuze ? "btn-brand" : ""}`} onClick={() => setRol(keuze)}>
-                {keuze === "boa" ? "BOA" : keuze === "student" ? "Student" : "Docent"}
-              </button>
-            ))}
-          </div>
-          <label className="field mt-4">
-            Domein
-            <select value={domein} onChange={(event) => setDomein(event.target.value as DomeinFilter)}>
-              <option value="alle">Alle domeinen</option>
-              {DOMEIN_INFO.filter((item) => item.id !== "algemeen").map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button type="button" className="btn btn-brand mt-5" onClick={() => startAls(rol)}>
-            Start nu
-          </button>
-        </div>
       </section>
     </div>
   );

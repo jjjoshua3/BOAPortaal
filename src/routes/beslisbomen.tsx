@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { BOMEN, nodeById, type Tree } from "@/lib/boa/trees";
 import { pastFilter, tagClass, toonClass } from "@/lib/boa/meta";
@@ -91,17 +91,28 @@ function Runner({ tree }: { tree: Tree }) {
           {node.pv ? <p className="mt-3 whitespace-pre-wrap bg-inset p-3 text-sm">{node.pv}</p> : null}
           <div className="mt-3 flex flex-wrap gap-2">
             {node.pv ? <CopyButton text={node.pv} label="Kopieer PV-zin" /> : null}
+            <Link to="/zakkaart" className="btn">
+              Zakkaart
+            </Link>
+            <Link to="/pv" className="btn">
+              PV-bouwer
+            </Link>
             <FeedbackKnop plek={`/beslisbomen?boom=${tree.id}`} onderwerp={node.titel} />
             <button type="button" className="btn" onClick={() => setPad([tree.start])}>
-              Opnieuw
+              Opnieuw starten
             </button>
           </div>
         </section>
       )}
-      {pad.length > 1 && node.soort === "vraag" ? (
-        <button type="button" className="btn w-fit" onClick={() => setPad((huidig) => huidig.slice(0, -1))}>
-          Stap terug
-        </button>
+      {pad.length > 1 ? (
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="btn w-fit" onClick={() => setPad((huidig) => huidig.slice(0, -1))}>
+            Vorige stap
+          </button>
+          <button type="button" className="btn w-fit" onClick={() => setPad([tree.start])}>
+            Opnieuw starten
+          </button>
+        </div>
       ) : null}
     </div>
   );

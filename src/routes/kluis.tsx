@@ -104,7 +104,23 @@ function KluisPage() {
             </button>
           </form>
           <ul className="grid gap-2">
-            {kluis.notes.length === 0 ? <li className="text-sm text-muted">Nog geen notities.</li> : null}
+            {kluis.notes.length === 0 ? (
+              <li className="panel p-4">
+                <p className="font-semibold">Nog niets opgeslagen.</p>
+                <p className="mt-2 text-sm text-muted">De kluis bewaart wat je zelf vastzet. Drie ingangen:</p>
+                <ol className="mt-3 grid gap-2 text-sm">
+                  <li className="border border-line p-2">
+                    1. Op <Link to="/feitcodes" className="font-semibold underline">Feitcodes</Link> een rij openen en Bewaar in kluis kiezen.
+                  </li>
+                  <li className="border border-line p-2">
+                    2. Op <Link to="/zakkaart" className="font-semibold underline">Zakkaart</Link> de spreektekst bewaren.
+                  </li>
+                  <li className="border border-line p-2">
+                    3. In de <Link to="/pv" className="font-semibold underline">PV-bouwer</Link> het concept versleuteld opslaan.
+                  </li>
+                </ol>
+              </li>
+            ) : null}
             {kluis.notes.map((note) => (
               <li key={note.id} className="panel p-3">
                 <h2 className="font-semibold">{note.titel}</h2>
