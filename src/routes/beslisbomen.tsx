@@ -3,12 +3,19 @@ import { useEffect, useMemo, useState } from "react";
 import { BOMEN, nodeById, type Tree } from "@/lib/boa/trees";
 import { pastFilter, tagClass, toonClass } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
+import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
 
 type Search = { boom?: string };
 
 export const Route = createFileRoute("/beslisbomen")({
+  head: () =>
+    seo(
+      "/beslisbomen",
+      "Interactieve Beslisbomen BOA: Sfeerovergang (Awb/Sv), HALT & OV | BOA Portaal",
+      "Doorloop stap voor stap de sfeerovergang van toezicht naar opsporing, weigering ID-inzage, HALT-afdoening bij jeugd en OV-procedures.",
+    ),
   validateSearch: (search: Record<string, unknown>): Search => {
     if (typeof search.boom === "string" && search.boom.length > 0) return { boom: search.boom };
     return {};

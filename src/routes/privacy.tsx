@@ -1,7 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHead } from "@/components/bits";
+import { seo } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
+  head: () =>
+    seo(
+      "/privacy",
+      "Privacy | BOA Portaal",
+      "Welke gegevens BOA Portaal verwerkt, waarom, en wat je eraan kunt doen. Geen BSN en geen dossier van burgers.",
+    ),
   component: PrivacyPage,
 });
 

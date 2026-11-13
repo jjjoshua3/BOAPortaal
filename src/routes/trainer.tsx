@@ -4,11 +4,18 @@ import { FEITEN, boeteKop } from "@/lib/boa/feitcodes";
 import { ABCD, BEGINSELEN, CASUSSEN, LSD, MATRIX, STAPPEN, filterVragen } from "@/lib/boa/trainer";
 import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
+import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
 import { WEEKSETS, weeksetOp } from "@/lib/boa/weken";
 
 export const Route = createFileRoute("/trainer")({
+  head: () =>
+    seo(
+      "/trainer",
+      "BOA & HTV Oefentrainer: Rechtskennis, Feitcodes & Casussen | BOA Portaal",
+      "Oefen gratis voor het BOA-basisexamen, HTV of hercertificering (PHB) met praktijkcasussen, rechtskennis en feitcodes per domein.",
+    ),
   component: TrainerPage,
 });
 

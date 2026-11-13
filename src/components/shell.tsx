@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   BookOpen,
   FileText,
@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { FeedbackDock } from "@/components/feedback";
+import { CopyButton } from "@/components/bits";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs, pasWeergave } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
@@ -30,6 +31,7 @@ const ICONS = {
   "/kluis": Lock,
   "/dienst": LayoutGrid,
   "/community": MessageSquare,
+  "/jargon": BookOpen,
   "/colofon": Scale,
 } as const;
 
@@ -68,6 +70,16 @@ const ORDER: Record<Rol, Item[]> = {
   ],
 };
 
+const TOP: Item[] = [
+  { to: "/zakkaart", label: "Zakkaart" },
+  { to: "/feitcodes", label: "Feitcodes" },
+  { to: "/dienst", label: "Werkbank" },
+  { to: "/pv", label: "PV-bouwer" },
+  { to: "/beslisbomen", label: "Beslisbomen" },
+  { to: "/trainer", label: "Trainer" },
+  { to: "/jargon", label: "Vakjargon" },
+];
+
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (state) => state.location.pathname });
   const navigate = useNavigate();
@@ -84,6 +96,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [zoekOpen, setZoekOpen] = useState(false);
   const [weergave, setWeergave] = useState(false);
   const [q, setQ] = useState("");
+  const zoekRef = useRef<HTMLInputElement>(null);
   const items = ORDER[rol];
 
   useEffect(() => {
@@ -106,26 +119,48 @@ export function AppShell({ children }: { children: ReactNode }) {
     setMeer(false);
   }, [path]);
 
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      const typt = Boolean(target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable));
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setZoekOpen(true);
+        return;
+      }
+      if (event.key === "/" && !typt && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        event.preventDefault();
+        setZoekOpen(true);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (zoekOpen) zoekRef.current?.focus();
+  }, [zoekOpen]);
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="no-print sticky top-0 z-30 border-b border-line bg-panel">
-        <div className="flex h-14 items-center gap-3 px-3">
-          <Link to="/" className="flex min-w-0 items-center gap-2">
+        <div className="flex h-14 items-center gap-2 overflow-x-auto px-3">
+          <Link to="/" className="flex shrink-0 items-center gap-2">
             <img src="/boa-mark.png" alt="" className="size-8 shrink-0" />
-            <span className="truncate font-semibold tracking-tight text-ink">BOA Portaal</span>
-            <span className="hidden rounded-sm border border-line px-1.5 py-0.5 font-mono text-xs text-muted sm:inline">Domein I–VI</span>
+            <span className="font-semibold tracking-tight text-ink">BOA Portaal</span>
+            <span className="hidden rounded-sm border border-line px-1.5 py-0.5 font-mono text-xs text-muted sm:inline lg:hidden">Domein I–VI</span>
           </Link>
-          <nav className="ml-2 hidden items-center gap-0.5 lg:flex">
-            {items.slice(0, 5).map((item) => (
-              <Link key={item.to} to={item.to} className={`px-2 py-1 text-sm font-semibold ${path === item.to ? "text-ink" : "text-muted"}`}>
+          <nav className="hidden shrink-0 items-center lg:flex">
+            {TOP.map((item) => (
+              <Link key={item.to} to={item.to} className={`px-1.5 py-1 text-xs font-semibold whitespace-nowrap ${path === item.to ? "text-ink" : "text-muted"}`}>
                 {item.label}
               </Link>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-2">
-            <button type="button" className="btn min-h-10 px-2" onClick={() => setZoekOpen((open) => !open)}>
+          <div className="ml-auto flex shrink-0 items-center gap-1">
+            <button type="button" className="btn min-h-10 px-2" onClick={() => setZoekOpen((open) => !open)} title="Zoeken (Ctrl+K)">
               <Search className="size-4" />
-              <span className="hidden sm:inline">Zoeken</span>
+              <span className="hidden xl:inline">Zoeken</span>
             </button>
             <div className="flex overflow-hidden rounded-sm border border-line" role="group" aria-label="Leesgrootte">
               <button
@@ -157,10 +192,14 @@ export function AppShell({ children }: { children: ReactNode }) {
               {theme === "night" ? <Moon className="size-4" /> : <Sun className="size-4" />}
               <span className="hidden xl:inline">{theme === "night" ? "Nachtdienst" : "Dag"}</span>
             </button>
-            <button type="button" className="btn min-h-10 px-2" onClick={() => setWeergave((open) => !open)}>
+            <button type="button" className="btn hidden min-h-10 px-2 lg:inline-flex" onClick={() => setWeergave((open) => !open)}>
               Weergave
             </button>
-            <Link to="/account" className="btn btn-brand min-h-10 px-3">
+            <Link to="/kluis" className={`btn min-h-10 px-2 ${path === "/kluis" ? "btn-brand" : ""}`}>
+              <Lock className="size-4" />
+              <span className="hidden xl:inline">Kluis</span>
+            </Link>
+            <Link to="/account" className="btn btn-brand min-h-10 px-2">
               {ready && user?.email ? user.email.split("@")[0] : "Account"}
             </Link>
           </div>
@@ -175,11 +214,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             }}
           >
             <input
+              ref={zoekRef}
               className="min-h-10 flex-1 border border-line bg-paper px-3 text-sm"
               value={q}
               onChange={(event) => setQ(event.target.value)}
               placeholder="Zoek op feitcode, vakjargon of onderwerp"
             />
+            {q ? (
+              <button type="button" className="btn px-2" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
+                <X className="size-4" />
+              </button>
+            ) : null}
             <button className="btn btn-brand" type="submit">
               Zoek
             </button>
@@ -300,7 +345,64 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
       ) : null}
+      <Spiekbrief />
       <FeedbackDock />
     </div>
+  );
+}
+
+const SPIEK = [
+  {
+    titel: "Cautie · art. 29 lid 2 Sv",
+    tekst: "U bent niet tot antwoorden verplicht.",
+  },
+  {
+    titel: "ID-vordering · art. 2 WID / art. 5:16a Awb",
+    tekst: "Ik vorder van u inzage in een geldig identiteitsbewijs op grond van de Wet op de identificatieplicht.",
+  },
+] as const;
+
+function Spiekbrief() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button type="button" className="no-print fixed bottom-20 left-3 z-30 btn border-[#1D4ED8] bg-white font-semibold text-[#1D4ED8] shadow-sm" onClick={() => setOpen(true)}>
+        Spiekbrief
+      </button>
+      {open ? (
+        <div className="fixed inset-0 z-40">
+          <button type="button" className="absolute inset-0 bg-[#0F172A]/70" aria-label="Sluit spiekbrief" onClick={() => setOpen(false)} />
+          <div className="panel absolute inset-x-3 bottom-20 max-h-[70vh] overflow-auto p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="font-semibold">Spiekbrief</p>
+              <button type="button" className="btn min-h-10 px-2" aria-label="Sluiten" onClick={() => setOpen(false)}>
+                <X className="size-4" />
+              </button>
+            </div>
+            <ul className="grid gap-3">
+              {SPIEK.map((item) => (
+                <li key={item.titel} className="border border-line p-3">
+                  <p className="text-xs font-semibold tracking-wide text-muted uppercase">{item.titel}</p>
+                  <p className="mt-1 text-sm font-semibold">{item.tekst}</p>
+                  <div className="mt-2">
+                    <CopyButton text={item.tekst} label="Kopieer" />
+                  </div>
+                </li>
+              ))}
+              <li className="border border-line p-3 text-sm">
+                <p className="text-xs font-semibold tracking-wide text-muted uppercase">Leeftijd en tarief</p>
+                <ul className="mt-2 grid gap-1">
+                  <li>Onder 12 jaar: geen strafrechtelijke vervolging (art. 486 Sv).</li>
+                  <li>12–13 jaar: wel strafrecht. Nog geen eigen toonplicht, dus geen D 517. Tarief 50%. Halt kan.</li>
+                  <li>14–15 jaar: wel toonplicht. Tarief 50% en Halt kan.</li>
+                  <li>16–17 jaar: bij Mulder het volledige bedrag. Ouders in beeld.</li>
+                  <li>18 jaar en ouder: volledig tarief en volledige toonplicht.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

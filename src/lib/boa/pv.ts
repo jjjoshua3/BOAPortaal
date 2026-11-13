@@ -1,47 +1,66 @@
 import type { Feit } from "@/lib/boa/feitcodes";
 import { domeinLabel, type DomeinId } from "@/lib/boa/meta";
 
+export type Regime = "bevindingen" | "straf" | "mulder";
+export type Identiteit = "" | "paspoort" | "idkaart" | "rijbewijs" | "weigering" | "kenteken";
+export type LeeftijdCat = "" | "18" | "16" | "12";
+
 export type PvInvoer = {
-  soort: "bevindingen" | "aanhouding";
+  regime: Regime;
+  koppel: "ik" | "wij";
   verbalisant: string;
-  betrokkene: string;
+  uniform: "uniform" | "burger";
   domein: DomeinId;
+  identiteit: Identiteit;
+  leeftijd: LeeftijdCat;
   feit: Feit | null;
+  plaats: string;
+  straat: string;
+  locatieZin: string;
   datum: string;
   tijd: string;
-  plaats: string;
-  aanleiding: string;
+  tijd2: string;
   waarmee: string;
-  waarneming: string;
-  hoedanigheid: "toezicht" | "opsporing";
-  cautie: "gegeven" | "nvt" | "niet";
+  aanleiding: string;
+  cautie: boolean;
   verklaring: string;
-  boeien: "nee" | "vlucht" | "gevaar";
+  geenVerklaring: boolean;
+  waarneming: string;
+  sfeer: boolean;
+  aanhouding: boolean;
   fouillering: boolean;
+  boeien: boolean;
   overdracht: boolean;
-  afloop: string;
 };
 
 export function leegPv(domein: DomeinId = "I"): PvInvoer {
+  const stempel = stempelNu();
   return {
-    soort: "bevindingen",
+    regime: "bevindingen",
+    koppel: "ik",
     verbalisant: "",
-    betrokkene: "[VERDACHTE]",
+    uniform: "uniform",
     domein,
+    identiteit: "",
+    leeftijd: "",
     feit: null,
-    datum: "",
-    tijd: "",
     plaats: "",
-    aanleiding: "",
+    straat: "",
+    locatieZin: "",
+    datum: stempel.datum,
+    tijd: stempel.tijd,
+    tijd2: "",
     waarmee: "",
-    waarneming: "",
-    hoedanigheid: "opsporing",
-    cautie: "gegeven",
+    aanleiding: "",
+    cautie: false,
     verklaring: "",
-    boeien: "nee",
+    geenVerklaring: false,
+    waarneming: "",
+    sfeer: false,
+    aanhouding: false,
     fouillering: false,
+    boeien: false,
     overdracht: false,
-    afloop: "",
   };
 }
 
@@ -53,101 +72,197 @@ export function stempelNu(): { datum: string; tijd: string } {
   };
 }
 
-function blok(titel: string, tekst: string): string {
-  const body = tekst.trim() || "[NOG INVULLEN]";
-  return `${titel}\n${body}`;
+export function persoon(invoer: PvInvoer): "verdachte" | "betrokkene" {
+  return invoer.regime === "straf" ? "verdachte" : "betrokkene";
+}
+
+function vul(waarde: string, leeg: string) {
+  const tekst = waarde.trim();
+  return tekst || leeg;
+}
+
+function datumLang(iso: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "[DATUM]";
+  const [jaar, maand, dag] = iso.split("-");
+  return `${Number(dag)}-${maand}-${jaar}`;
+}
+
+function identiteitZin(invoer: PvInvoer) {
+  const wie = persoon(invoer);
+  if (invoer.identiteit === "paspoort") return `De identiteit van de ${wie} is vastgesteld via een ter inzage getoond geldig Nederlands paspoort.`;
+  if (invoer.identiteit === "idkaart") return `De identiteit van de ${wie} is vastgesteld via een ter inzage getoonde Nederlandse identiteitskaart.`;
+  if (invoer.identiteit === "rijbewijs") return `De identiteit van de ${wie} is vastgesteld via een ter inzage getoond Nederlands rijbewijs.`;
+  if (invoer.identiteit === "weigering") {
+    return `Ik heb de ${wie} gevorderd een identiteitsbewijs ter inzage te tonen. De ${wie} heeft aan die vordering niet voldaan. Dat kan, vanaf 14 jaar, feitcode D 517 zijn (artikel 447e van het Wetboek van Strafrecht).`;
+  }
+  if (invoer.identiteit === "kenteken") return `Er is niet staande gehouden. De gedraging is geconstateerd op het kenteken.`;
+  return "";
+}
+
+function leeftijdZin(invoer: PvInvoer) {
+  if (invoer.leeftijd === "18") return "De betrokkene is meerderjarig.";
+  if (invoer.leeftijd === "16") return "Het gaat om een jeugdige van 16 of 17 jaar. Bij een Mulder-gedraging geldt het volledige bedrag.";
+  if (invoer.leeftijd === "12") return "Het gaat om een jeugdige van 12 tot en met 15 jaar. Het tarief wordt gehalveerd. Halt is te toetsen. Onder de 14 jaar geldt geen eigen toonplicht voor een identiteitsbewijs.";
+  return "";
+}
+
+function kledingZin(invoer: PvInvoer) {
+  if (invoer.uniform === "burger") return "in burger, gelegitimeerd met het BOA-legitimatiebewijs";
+  return "in uniform gekleed";
 }
 
 export function pvWaarschuwingen(invoer: PvInvoer): string[] {
   const uit: string[] = [];
-  const heeftVerklaring = invoer.verklaring.trim().length > 0;
-  if (heeftVerklaring && invoer.cautie === "niet") {
-    uit.push("Er staat een verklaring in het concept terwijl de cautie niet is gegeven. Dat concept is niet bruikbaar als verhoor.");
+  const verklaring = invoer.verklaring.trim().length > 0 && !invoer.geenVerklaring;
+  if (invoer.regime === "straf" && verklaring && !invoer.cautie) {
+    uit.push("Let op (vormfout-check): er is een verklaring van de verdachte ingevuld bij een strafrechtelijk feit, maar het vinkje 'Cautie gegeven voor aanvang verhoor (art. 29 Sv)' staat nog uit.");
   }
-  if (heeftVerklaring && invoer.hoedanigheid === "toezicht" && invoer.cautie !== "gegeven") {
-    uit.push("Een verklaring over het feit past niet bij zuiver toezicht. Markeer de sfeerovergang en geef de cautie, of haal de verklaring eruit.");
+  if (/dronken|agressief/i.test(invoer.waarneming)) {
+    uit.push("Let op: 'dronken' en 'agressief' zijn conclusies. Schrijf wat je zag, hoorde, rook of voelde, bijvoorbeeld een alcohollucht, onvast lopen of schreeuwen.");
   }
-  if (invoer.soort === "aanhouding" && !invoer.overdracht) {
-    uit.push("Bij een aanhouding hoort onverwijlde overdracht aan de politie. Zet de overdracht aan of verander het soort PV.");
+  if (invoer.regime === "mulder" && /verdachte/i.test(`${invoer.waarneming} ${invoer.verklaring}`)) {
+    uit.push("Bij Wet Mulder schrijf je betrokkene en gedraging, niet verdachte.");
   }
-  if (invoer.boeien !== "nee" && invoer.soort !== "aanhouding") {
-    uit.push("Handboeien horen bij een aanhouding of een concreet gevaar, niet bij een losse bon. Verantwoord de grond of haal de boeien eruit.");
-  }
-  if (!invoer.verbalisant.trim()) uit.push("De naam van de verbalisant ontbreekt.");
-  if (!invoer.plaats.trim()) uit.push("De plaats ontbreekt.");
-  if (!invoer.waarneming.trim()) uit.push("De waarneming ontbreekt. Zonder waarneming is het geen PV van bevindingen.");
   return uit;
 }
 
-export function bouwPv(invoer: PvInvoer): string {
-  const titel = invoer.soort === "aanhouding" ? "PROCES-VERBAAL VAN AANHOUDING" : "PROCES-VERBAAL VAN BEVINDINGEN";
-  const feitregel = invoer.feit
-    ? `${invoer.feit.code} | ${invoer.feit.titel} (${invoer.feit.artikel})`
-    : "[FEIT NOG KIEZEN]";
-  const cautie =
-    invoer.cautie === "gegeven"
-      ? "Voorafgaand aan het verhoor heb ik, verbalisant, de verdachte medegedeeld dat hij niet tot antwoorden verplicht is."
-      : invoer.cautie === "nvt"
-        ? "Ik heb geen cautie gegeven, omdat ik alleen personalia heb gevraagd en geen verhoor heb afgenomen over het feit."
-        : "Een cautie is niet gegeven.";
-  const boeien =
-    invoer.boeien === "nee"
-      ? "Handboeien zijn niet aangelegd."
-      : invoer.boeien === "vlucht"
-        ? "Ik heb [VERDACHTE] handboeien aangelegd op grond van artikel 22 van de Ambtsinstructie, omdat er naar mijn oordeel vluchtgevaar bestond. Een lichter middel volstond niet."
-        : "Ik heb [VERDACHTE] handboeien aangelegd op grond van artikel 22 van de Ambtsinstructie, omdat er onmiddellijk gevaar bestond voor de veiligheid. Een lichter middel volstond niet.";
-  const fouille = invoer.fouillering
-    ? "Ik heb een onderzoek aan de kleding gedaan als bedoeld in artikel 7, derde lid, van de Ambtsinstructie, noodzakelijk voor de veiligheid en gericht op wapens of gevaarlijke voorwerpen."
-    : "Een veiligheidsfouillering heeft niet plaatsgevonden.";
-  const overdracht = invoer.overdracht
-    ? "De aangehouden verdachte is onverwijld overgedragen aan de politie / hulpofficier van justitie."
-    : "Van overdracht aan de politie is geen sprake.";
-  const hoedanigheid =
-    invoer.hoedanigheid === "toezicht"
-      ? "Ik trad op als toezichthouder. Een medewerkingsplicht heb ik alleen gebruikt voor gegevens die het toezicht vroeg, niet voor een verklaring over een strafbaar feit."
-      : "Ik trad op als buitengewoon opsporingsambtenaar binnen mijn akte van opsporing.";
+export type WStatus = { id: string; label: string; ok: boolean };
 
-  const delen = [
+export function wStatus(invoer: PvInvoer): WStatus[] {
+  return [
+    { id: "wie", label: "Wie", ok: Boolean(invoer.verbalisant.trim()) },
+    { id: "wat", label: "Wat", ok: Boolean(invoer.feit) },
+    { id: "waar", label: "Waar", ok: Boolean(invoer.plaats.trim() || invoer.straat.trim()) },
+    { id: "wanneer", label: "Wanneer", ok: Boolean(invoer.datum && invoer.tijd) },
+    { id: "waarmee", label: "Waarmee", ok: Boolean(invoer.waarmee.trim()) },
+    { id: "waarom", label: "Waarom", ok: Boolean(invoer.aanleiding.trim()) },
+    { id: "hoe", label: "Hoe", ok: Boolean(invoer.waarneming.trim()) },
+  ];
+}
+
+export function kwaliteit(invoer: PvInvoer) {
+  const status = wStatus(invoer);
+  const klaar = status.filter((item) => item.ok).length;
+  return Math.round((klaar / status.length) * 100);
+}
+
+export function bouwPv(invoer: PvInvoer): string {
+  const wie = persoon(invoer);
+  const ikKlein = invoer.koppel === "wij" ? "wij" : "ik";
+  const mij = invoer.koppel === "wij" ? "ons" : "mij";
+  const domein = invoer.domein;
+  const feitKop = invoer.feit ? `${invoer.feit.code} | ${invoer.feit.titel}` : "[FEITCODE]";
+  const titel =
+    invoer.regime === "mulder"
+      ? "PROCES-VERBAAL VAN BEVINDINGEN"
+      : invoer.regime === "straf"
+        ? "PROCES-VERBAAL VAN BEVINDINGEN"
+        : "PROCES-VERBAAL VAN BEVINDINGEN";
+  const regimeRegel =
+    invoer.regime === "mulder"
+      ? "Regime: Wet Mulder / Wahv. Termen: betrokkene en gedraging."
+      : invoer.regime === "straf"
+        ? "Regime: strafrecht / politiestrafbeschikking. Termen: verdachte en strafbaar feit."
+        : "Regime: bevindingen, algemeen of ter overdracht.";
+  const locatie = [invoer.locatieZin.trim(), invoer.straat.trim() && `ter hoogte van ${invoer.straat.trim()}`, invoer.plaats.trim() && `te ${invoer.plaats.trim()}`]
+    .filter(Boolean)
+    .join(", ");
+  const naam = vul(invoer.verbalisant, "[VERBALISANT]");
+  const aanhef =
+    invoer.koppel === "wij"
+      ? `Op ${datumLang(invoer.datum)}, omstreeks ${vul(invoer.tijd, "[TIJD]")} uur, bevonden wij, verbalisanten, ${naam}, ons als buitengewoon opsporingsambtenaar domein ${domein}, ${kledingZin(invoer)} en belast met toezicht en handhaving${locatie ? ` ${locatie}` : " op de voor het openbaar verkeer openstaande weg"}.`
+      : `Op ${datumLang(invoer.datum)}, omstreeks ${vul(invoer.tijd, "[TIJD]")} uur, bevond ik, ${naam}, buitengewoon opsporingsambtenaar domein ${domein}, mij ${kledingZin(invoer)} en belast met toezicht en handhaving${locatie ? ` ${locatie}` : " op de voor het openbaar verkeer openstaande weg"}.`;
+  const aanleiding = invoer.aanleiding.trim() ? `De aanleiding was: ${invoer.aanleiding.trim()}` : "";
+  const waarmee = invoer.waarmee.trim() ? `Daarbij was betrokken: ${invoer.waarmee.trim()}.` : "";
+  const tweede = invoer.tijd2.trim() ? `Een eerste waarneming deed ${ikKlein} om ${invoer.tijd.trim() || "[TIJD]"} uur. Een tweede waarneming deed ${ikKlein} om ${invoer.tijd2.trim()} uur.` : "";
+  const waarneming = invoer.waarneming.trim();
+  const idZin = identiteitZin(invoer);
+  const leeftijd = leeftijdZin(invoer);
+  const cautie = invoer.cautie
+    ? `Voorafgaand aan het verhoor heb ${ikKlein} de ${wie} medegedeeld dat hij niet tot antwoorden verplicht is.`
+    : "";
+  let verklaring = "";
+  if (invoer.geenVerklaring) verklaring = `De ${wie} wenste geen verklaring af te leggen.`;
+  else if (invoer.verklaring.trim()) verklaring = `De ${wie} verklaarde, woordelijk: "${invoer.verklaring.trim()}"`;
+  const extra = [
+    invoer.sfeer ? "De sfeer is overgegaan van toezicht op grond van de Algemene wet bestuursrecht naar opsporing op grond van het Wetboek van Strafvordering." : "",
+    invoer.aanhouding ? `Ik heb de ${wie} op heterdaad aangehouden als bedoeld in artikel 53 van het Wetboek van Strafvordering.` : "",
+    invoer.fouillering
+      ? "Ik heb een onderzoek aan de kleding gedaan als bedoeld in artikel 7, derde lid, van de Ambtsinstructie, noodzakelijk voor de veiligheid en gericht op wapens of gevaarlijke voorwerpen."
+      : "",
+    invoer.boeien
+      ? `Ik heb de ${wie} handboeien aangelegd op grond van artikel 22 van de Ambtsinstructie, omdat een lichter middel niet volstond.`
+      : "",
+    invoer.overdracht ? `De ${wie} is overgedragen aan de politie dan wel voorgeleid aan een hulpofficier van justitie.` : "",
+  ].filter(Boolean);
+  const feitZin = invoer.feit
+    ? `Het betreft ${invoer.regime === "mulder" ? "de gedraging" : "het strafbare feit"} ${invoer.feit.code}, ${invoer.feit.titel} (${invoer.feit.artikel}).`
+    : "";
+  const afdoening = invoer.feit
+    ? `Aan de ${wie} werd een aankondiging van beschikking of een kennisgeving van bekeuring uitgereikt ter zake van feitcode ${invoer.feit.code}.`
+    : "";
+  const slot = `Waarvan door ${mij}, ${invoer.koppel === "wij" ? "verbalisanten" : "verbalisant"}, op ambtseed / ambtsbelofte is opgemaakt dit proces-verbaal, dat ${ikKlein} sloot en ondertekende te ${vul(invoer.plaats, "[PLAATS]")} op ${datumLang(invoer.datum)}.`;
+
+  const alinea = [aanleiding, tweede, waarneming, waarmee, feitZin].filter(Boolean).join(" ");
+  const midden = [idZin, leeftijd, cautie, verklaring, ...extra, afdoening].filter(Boolean).join(" ");
+
+  return [
     titel,
-    "Opgebouwd langs de zeven W's | Wie, Wat, Waar, Wanneer, Waarmee, Waarom, Hoe.",
+    `Domein ${domein}${invoer.feit ? ` | ${feitKop}` : ""}`,
+    regimeRegel,
     "",
-    blok(
-      "W1 | Wie",
-      `Verbalisant: ${invoer.verbalisant.trim() || "[NAAM VERBALISANT]"}, buitengewoon opsporingsambtenaar, ${domeinLabel(invoer.domein)}.\nBetrokkene: ${invoer.betrokkene.trim() || "[VERDACHTE]"}. Geen echte naam van een burger in dit portaal.`,
-    ),
+    aanhef,
     "",
-    blok("W2 | Wat", `Soort: ${titel}.\nFeit: ${feitregel}.`),
+    alinea,
     "",
-    blok("W3 | Waar", invoer.plaats.trim() || "[PLAATS]"),
+    midden,
     "",
-    blok("W4 | Wanneer", `Datum: ${invoer.datum || "[DATUM]"}\nTijd: ${invoer.tijd || "[TIJD]"}`),
+    slot,
     "",
-    blok("W5 | Waarmee", invoer.waarmee.trim() || "[VOORWERP, VOERTUIG OF MIDDEL]"),
-    "",
-    blok("W6 | Waarom", invoer.aanleiding),
-    "",
-    blok(
-      "W7 | Hoe",
-      [
-        `Waarneming: ${invoer.waarneming.trim() || "[NOG INVULLEN]"}`,
-        hoedanigheid,
-        cautie,
-        invoer.verklaring.trim()
-          ? `${invoer.betrokkene.trim() || "[VERDACHTE]"} verklaarde, zakelijk weergegeven:\n"${invoer.verklaring.trim()}"`
-          : "Er is geen verklaring afgelegd.",
-        boeien,
-        fouille,
-        overdracht,
-        invoer.afloop.trim() ? `Afloop: ${invoer.afloop.trim()}` : "Afloop: [NOG INVULLEN]",
-      ].join("\n"),
-    ),
-    "",
-    `Waarvan door mij, verbalisant, is opgemaakt dit proces-verbaal, dat ik sloot en ondertekende op ambtseed / ambtsbelofte te ${invoer.plaats.trim() || "[PLAATS]"} op ${invoer.datum || "[DATUM]"}.`,
-    "",
-    invoer.verbalisant.trim() || "[NAAM VERBALISANT]",
+    vul(invoer.verbalisant, "[VERBALISANT]"),
     "buitengewoon opsporingsambtenaar",
     "",
-    "Dit concept is een bouwsteen voor het bronsysteem (BRS, MEOS of CityControl). Het vervangt de akte niet en hoort geen persoonsgegevens van burgers te bevatten.",
+    "Bouwsteen voor BRS, CityControl, Sigmax of MEOS. Geen persoonsgegevens van burgers in dit portaal. De akte gaat voor.",
+  ]
+    .filter((regel, index, lijst) => !(regel === "" && lijst[index - 1] === ""))
+    .join("\n");
+}
+
+export function checklistPv(invoer: PvInvoer): string {
+  const wie = persoon(invoer);
+  const status = wStatus(invoer);
+  const regels = [
+    "7 W's | controle voor de les of het examen",
+    "",
+    `W1 | Wie ${status[0]?.ok ? "✓" : "○"}`,
+    `${invoer.koppel === "wij" ? "Wij, verbalisanten" : "Ik, verbalisant"}: ${vul(invoer.verbalisant, "[VERBALISANT]")}. ${kledingZin(invoer)}. ${domeinLabel(invoer.domein)}.`,
+    `${wie}: ${identiteitZin(invoer) || "[identiteit nog niet vastgelegd]"} ${leeftijdZin(invoer)}`.trim(),
+    "",
+    `W2 | Wat ${status[1]?.ok ? "✓" : "○"}`,
+    invoer.feit ? `${invoer.feit.code} | ${invoer.feit.titel} (${invoer.feit.artikel})` : "[feit nog kiezen]",
+    invoer.feit?.pv ? `PV-aandachtspunt: ${invoer.feit.pv}` : "",
+    "",
+    `W3 | Waar ${status[2]?.ok ? "✓" : "○"}`,
+    [invoer.straat, invoer.plaats, invoer.locatieZin].filter((deel) => deel.trim()).join(" | ") || "[plaats nog invullen]",
+    "",
+    `W4 | Wanneer ${status[3]?.ok ? "✓" : "○"}`,
+    `${datumLang(invoer.datum)} om ${vul(invoer.tijd, "[TIJD]")} uur${invoer.tijd2.trim() ? `, tweede waarneming om ${invoer.tijd2.trim()} uur` : ""}.`,
+    "",
+    `W5 | Waarmee ${status[4]?.ok ? "✓" : "○"}`,
+    invoer.waarmee.trim() || "[nog geen middel of voorwerp]",
+    "",
+    `W6 | Waarom ${status[5]?.ok ? "✓" : "○"}`,
+    invoer.aanleiding.trim() || "[aanleiding nog invullen]",
+    invoer.cautie ? "Cautie gegeven (art. 29 lid 2 Sv)." : "Cautie nog niet aangevinkt.",
+    invoer.geenVerklaring ? `De ${wie} wenste geen verklaring af te leggen.` : invoer.verklaring.trim() ? `Verklaring: "${invoer.verklaring.trim()}"` : "Nog geen verklaring.",
+    "",
+    `W7 | Hoe ${status[6]?.ok ? "✓" : "○"}`,
+    invoer.waarneming.trim() || "[waarneming nog invullen]",
+    invoer.sfeer ? "Sfeerovergang aangevinkt." : "",
+    invoer.aanhouding ? "Aanhouding op heterdaad aangevinkt." : "",
+    invoer.fouillering ? "Veiligheidsfouillering aangevinkt." : "",
+    invoer.boeien ? "Handboeien aangevinkt." : "",
+    invoer.overdracht ? "Overdracht aangevinkt." : "",
   ];
-  return delen.join("\n");
+  return regels.filter((regel) => regel !== undefined).join("\n");
 }

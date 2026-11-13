@@ -64,7 +64,7 @@ export function CopyButton({ text, label = "Kopieer", disabled = false }: { text
         window.setTimeout(() => setDone(false), 1500);
       }}
     >
-      {done ? "Gekopieerd" : label}
+      {done ? "✓ Gekopieerd!" : label}
     </button>
   );
 }

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHead } from "@/components/bits";
+import { seo } from "@/lib/seo";
 
 const BRONNEN = [
   ["Wetboek van Strafrecht", "https://wetten.overheid.nl/BWBR0001903"],
@@ -22,6 +23,12 @@ const BRONNEN = [
 ];
 
 export const Route = createFileRoute("/colofon")({
+  head: () =>
+    seo(
+      "/colofon",
+      "Colofon | BOA Portaal",
+      "Bronnen, reikwijdte en wie BOA Portaal maakt. Onafhankelijke naslag, geen publicatie van het OM of de politie.",
+    ),
   component: ColofonPage,
 });
 

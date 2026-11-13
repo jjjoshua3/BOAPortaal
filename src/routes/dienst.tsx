@@ -35,6 +35,7 @@ import { zoekKenteken, type VoertuigKaart } from "@/lib/boa/rdw.functions";
 import { laadVermisten, type VermistPersoon } from "@/lib/boa/vermist.functions";
 import { useKluis } from "@/lib/kluis/provider";
 import { useBoaAuth } from "@/lib/supabase/auth";
+import { seo } from "@/lib/seo";
 import { sessieToken } from "@/lib/supabase/client";
 
 type Werk =
@@ -89,6 +90,12 @@ const MODULES: { id: Werk; titel: string; regel: string; icoon: LucideIcon }[] =
 const GELDIG = new Set(MODULES.map((item) => item.id));
 
 export const Route = createFileRoute("/dienst")({
+  head: () =>
+    seo(
+      "/dienst",
+      "BOA Werkbank: Combibon-check, Waarnemingstimer & Leeftijdcalculator | BOA Portaal",
+      "Praktische dienst-tools voor op straat: jeugdtarief- en leeftijdcheck (12-15 jaar), parkeer-waarnemingstimer en combibon-ondersteuning.",
+    ),
   validateSearch: (search: Record<string, unknown>): { werk?: Werk } => {
     if (typeof search.werk === "string" && GELDIG.has(search.werk as Werk)) return { werk: search.werk as Werk };
     return {};

@@ -1,12 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { X } from "lucide-react";
 import { PageHead } from "@/components/bits";
 import { JARGON, type Woord } from "@/lib/boa/jargon";
+import { seo } from "@/lib/seo";
 import { useKluis } from "@/lib/kluis/provider";
 
 type Search = { q?: string };
 
 export const Route = createFileRoute("/jargon")({
+  head: () =>
+    seo(
+      "/jargon",
+      "BOA Vakjargon & Juridische Begrippenlijst (A-Z) | BOA Portaal",
+      "Van Abri, Awb en Cautie tot Sfeerovergang, Wet Mulder en Zwerfafval: alle straat- en wetsbegrippen helder uitgelegd voor BOA's en studenten.",
+    ),
   validateSearch: (search: Record<string, unknown>): Search => {
     if (typeof search.q === "string" && search.q.length > 0) return { q: search.q };
     return {};
@@ -85,12 +93,19 @@ function JargonPage() {
         title="Vakjargon"
         lede="Woorden die op straat, in de akte en in het Feitenboekje een vaste betekenis hebben."
       />
-      <label className="field mb-3">
-        Zoek een woord
-        <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="Abri, cautie, combibon, UvB" />
-      </label>
-      <div className="sticky top-14 z-10 -mx-4 mb-3 border-y border-line bg-[#F8FAFC] px-4 py-2">
-        <div className="flex flex-wrap gap-1">
+      <div className="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-paper px-4 py-2">
+        <label className="field">
+          Zoek een woord
+          <span className="relative block">
+            <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="Abri, cautie, combibon, UvB" className="pr-10" />
+            {q ? (
+              <button type="button" className="absolute top-1/2 right-2 -translate-y-1/2 text-muted" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
+                <X className="size-4" />
+              </button>
+            ) : null}
+          </span>
+        </label>
+        <div className="mt-2 flex flex-wrap gap-1">
           <button type="button" className={letter === "alle" ? "btn btn-brand min-h-8 px-2 text-xs" : "btn min-h-8 px-2 text-xs"} onClick={() => setLetter("alle")}>
             A–Z
           </button>

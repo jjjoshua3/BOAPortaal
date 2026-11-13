@@ -4,10 +4,17 @@ import { PageHead } from "@/components/bits";
 import { pastFilter } from "@/lib/boa/meta";
 import { lijstOverleg, plaatsOverleg, verwijderOverleg, type OverlegBericht } from "@/lib/boa/overleg.functions";
 import { usePrefs } from "@/lib/boa/prefs";
+import { seo } from "@/lib/seo";
 import { useBoaAuth } from "@/lib/supabase/auth";
 import { sessieToken } from "@/lib/supabase/client";
 
 export const Route = createFileRoute("/community")({
+  head: () =>
+    seo(
+      "/community",
+      "Community BOA Portaal | Vragen en tips van collega's",
+      "Stel een vakvraag of lees mee. Alleen met een organisatie- of onderwijsaccount. Geen persoonsgegevens van burgers.",
+    ),
   component: CommunityPage,
 });
 

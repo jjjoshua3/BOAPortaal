@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { KAARTEN, type Kaart } from "@/lib/boa/zakkaart";
 import { pastFilter } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
+import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
 import { useKluis } from "@/lib/kluis/provider";
@@ -24,6 +26,12 @@ function isTab(value: unknown): value is TabId {
 }
 
 export const Route = createFileRoute("/zakkaart")({
+  head: () =>
+    seo(
+      "/zakkaart",
+      "BOA Zakkaartjes: Cautie, ID-Vordering (WID) & Aanhouding op Straat | BOA Portaal",
+      "Directe zakkaartjes voor op straat: letterlijke spreektekst cautie (art. 29 Sv), ID-vordering (art. 5:16a Awb / art. 2 WID) en stappenplan aanhouding op heterdaad.",
+    ),
   validateSearch: (search: Record<string, unknown>): Search => {
     if (isTab(search.tab) && search.tab !== "alle") return { tab: search.tab };
     return {};
@@ -45,10 +53,18 @@ function ZakPage() {
   const tabUitUrl = Route.useSearch().tab ?? "alle";
   const navigate = Route.useNavigate();
   const [tab, setTab] = useState<TabId>(tabUitUrl);
+  const [q, setQ] = useState("");
   useEffect(() => {
     setTab(tabUitUrl);
   }, [tabUitUrl]);
-  const kaarten = KAARTEN.filter((kaart) => pastFilter(kaart.domeinen, domein)).filter((kaart) => tab === "alle" || tabVan(kaart.id) === tab);
+  const delen = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const kaarten = KAARTEN.filter((kaart) => pastFilter(kaart.domeinen, domein))
+    .filter((kaart) => tab === "alle" || tabVan(kaart.id) === tab)
+    .filter((kaart) => {
+      if (!delen.length) return true;
+      const hay = `${kaart.titel} ${kaart.artikel} ${kaart.spreek} ${kaart.pv}`.toLowerCase();
+      return delen.every((deel) => hay.includes(deel));
+    });
 
   function kies(id: TabId) {
     setTab(id);
@@ -58,6 +74,19 @@ function ZakPage() {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-5">
       <PageHead kicker="ZAKKAART" title="Zakkaart" lede="Spreektekst, stappen en valkuil. Gemaakt voor het scherm op straat." />
+      <div className="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-paper px-4 py-2">
+        <label className="field max-w-xl">
+          Zoeken
+          <span className="relative block">
+            <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="Cautie, ID, aanhouding" className="pr-10" />
+            {q ? (
+              <button type="button" className="absolute top-1/2 right-2 -translate-y-1/2 text-muted" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
+                <X className="size-4" />
+              </button>
+            ) : null}
+          </span>
+        </label>
+      </div>
       <div className="mb-4 flex flex-wrap gap-2">
         {TABS.map((item) => (
           <button key={item.id} type="button" className={tab === item.id ? "btn btn-brand" : "btn"} onClick={() => kies(item.id)}>

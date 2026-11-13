@@ -242,9 +242,9 @@ export const FEITEN: Feit[] = [
   },
   {
     id: "apv-groep",
-    code: "APV",
+    code: "F 120 a",
     titel: "Hinderlijk ophouden of een samenscholingsverbod negeren",
-    artikel: "APV",
+    artikel: "APV | feitcode F 120 a",
     domeinen: ["I"],
     afdoening: "om",
     afdoeningLabel: "Lokale overtreding, na een geldige aanwijzing",
@@ -272,9 +272,9 @@ export const FEITEN: Feit[] = [
   },
   {
     id: "apv-hond",
-    code: "APV",
+    code: "F 145 a",
     titel: "Hond los of uitwerpselen niet opruimen",
-    artikel: "APV",
+    artikel: "APV | feitcode F 145 a/b",
     domeinen: ["I"],
     afdoening: "om",
     afdoeningLabel: "Lokale overtreding",
@@ -349,9 +349,9 @@ export const FEITEN: Feit[] = [
   },
   {
     id: "vuurwerk",
-    code: "Vuurwerkbesluit",
+    code: "H 171 a",
     titel: "Vuurwerk afsteken buiten de toegestane periode of verboden vuurwerk aanwezig hebben",
-    artikel: "Vuurwerkbesluit / APV",
+    artikel: "Vuurwerkbesluit / APV | aanduiding H 171 a",
     domeinen: ["II", "I"],
     afdoening: "om",
     afdoeningLabel: "Strafrecht of bestuursrecht, volgens akte",
@@ -611,9 +611,20 @@ export const FEITEN: Feit[] = [
 ];
 
 export function boeteKop(feit: Feit): string {
-  if (!feit.tarief) return "Geen vast bedrag in de boetebase";
+  if (!feit.tarief) return "Geen vast bedrag";
   const kop = feit.tarief.split("|")[0]?.trim() ?? "";
-  return kop || "Geen vast bedrag in de boetebase";
+  if (!kop || /geen vast|niet in een vuistregel|verordening/i.test(kop)) return "Geen vast bedrag";
+  return kop;
+}
+
+export function heeftEuro(feit: Feit): boolean {
+  return /€\s*\d/.test(feit.tarief ?? "");
+}
+
+export function tariefRegel(feit: Feit): string {
+  const kop = boeteKop(feit);
+  if (!heeftEuro(feit)) return kop;
+  return `${kop} · excl. € 9 administratiekosten CJIB`;
 }
 
 export function zoekFeiten(query: string, lijst: Feit[]): Feit[] {
