@@ -2,32 +2,16 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { DOMEIN_INFO, type DomeinFilter, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
-import { PageHead } from "@/components/bits";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const SNEL = [
-  { href: "/zakkaart" as const, hash: "cautie", titel: "Cautie", tekst: "U bent niet tot antwoorden verplicht. Niet bij personalia." },
-  { href: "/zakkaart" as const, hash: "id", titel: "ID-vordering", tekst: "Toonplicht vanaf 14 jaar. Geen draagplicht. Onder 14 geen D 517." },
-];
-
-const DOMEIN_START: { id: DomeinId; boom: "parkeer" | "natuur" | "verzuim" | "ov" | "woning" | "akte"; tekst: string }[] = [
-  { id: "I", boom: "parkeer", tekst: "Parkeren, Wahv en de sfeerovergang als iemand gaat schelden." },
-  { id: "II", boom: "natuur", tekst: "Natuur, vissen, dieren en vuurwerk. Eerst de akte." },
-  { id: "III", boom: "verzuim", tekst: "Absoluut, relatief of luxe. Artikel 21 is vervallen." },
-  { id: "IV", boom: "ov", tekst: "Uitstel van betaling, aanwijzing, verwijdering. Onder de 14 geen D 517." },
-  { id: "V", boom: "woning", tekst: "Inlichtingenplicht en de drempel van de woning." },
-  { id: "VI", boom: "akte", tekst: "Alleen wat de akte noemt. K 055 is een overtreding." },
-];
-
-const AFSPRAKEN = [
-  "Personalia vragen is geen verhoor. Een waarom-vraag wel.",
-  "Onder 12 jaar geen strafvervolging. De toonplicht van een ID begint bij 14. Een draagplicht is er niet.",
-  "Een parkeerbon op kenteken is Wahv, geen staandehouding.",
-  "Een aangehouden verdachte draag je onverwijld over aan de politie.",
-  "Handboeien alleen bij vluchtgevaar of direct gevaar, met de reden in het PV.",
+const DEUREN = [
+  { to: "/zakkaart" as const, titel: "Zakkaart", tekst: "Cautie, ID, aanhouding. Kort, voor op straat." },
+  { to: "/feitcodes" as const, titel: "Feitcodes", tekst: "Zoek op code, artikel of situatie." },
+  { to: "/dienst" as const, titel: "Werkbank", tekst: "Combibon, kenteken, tarieven." },
+  { to: "/community" as const, titel: "Community", tekst: "Vragen en tips met collega's." },
 ];
 
 function Home() {
@@ -42,100 +26,54 @@ function Home() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-5">
-      <PageHead
-        kicker="NASLAG | DOMEIN I–VI"
-        title="BOA Portaal"
-        lede="Kennis en praktijk voor buitengewoon opsporingsambtenaren, studenten HTV of BOA-basis, en vakdocenten. Gratis, zonder abonnement. De open naslag is direct te gebruiken. Notities en eigen PV-sjablonen staan in een versleutelde kluis achter een zakelijk of schooladres."
-      />
+    <div className="mx-auto w-full max-w-3xl px-4 py-10">
+      <header className="border-b border-line pb-6">
+        <p className="font-mono text-xs tracking-wide text-muted">BOA PORTAAL</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Welkom</h1>
+        <p className="mt-3 max-w-xl text-base text-muted">
+          Naslag en praktijk voor boa's, studenten en docenten. Gratis. De open pagina's zijn meteen te gebruiken. Notities en eigen sjablonen staan achter een account.
+        </p>
+      </header>
+
       <form
-        className="panel flex flex-col gap-2 p-3 sm:flex-row"
+        className="mt-6 flex flex-col gap-2 sm:flex-row"
         onSubmit={(event) => {
           event.preventDefault();
           void navigate({ to: "/feitcodes", search: q.trim() ? { q: q.trim() } : {} });
         }}
       >
         <label className="field flex-1">
-          Zoek op feitcode, artikel of situatie
-          <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="bijvoorbeeld 447e, cautie, zwartrijden" />
+          Zoek
+          <input value={q} onChange={(event) => setQ(event.target.value)} placeholder="feitcode, artikel of situatie" />
         </label>
         <button className="btn btn-brand sm:self-end" type="submit">
           Zoek
         </button>
       </form>
 
-      <section className="mt-4 grid gap-3 md:grid-cols-3">
-        {SNEL.map((item) => (
-          <Link key={item.titel} to="/zakkaart" hash={item.hash} className="panel accent-navy block p-3">
-            <h2 className="font-semibold">{item.titel}</h2>
-            <p className="mt-1 text-sm text-muted">{item.tekst}</p>
-          </Link>
+      <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+        {DEUREN.map((deur) => (
+          <li key={deur.to}>
+            <Link to={deur.to} className="panel block h-full p-4">
+              <h2 className="font-semibold">{deur.titel}</h2>
+              <p className="mt-1 text-sm text-muted">{deur.tekst}</p>
+            </Link>
+          </li>
         ))}
-        <Link to="/jargon" className="panel accent-navy block p-3">
-          <h2 className="font-semibold">Vakjargon</h2>
-          <p className="mt-1 text-sm text-muted">Abri, combibon, UvB, modaliteit. De woorden zoals ze op straat worden gebruikt.</p>
-        </Link>
-        <Link to="/community" className="panel accent-navy block p-3">
-          <h2 className="font-semibold">Community</h2>
-          <p className="mt-1 text-sm text-muted">Vragen stellen, tips delen en antwoorden geven. Alleen voor aangemelde collega's.</p>
-        </Link>
-      </section>
+      </ul>
 
-      <section className="mt-6">
-        <h2 className="text-lg font-semibold">Zes domeinen, dezelfde diepte</h2>
-        <ul className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {DOMEIN_START.map((item) => (
-            <li key={item.id}>
-              <Link to="/beslisbomen" search={{ boom: item.boom }} className="panel block h-full p-3">
-                <p className="font-mono text-xs text-muted">DOMEIN {item.id}</p>
-                <p className="mt-1 text-sm">{item.tekst}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-6">
-        <h2 className="text-lg font-semibold">Domeinen</h2>
-        <p className="mt-1 text-sm text-muted">De filter bovenin volgt deze keuze op de andere pagina's.</p>
-        <ul className="mt-3 grid gap-3 md:grid-cols-2">
+      <section className="mt-10">
+        <h2 className="text-base font-semibold">Kies je domein</h2>
+        <p className="mt-1 text-sm text-muted">De filter bovenin volgt deze keuze.</p>
+        <ul className="mt-3 flex flex-wrap gap-2">
           {DOMEIN_INFO.map((domein) => (
             <li key={domein.id}>
-              <button type="button" className="panel h-full w-full p-3 text-left" onClick={() => openDomein(domein.id)}>
-                <p className="font-mono text-xs text-muted">{domein.id === "algemeen" ? "ALLE DOMEINEN" : `DOMEIN ${domein.id}`}</p>
-                <h3 className="mt-1 font-semibold">{domein.label}</h3>
-                <p className="mt-1 text-sm">{domein.kort}</p>
-                <p className="mt-2 text-sm text-muted">{domein.tekst}</p>
+              <button type="button" className="btn" onClick={() => openDomein(domein.id)}>
+                {domein.id === "algemeen" ? "Alle" : `Domein ${domein.id}`}
               </button>
             </li>
           ))}
         </ul>
-      </section>
-
-      <section className="mt-6 grid gap-3 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="panel p-3">
-          <h2 className="font-semibold">Afspraken die op straat schelen</h2>
-          <ol className="mt-3 grid gap-2 text-sm">
-            {AFSPRAKEN.map((regel, index) => (
-              <li key={regel} className="grid grid-cols-[2rem_1fr] gap-2 border-b border-line pb-2 last:border-0">
-                <span className="font-mono text-muted">{String(index + 1).padStart(2, "0")}</span>
-                <span>{regel}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div className="panel accent-amber p-3">
-          <h2 className="font-semibold">Geen officieel systeem</h2>
-          <p className="mt-2 text-sm">
-            Dit portaal is onafhankelijk. Het is geen publicatie van het Openbaar Ministerie, de politie, het CJIB of een gemeente. Feitcodes en bedragen volgen het Feitenboekje van 1 januari 2026, exclusief € 9 administratiekosten van het CJIB. Artikel 45 en artikel 45a van de Alcoholwet staan zo in de geldende tekst. Jouw akte van opsporing bepaalt wat je mag doen.
-          </p>
-          <p className="mt-2 text-sm">
-            Controleer de wettekst op wetten.overheid.nl voordat je een PV in het bronsysteem zet.
-          </p>
-          <Link to="/colofon" className="btn mt-3">
-            Colofon en bronnen
-          </Link>
-        </div>
       </section>
     </div>
   );
