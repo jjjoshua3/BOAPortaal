@@ -41,7 +41,7 @@ function PrivacyPage() {
             Een account vraagt een zakelijk, overheids-, vervoers- of schooladres. Gratis mailboxen worden geweigerd. Het adres en het wachtwoord staan alleen in de aanmelddienst. Het wachtwoord is niet leesbaar. In het portaal zelf zie je geen e-mailadres en geen voornaam.
           </p>
           <p className="mt-2">
-            In plaats daarvan krijgt het account een Client-ID, bijvoorbeeld BP-3200-YE, en een PV-naam in de vorm ACHTERNAAM, V. Die twee zijn wat collega's en het beheer zien. Grondslag: je maakt het account zelf aan om de kluis en het overleg te gebruiken, artikel 6 lid 1 onder a en b AVG. Een medewerkersaccount maakt alleen de hoofdbeheerder aan, in systeem.boaportaal.nl. Daarmee krijgt die persoon toegang tot de servicedesk.
+            In plaats daarvan krijgt het account een Client-ID, bijvoorbeeld BP-3200-YE, en een PV-naam in de vorm ACHTERNAAM, V. Die twee zijn wat collega's en het beheer zien. Grondslag: je maakt het account zelf aan om de kluis en het overleg te gebruiken, artikel 6 lid 1 onder a en b AVG. Support en de hoofdbeheerder kunnen in systeem.boaportaal.nl ook een account voor boaportaal.nl aanmaken. Een medewerkersaccount, met recht op de servicedesk, maakt alleen de hoofdbeheerder aan.
           </p>
         </section>
 
@@ -54,7 +54,7 @@ function PrivacyPage() {
             In het dossier staat de Client-ID, de PV-naam, de organisatie en of het account vergrendeld is. Het e-mailadres komt niet op het scherm. De inhoud van de kluis ook niet. De beheerder ziet alleen tellers: hoeveel notities, concepten en favorieten er versleuteld staan, en wanneer de kluis voor het laatst synchroniseerde.
           </p>
           <p className="mt-2">
-            Zoeken op e-mailadres kan alleen de hoofdbeheerder, en alleen als het adres anders niet te vinden is. Dat is een nood-opvraag. Die schrijft een zware regel (BREAK_GLASS). Het adres komt niet terug in het dossier.
+            Zoeken op e-mailadres kunnen support en de hoofdbeheerder, als het dossier niet op Client-ID te vinden is. Die opvraag schrijft een aparte regel (BREAK_GLASS). Het adres komt niet terug in het dossier.
           </p>
         </section>
 
@@ -67,9 +67,9 @@ function PrivacyPage() {
         </section>
 
         <section className="panel p-3">
-          <h2 className="font-semibold">Inloggen en IP-adres</h2>
+          <h2 className="font-semibold">Inloggen</h2>
           <p className="mt-2">
-            Een aanmelding op boaportaal.nl, de servicedesk en het beheersysteem wordt gelogd: moment, site, uitkomst en Client-ID als die bekend is. Het IP-adres hoort bij die regel en is alleen zichtbaar voor de hoofdbeheerder. Support ziet de poging, niet het adres.
+            Een aanmelding op boaportaal.nl, de servicedesk en het beheersysteem wordt gelogd: moment, site, uitkomst en Client-ID als die bekend is.
           </p>
         </section>
 
