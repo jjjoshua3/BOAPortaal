@@ -629,6 +629,9 @@ begin
   if actor.rol is distinct from 'beheerder' then
     raise exception 'Nood-opvraag is alleen voor de hoofdbeheerder.';
   end if;
+  if length(trim(coalesce(p_reden, ''))) < 12 then
+    raise exception 'Reden is verplicht (minimaal 12 tekens).';
+  end if;
   if position('@' in coalesce(p_email, '')) < 2 then
     raise exception 'Geen geldig adres.';
   end if;
