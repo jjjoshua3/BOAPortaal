@@ -10,7 +10,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Aanhouden",
-    uitleg: "Vrijheidsbeneming. Op heterdaad: artikel 53 Sv. Alleen als de akte het toestaat. Daarna onverwijld overdragen aan de politie. Geen eigen verhoor op kantoor.",
+    uitleg: "Vrijheidsbeneming op heterdaad: artikel 53 Sv. Lid 2: ten spoedigste overbrengen ter voorgeleiding aan de hulpofficier of de officier. Artikel 154 Sv is vervallen sinds 1 januari 2013. De boa is geen hulpofficier.",
   },
   {
     term: "Aanwijzing",
@@ -166,15 +166,15 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Heterdaad",
-    uitleg: "Het feit wordt begaan of is net begaan. Artikel 128 Sv. Grond voor aanhouding op heterdaad.",
+    uitleg: "Ontdekking op heterdaad: het feit wordt ontdekt terwijl het wordt begaan of terstond daarna. Artikel 128 Sv. Dat duurt niet langer dan kort na die ontdekking.",
   },
   {
     term: "Hoedanigheid",
-    uitleg: "Of je als toezichthouder of als opsporingsambtenaar optreedt. Zeg het hardop. De ander moet het kunnen horen.",
+    uitleg: "Of je als toezichthouder of als buitengewoon opsporingsambtenaar optreedt. Zeg het hardop. De ander moet het kunnen horen.",
   },
   {
     term: "HOvJ",
-    uitleg: "Hulpofficier van justitie. Een boa is dat niet. Overdracht van een aangehouden verdachte gaat naar de politie of de hulpofficier.",
+    uitleg: "Hulpofficier van justitie. Een boa is dat niet. Artikel 53 lid 2 Sv noemt de voorgeleiding aan de hulpofficier of de officier van justitie.",
   },
   {
     term: "HTV",

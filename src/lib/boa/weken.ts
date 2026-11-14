@@ -41,7 +41,7 @@ const BASIS: Vraag[][] = [
       "Je wilt weten waarom iemand het feit deed. Wat gaat vooraf aan die vraag?",
       [
         "Alleen je naam en dienstnummer",
-        "De mededeling dat je als opsporingsambtenaar optreedt en dat de ander niet tot antwoorden verplicht is",
+        "De mededeling dat je als buitengewoon opsporingsambtenaar optreedt en dat de ander niet tot antwoorden verplicht is",
         "Een waarschuwing dat zwijgen de boete verhoogt",
         "Niets, want personalia zijn al gevraagd",
       ],

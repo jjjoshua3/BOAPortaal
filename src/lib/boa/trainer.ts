@@ -44,8 +44,8 @@ export const BEGINSELEN: Beginsel[] = [
     tekst: "Een parkeerbeschikking op kenteken is bestuursrecht. Geen staandehouding, geen cautie, geen verdachte. Schelden daarna opent wél het strafrecht.",
   },
   {
-    titel: "Aanhouding eindigt bij de politie",
-    tekst: "Onverwijlde overdracht. De boa is geen hulpofficier en houdt niemand voor eigen verhoor op kantoor.",
+    titel: "Aanhouding eindigt bij de voorgeleiding",
+    tekst: "Artikel 53 lid 2 Sv: ten spoedigste overbrengen naar de plaats voor verhoor, ter voorgeleiding aan de hulpofficier of de officier. De boa is geen hulpofficier. Artikel 154 Sv is vervallen.",
   },
   {
     titel: "Geweld zonder noodzaak is zelf een feit",
@@ -227,7 +227,7 @@ export const VRAGEN: Vraag[] = [
       "Art. 73 is alleen een huisregel zonder strafbedreiging",
     ],
     juist: 1,
-    toelichting: "Artikel 101 Wp2000 wijst overtreding van artikel 73 aan als economisch delict.",
+    toelichting: "Artikel 70 is het vervoerbewijs, artikel 72 de orde, artikel 73 de aanwijzing. In het Feitenboekje 2026 is E 128 (artikel 73) een politiestrafbeschikking, geen misdrijf.",
   },
   {
     id: "q11",

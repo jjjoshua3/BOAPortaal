@@ -82,7 +82,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "amber",
         titel: "Dit is al een verhoor",
-        tekst: "Een waarom-vraag over een mogelijk strafbaar feit is verhoor. Zeg dat je nu als opsporingsambtenaar optreedt en geef de cautie vóór je die vraag stelt. Artikel 5:20 Awb gebruik je niet om het antwoord af te dwingen.",
+        tekst: "Een waarom-vraag over een mogelijk strafbaar feit is verhoor. Zeg dat je nu als buitengewoon opsporingsambtenaar optreedt en geef de cautie vóór je die vraag stelt. Artikel 5:20 Awb gebruik je niet om het antwoord af te dwingen.",
         pv: "Ik heb de sfeerovergang kenbaar gemaakt en de cautie gegeven voordat ik [VERDACHTE] vroeg naar diens betrokkenheid bij [FEIT].",
       },
       {
@@ -90,8 +90,8 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "stop",
         titel: "Eerst cautie, dan de vraag",
-        tekst: "Spreektaal: 'Ik treed vanaf nu op als opsporingsambtenaar. U bent niet tot antwoorden verplicht.' Daarna pas de vraag. Wat iemand daarvóór spontaan zei, noteer je apart als spontane verklaring.",
-        pv: "Voorafgaand aan het verhoor heb ik [VERDACHTE] medegedeeld dat ik als opsporingsambtenaar optrad en dat hij niet tot antwoorden verplicht is.",
+        tekst: "Spreektaal: 'Ik treed vanaf nu op als buitengewoon opsporingsambtenaar. U bent niet tot antwoorden verplicht.' Daarna pas de vraag. Wat iemand daarvóór spontaan zei, noteer je apart als spontane verklaring.",
+        pv: "Voorafgaand aan het verhoor heb ik [VERDACHTE] medegedeeld dat ik als buitengewoon opsporingsambtenaar optrad en dat hij niet tot antwoorden verplicht is.",
       },
       {
         id: "einde-stil",
@@ -200,7 +200,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "stop",
         titel: "D 517 en, als het moet, aanhouding",
-        tekst: "Het niet voldoen is een overtreding (art. 447e Sr). Aanhouding op heterdaad kan, daarna onverwijlde overdracht aan de politie. Geen cautie nodig voor de personalia zelf. Wel cautie als je daarna vraagt waarom iemand weigert.",
+        tekst: "Het niet voldoen is een overtreding (art. 447e Sr). Aanhouding op heterdaad kan. Artikel 53 lid 2 Sv: ten spoedigste overbrengen ter voorgeleiding aan de hulpofficier of de officier. Artikel 154 Sv is vervallen. Geen cautie nodig voor de personalia zelf. Wel cautie als je daarna vraagt waarom iemand weigert.",
         pv: "Ik heb [VERDACHTE], 14 jaar of ouder, gevorderd een identiteitsbewijs te tonen en gewezen op artikel 447e Sr. [VERDACHTE] voldeed niet. Ik heb [VERDACHTE] aangehouden en overgedragen aan de politie.",
       },
       {
@@ -564,7 +564,7 @@ export const BOMEN: Tree[] = [
         toon: "stop",
         titel: "Bon blijft, belediging is een tweede spoor",
         tekst: "Artikel 266 of 267 Sr staat los van de kentekenbeschikking. Maak de sfeerovergang hoorbaar en geef de cautie vóór je over de uitlating doorvraagt. Handboeien volgen niet uit het woord alleen.",
-        pv: "Tijdens het aanzeggen van de Wahv-beschikking deed [VERDACHTE] de uitlating: [UITLATING]. Ik heb daarna medegedeeld dat ik als opsporingsambtenaar optrad en de cautie gegeven, voordat ik over die uitlating vragen stelde. De beschikking op kenteken heb ik niet ingetrokken.",
+        pv: "Tijdens het aanzeggen van de Wahv-beschikking deed [VERDACHTE] de uitlating: [UITLATING]. Ik heb daarna medegedeeld dat ik als buitengewoon opsporingsambtenaar optrad en de cautie gegeven, voordat ik over die uitlating vragen stelde. De beschikking op kenteken heb ik niet ingetrokken.",
       },
       {
         id: "verzet",
@@ -1139,7 +1139,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "stop",
         titel: "Eerst cautie",
-        tekst: "Zeg dat je als opsporingsambtenaar optreedt. Geef de cautie vóór de vraag. Artikel 17 gebruik je niet om het zwijgrecht te omzeilen. De bestuurlijke boete van artikel 18a legt het college op, niet jij.",
+        tekst: "Zeg dat je als buitengewoon opsporingsambtenaar optreedt. Geef de cautie vóór de vraag. Artikel 17 gebruik je niet om het zwijgrecht te omzeilen. De bestuurlijke boete van artikel 18a legt het college op, niet jij.",
         pv: "Vanaf [TIJD] was er een redelijk vermoeden van een strafbaar feit. Ik heb de cautie gegeven voordat ik [VERDACHTE] vroeg naar de betrokkenheid.",
       },
       {

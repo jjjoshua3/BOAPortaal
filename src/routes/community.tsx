@@ -37,7 +37,7 @@ const ONDERWERPEN: { domein: "I" | "II" | "III" | "IV" | "V" | "VI" | "algemeen"
   {
     domein: "algemeen",
     titel: "Sfeerovergang",
-    tekst: "Zodra je een verklaring zoekt over het feit, stopt de medewerkingsplicht. Hardop zeggen dat je opspoort, daarna de cautie (art. 29 lid 2 Sv).",
+    tekst: "Zodra je een verklaring zoekt over het feit, stopt de medewerkingsplicht. Noem je titel: buitengewoon opsporingsambtenaar (art. 142 Sv). De cautie zelf is art. 29 lid 2 Sv: niet tot antwoorden verplicht, vóór het verhoor.",
   },
   {
     domein: "IV",
