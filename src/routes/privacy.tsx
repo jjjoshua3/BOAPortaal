@@ -108,7 +108,10 @@ function PrivacyPage() {
         <section className="panel p-3">
           <h2 className="font-semibold">Overleg en servicedesk</h2>
           <p className="mt-2">
-            Een bericht op het prikbord wordt versleuteld bewaard. Aangemelde collega's kunnen het lezen, anders werkt het bord niet. Onder het bericht staat de PV-naam en de Client-ID, niet het e-mailadres.
+            Een bericht op het prikbord is leesbaar voor aangemelde collega's, anders werkt het bord niet. Onder een gewoon bericht staat de PV-naam en de Client-ID, niet het e-mailadres.
+          </p>
+          <p className="mt-2">
+            Je kunt een bericht anoniem plaatsen. Dan staat er geen naam en geen Client-ID, maar een code die per bericht anders is. Een reactie van jou op dat bericht blijft anoniem en houdt dezelfde code. Een nieuw anoniem bericht krijgt een nieuwe code. Collega's zien de code, niet wie erachter zit. Support en beheer kunnen die code in systeem.boaportaal.nl opzoeken. Daarvoor is een reden verplicht, en die komt in het auditlog.
           </p>
           <p className="mt-2">
             Een ticket op de servicedesk bevat Client-ID, PV-naam, categorie, onderwerp en je omschrijving. Geen e-mailadres in het scherm van de behandelaar. Een ticket is een vraag over het portaal, geen proces-verbaal en geen dossier van een burger.

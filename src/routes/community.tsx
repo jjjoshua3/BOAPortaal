@@ -76,7 +76,7 @@ function CommunityPage() {
       <PageHead
         kicker="COMMUNITY"
         title="Community"
-        lede="Vaste onderwerpen per domein, plus het bord voor aangemelde collega's. Geen namen van burgers."
+        lede="Vaste onderwerpen per domein, plus het bord voor aangemelde collega's. Anoniem plaatsen kan: dan staat er een code, geen naam."
       />
       <ul className="grid gap-2">
         {onderwerpen.map((item) => (
@@ -114,6 +114,7 @@ function Bord() {
   const [bezig, setBezig] = useState(false);
   const [reageerOp, setReageerOp] = useState<string | null>(null);
   const [reactieTekst, setReactieTekst] = useState("");
+  const [anoniem, setAnoniem] = useState(false);
 
   async function vernieuw() {
     const token = await sessieToken();
@@ -148,6 +149,7 @@ function Bord() {
           tekst: isReply ? reactieTekst : tekst,
           domein: domein === "alle" ? "algemeen" : domein,
           parent_id: parentId,
+          anoniem: isReply ? false : anoniem,
         },
       });
       if (isReply) {
@@ -156,6 +158,7 @@ function Bord() {
       } else {
         setTitel("");
         setTekst("");
+        setAnoniem(false);
       }
       await vernieuw();
     } catch (error) {
@@ -199,22 +202,23 @@ function Bord() {
     return geplaatst.toLocaleDateString("nl-NL", { day: "numeric", month: "short" });
   }
 
-  function BerichtKaart({ bericht, diep = false }: { bericht: OverlegBericht; diep?: boolean }) {
+  function BerichtKaart({ bericht, diep = false, eigenDraad = false }: { bericht: OverlegBericht; diep?: boolean; eigenDraad?: boolean }) {
     const replies = (kinderen.get(bericht.id) ?? []).sort(
       (a, b) => new Date(a.gemaakt).getTime() - new Date(b.gemaakt).getTime(),
     );
+    const draad = eigenDraad || (!diep && bericht.anoniem && bericht.eigen);
     return (
       <li className={diep ? "ml-6 border-l border-line pl-3" : ""}>
         <div className="overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
           <div className="flex items-start gap-3 p-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-inset text-xs font-semibold text-ink">
-              {(bericht.weergave || "C").slice(0, 1).toUpperCase()}
+              {bericht.anoniem ? "A" : (bericht.weergave || "C").slice(0, 1).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-muted">
-                <span className="font-semibold text-ink">{bericht.weergave || "collega"}</span>
+                <span className="font-semibold text-ink">{bericht.anoniem ? "Anoniem" : bericht.weergave || "collega"}</span>
                 <span>·</span>
-                <span>{bericht.organisatie}</span>
+                {bericht.anoniem ? <span className="font-mono text-ink">{bericht.organisatie}</span> : <span>{bericht.organisatie}</span>}
                 <span>·</span>
                 <span>{relatief(bericht.gemaakt)}</span>
                 <span className="rounded-full bg-inset px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
@@ -226,6 +230,9 @@ function Bord() {
               </div>
               <h3 className="mt-1.5 text-base font-semibold leading-snug">{bericht.titel}</h3>
               <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-ink/90">{bericht.tekst}</p>
+              {bericht.eigen && bericht.anoniem && !diep ? (
+                <p className="mt-1 text-xs text-muted">Jouw code voor dit bericht: {bericht.organisatie}. Een volgend anoniem bericht krijgt een andere code.</p>
+              ) : null}
               <div className="mt-3 flex items-center gap-1">
                 <button
                   type="button"
@@ -272,6 +279,7 @@ function Bord() {
               </div>
               {reageerOp === bericht.id ? (
                 <form className="mt-3 grid gap-2" onSubmit={(e) => void plaats(e, bericht.id)}>
+                  {draad ? <p className="text-xs text-muted">Je reageert anoniem, met dezelfde code als het bericht.</p> : null}
                   <textarea
                     value={reactieTekst}
                     onChange={(e) => setReactieTekst(e.target.value)}
@@ -296,7 +304,7 @@ function Bord() {
         {replies.length ? (
           <ul className="mt-2 grid gap-2">
             {replies.map((r) => (
-              <BerichtKaart key={r.id} bericht={r} diep />
+              <BerichtKaart key={r.id} bericht={r} diep eigenDraad={draad} />
             ))}
           </ul>
         ) : null}
@@ -321,6 +329,10 @@ function Bord() {
         <label className="field">
           Bericht
           <textarea value={tekst} onChange={(e) => setTekst(e.target.value)} rows={4} required />
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input className="mt-1" type="checkbox" checked={anoniem} onChange={(e) => setAnoniem(e.target.checked)} />
+          Anoniem plaatsen. Je krijgt een code, geen naam. Per nieuw bericht een andere code. Support kan die code opzoeken.
         </label>
         <button className="btn btn-brand w-fit" type="submit" disabled={bezig}>
           {bezig ? "Plaatsen…" : "Plaatsen"}

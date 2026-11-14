@@ -13,6 +13,7 @@ export type OverlegBericht = {
   tekst: string;
   organisatie: string;
   weergave: string;
+  anoniem: boolean;
   gemaakt: string;
   score: number;
   mijn_stem: -1 | 0 | 1;
@@ -47,7 +48,8 @@ const GRATIS = new Set([
 
 type Rij = {
   id: string;
-  user_id: string;
+  user_id?: string;
+  eigen?: boolean;
   parent_id: string | null;
   soort: "overleg" | "correctie";
   domein: string;
@@ -55,6 +57,8 @@ type Rij = {
   tekst: string;
   weergave: string;
   organisatie: string;
+  anoniem?: boolean;
+  anon_code?: string | null;
   created_at: string;
 };
 
@@ -89,6 +93,7 @@ function leesInvoer(data: unknown): {
   tekst: string;
   domein: string;
   parent_id: string | null;
+  anoniem: boolean;
 } {
   if (!data || typeof data !== "object") throw new Error("onvolledig");
   const rij = data as Record<string, unknown>;
@@ -98,16 +103,24 @@ function leesInvoer(data: unknown): {
   const tekst = typeof rij.tekst === "string" ? rij.tekst.trim() : "";
   const domein = typeof rij.domein === "string" ? rij.domein : "";
   const parent_id = typeof rij.parent_id === "string" && rij.parent_id ? rij.parent_id : null;
+  const anoniem = rij.anoniem === true && !parent_id;
   if (!soort || titel.length < 3 || titel.length > 120 || tekst.length < 5 || tekst.length > 1200) {
     throw new Error("Titel en tekst kloppen niet.");
   }
   if (!DOMEINEN.has(domein)) throw new Error("Kies een domein.");
   const scan = scanPii(`${titel}\n${tekst}`);
   if (scan.hard.length) throw new Error("Telefoon, e-mail en IBAN horen hier niet in.");
-  return { token, soort, titel, tekst, domein, parent_id };
+  return { token, soort, titel, tekst, domein, parent_id, anoniem };
+}
+
+function anonSchema(bericht: string) {
+  return /boa_community_zicht|boa_community_plaats|boa_community_wis|schema cache|PGRST202|PGRST205|42P01/i.test(bericht);
 }
 
 function tabelFout(bericht: string): never {
+  if (anonSchema(bericht)) {
+    throw new Error("Anonieme posts missen nog in Supabase. Voer migrations/0009_community_anon.sql eenmalig uit in de SQL Editor.");
+  }
   if (/relation|does not exist|schema cache|42P01/i.test(bericht)) {
     throw new Error("De community-tabel ontbreekt nog in Supabase. Voer het community-SQL eenmalig uit in de SQL Editor.");
   }
@@ -122,11 +135,21 @@ export const lijstOverleg = createServerFn({ method: "POST" })
     if (!user) throw new Error("Meld je aan met een zakelijk of schooladres.");
     const sb = client(token);
 
-    const { data: rijen, error } = await sb
-      .from("boa_community")
-      .select("id, user_id, parent_id, soort, domein, titel, tekst, weergave, organisatie, created_at")
+    let { data: rijen, error } = await sb
+      .from("boa_community_zicht")
+      .select("id, eigen, parent_id, soort, domein, titel, tekst, weergave, organisatie, anoniem, anon_code, created_at")
       .order("created_at", { ascending: false })
       .limit(120);
+    if (error && anonSchema(error.message)) {
+      const oud = await sb
+        .from("boa_community")
+        .select("id, user_id, parent_id, soort, domein, titel, tekst, weergave, organisatie, created_at")
+        .order("created_at", { ascending: false })
+        .limit(120);
+      if (oud.error) tabelFout(oud.error.message);
+      rijen = ((oud.data ?? []) as Rij[]).map((rij) => ({ ...rij, eigen: rij.user_id === user.id, anoniem: false, anon_code: null }));
+      error = null;
+    }
     if (error) tabelFout(error.message);
 
     const ids = ((rijen ?? []) as Rij[]).map((r) => r.id);
@@ -148,14 +171,15 @@ export const lijstOverleg = createServerFn({ method: "POST" })
 
     return ((rijen ?? []) as Rij[]).map((rij) => ({
       id: rij.id,
-      eigen: rij.user_id === user.id,
+      eigen: Boolean(rij.eigen) || rij.user_id === user.id,
       parent_id: rij.parent_id,
       soort: rij.soort,
       domein: rij.domein,
       titel: rij.titel,
       tekst: rij.tekst,
-      organisatie: rij.organisatie,
-      weergave: rij.weergave,
+      anoniem: Boolean(rij.anoniem),
+      organisatie: rij.anoniem ? rij.anon_code || rij.organisatie || "Anoniem" : rij.organisatie,
+      weergave: rij.anoniem ? "Anoniem" : rij.weergave,
       gemaakt: rij.created_at,
       score: scoreMap.get(rij.id) ?? 0,
       mijn_stem: mijnMap.get(rij.id) ?? 0,
@@ -169,6 +193,18 @@ export const plaatsOverleg = createServerFn({ method: "POST" })
     const user = await gebruiker(invoer.token);
     if (!user) throw new Error("Meld je aan met een zakelijk of schooladres.");
     const sb = client(invoer.token);
+    const geplaatst = await sb.rpc("boa_community_plaats", {
+      p_parent: invoer.parent_id,
+      p_soort: invoer.parent_id ? "correctie" : invoer.soort,
+      p_domein: invoer.domein,
+      p_titel: invoer.titel,
+      p_tekst: invoer.tekst,
+      p_anoniem: invoer.anoniem,
+    });
+    if (!geplaatst.error && geplaatst.data) return { id: String(geplaatst.data) };
+    if (!geplaatst.error) tabelFout("Plaatsen lukte niet.");
+    if (!anonSchema(geplaatst.error.message)) tabelFout(geplaatst.error.message);
+    if (invoer.anoniem) tabelFout(geplaatst.error.message);
     const { data: ident } = await sb.from("boa_identiteit").select("pv_naam, client_id").eq("user_id", user.id).maybeSingle();
     const { data: rij, error } = await sb
       .from("boa_community")
@@ -226,6 +262,11 @@ export const verwijderOverleg = createServerFn({ method: "POST" })
     const user = await gebruiker(token);
     if (!user || !id) throw new Error("niet aangemeld");
     const sb = client(token);
-    const { error } = await sb.from("boa_community").delete().eq("id", id).eq("user_id", user.id);
-    if (error) tabelFout(error.message);
+    const wis = await sb.rpc("boa_community_wis", { p_id: id });
+    if (wis.error && anonSchema(wis.error.message)) {
+      const { error } = await sb.from("boa_community").delete().eq("id", id).eq("user_id", user.id);
+      if (error) tabelFout(error.message);
+      return;
+    }
+    if (wis.error) tabelFout(wis.error.message);
   });

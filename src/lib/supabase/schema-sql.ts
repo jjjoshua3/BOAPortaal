@@ -147,6 +147,8 @@ create table if not exists public.boa_community (
   tekst text not null,
   weergave text not null,
   organisatie text not null,
+  anoniem boolean not null default false,
+  anon_code text,
   created_at timestamptz not null default now()
 );
 

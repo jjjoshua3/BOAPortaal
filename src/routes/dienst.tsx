@@ -635,6 +635,7 @@ function Overleg() {
   const [tekst, setTekst] = useState("");
   const [soort, setSoort] = useState<"overleg" | "correctie">("overleg");
   const [bezig, setBezig] = useState(false);
+  const [anoniem, setAnoniem] = useState(false);
 
   async function vernieuw() {
     const token = await sessieToken();
@@ -668,10 +669,12 @@ function Overleg() {
           titel,
           tekst,
           domein: domein === "alle" ? "algemeen" : domein,
+          anoniem,
         },
       });
       setTitel("");
       setTekst("");
+      setAnoniem(false);
       await vernieuw();
     } catch (error) {
       const bericht = error instanceof Error ? error.message : "Plaatsen lukte niet.";
@@ -700,6 +703,10 @@ function Overleg() {
           Bericht
           <textarea value={tekst} onChange={(event) => setTekst(event.target.value)} rows={4} required />
         </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input className="mt-1" type="checkbox" checked={anoniem} onChange={(event) => setAnoniem(event.target.checked)} />
+          Anoniem plaatsen. Per bericht een andere code. Support kan die code opzoeken.
+        </label>
         <button className="btn btn-brand w-fit" type="submit" disabled={bezig}>
           {bezig ? "Plaatsen…" : "Plaatsen"}
         </button>
@@ -709,7 +716,7 @@ function Overleg() {
         {lijst.map((bericht) => (
           <li key={bericht.id} className="panel p-3">
             <p className="text-xs font-semibold text-muted">
-              {bericht.soort === "correctie" ? "Antwoord" : "Vraag / tip"} | Domein {bericht.domein} | {bericht.weergave}
+              {bericht.soort === "correctie" ? "Antwoord" : "Vraag / tip"} | Domein {bericht.domein} | {bericht.anoniem ? `Anoniem ${bericht.organisatie}` : bericht.weergave}
             </p>
             <h3 className="mt-1 font-semibold">{bericht.titel}</h3>
             <p className="mt-1 text-sm">{bericht.tekst}</p>
