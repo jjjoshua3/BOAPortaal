@@ -242,17 +242,17 @@ export const FEITEN: Feit[] = [
   },
   {
     id: "apv-groep",
-    code: "F 120 a",
-    titel: "Hinderlijk ophouden of een samenscholingsverbod negeren",
-    artikel: "APV | feitcode F 120 a",
+    code: "F 120 b",
+    titel: "Zich ophouden op een wijze die overlast of hinder veroorzaakt",
+    artikel: "APV | feitcode F 120 b",
     domeinen: ["I"],
     afdoening: "om",
     afdoeningLabel: "Lokale overtreding, na een geldige aanwijzing",
     kwalificatie: "Overtreding",
     leeftijd: "Strafrecht vanaf 12 jaar. Bij jongeren eerst de-escaleren en de Halt-route toetsen.",
     bijzonder:
-      "Een samenscholingsverbod geldt pas als het in de APV staat en vaak pas na een concrete aanwijzing om je te verwijderen. Alleen 'er staan' is meestal onvoldoende. Leg de hinder feitelijk vast.",
-    pv: "Te [PLAATS] hielden personen zich hinderlijk op, omdat [FEITELIJKE HINDER]. Ik heb op grond van [ARTIKEL APV] de aanwijzing gegeven de plaats te verlaten. [VERDACHTE] heeft die aanwijzing niet opgevolgd.",
+      "F 120 a is klimmen of zich bevinden op een beeld, monument, hek of straatmeubilair. Toelichting: waarop. Tarief € 110. F 120 b is hinderlijk ophouden. Toelichting: waaruit bleek dit. Tarief € 170. Een samenscholingsverbod is een eigen APV-artikel, niet deze code.",
+    pv: "Te [PLAATS] hield [VERDACHTE] zich op een wijze op die overlast of hinder veroorzaakte. Waaruit dat bleek: [FEITEN]. Grondslag: [ARTIKEL APV], feitcode F 120 b.",
     trefwoorden: "samenscholing hangjongeren hinderlijk ophouden groep apv",
   },
   {
@@ -457,7 +457,7 @@ export const FEITEN: Feit[] = [
   {
     id: "wp72",
     code: "E 120 a",
-    titel: "Orde, rust, veiligheid of de goede bedrijfsgang verstoren",
+    titel: "Bediening en gebruik van voorzieningen verhinderen of belemmeren",
     artikel: "Art. 72 Wp2000",
     domeinen: ["IV"],
     afdoening: "om",
@@ -465,9 +465,9 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Overtreding",
     leeftijd: "Vanaf 12 jaar als er een PV komt. Verwijdering kan ook bestuurlijk via de huisregels.",
     bijzonder:
-      "De gedraging bepaalt de code: belemmeren van de bediening is E 120 a (€ 290), hinderlijk geluid E 129 a (€ 170), natuurlijke behoefte in het voertuig E 129 ff (€ 170). Vraag of er toestemming van de vervoerder was (art. 52 lid 2 BP 2000). Verwijdering is geen aanhouding.",
+      "E 120 a is alleen het belemmeren van de bediening en het gebruik van voorzieningen, € 290. E 120 b is het vervoermiddel, E 120 c het personeel. Hinderlijk geluid is E 129 a (€ 170). Bij de hele reeks vraagt het Feitenboekje of de verdachte handelde met toestemming van de vervoerder (art. 52 lid 2 Besluit personenvervoer 2000). Verwijdering is geen aanhouding.",
     tarief: "€ 290 | politiestrafbeschikking | E 120 a | " + BRON,
-    pv: "In [VOERTUIG / STATION] verstoorde [VERDACHTE] de orde door [GEDRAGING]. Ik heb een aanwijzing gegeven om daarmee te stoppen. [VERDACHTE] heeft [WEL / NIET] gevolg gegeven. Maatregel: [VERWIJDERING / VERBLIJFSONTZEGGING / PV] op grond van artikel 72 Wet personenvervoer 2000.",
+    pv: "In [VOERTUIG / STATION] verhinderde of belemmerde [VERDACHTE] de bediening en het gebruik van [VOORZIENING], doordat [GEDRAGING]. Ik heb gevraagd of [VERDACHTE] handelde met toestemming van de vervoerder. Antwoord: [JA / NEE]. Grondslag: artikel 72 Wet personenvervoer 2000, feitcode E 120 a.",
     trefwoorden: "orde verstoren voertuig station overlast 72",
   },
   {
@@ -612,10 +612,9 @@ export const FEITEN: Feit[] = [
 
 const MOET: Record<string, string[]> = {
   d517: [
-    "Je hebt je gelegitimeerd en de hoedanigheid kenbaar gemaakt.",
-    "De vordering tot inzage is duidelijk uitgesproken (art. 2 WID).",
+    "Feitenboekje 2026, toelichting bij p D 517: feiten en omstandigheden vermelden waarom de vordering redelijkerwijze noodzakelijk werd geacht.",
+    "Je hebt je gelegitimeerd en de vordering tot inzage duidelijk uitgesproken (art. 2 WID).",
     "De persoon is 14 jaar of ouder. Onder de 14 is dit feit er niet.",
-    "Na de vordering is gewezen op artikel 447e Sr, en daarna is nog steeds niet voldaan.",
     "Dit is een verdachte, geen betrokkene. Ook in het openbaar vervoer.",
   ],
   d515: [
@@ -684,9 +683,9 @@ const MOET: Record<string, string[]> = {
     "Geen naam of andere herleidbare gegevens in dit portaal.",
   ],
   "apv-groep": [
-    "De tekst van het samenscholings- of ophoudverbod van deze gemeente.",
-    "Dat de groep is aangemaand en wat er daarna gebeurde.",
-    "Een landelijke standaardzin zonder het artikel van de APV is niet genoeg.",
+    "F 120 b, niet F 120 a. F 120 a is klimmen of zich bevinden op een beeld, monument, hek of straatmeubilair.",
+    "Feitenboekje: waaruit bleek de overlast of hinder. Schrijf die feiten, niet het woord hinder alleen.",
+    "Een samenscholingsverbod is een eigen artikel in de APV, niet automatisch deze code.",
   ],
   "apv-vo": [
     "Dat er een verblijfsontzegging gold, voor welk gebied en welke periode.",
@@ -755,9 +754,9 @@ const MOET: Record<string, string[]> = {
     "Artikel 71, niet artikel 70 lid 2. Lid 2 is de administratieve betalingsweg.",
   ],
   wp72: [
-    "De concrete gedraging die de orde, rust, veiligheid of bedrijfsgang verstoorde.",
-    "Of er toestemming van de vervoerder was.",
-    "Verwijdering is geen aanhouding. De code volgt de gedraging, niet 'overlast' in het algemeen.",
+    "E 120 a is het verhinderen of belemmeren van de bediening en het gebruik van voorzieningen, € 290. Niet elke verstoring.",
+    "Feitenboekje, bij de hele reeks: altijd vragen of de verdachte handelde met toestemming van de vervoerder (art. 52 lid 2 Besluit personenvervoer 2000).",
+    "Verwijdering is geen aanhouding.",
   ],
   wp73: [
     "De aanwijzing woordelijk, en dat die ging over orde, rust, veiligheid of de bedrijfsgang.",
@@ -795,9 +794,10 @@ const MOET: Record<string, string[]> = {
     "De akte moet dit feit noemen.",
   ],
   r545: [
-    "Het voertuig werd bestuurd en een mobiel apparaat werd vastgehouden.",
-    "Wat je zag: in de hand, niet 'aan het appen' als je het scherm niet zag.",
-    "Dit is een Wahv-gedraging. Betrokkene of bestuurder, geen verdachte voor dit feit alleen.",
+    "Feitenboekje: noteer soort elektronisch apparaat, bijvoorbeeld vorm, merk en type.",
+    "De code geldt niet voor de rij-instructeur. Categorie 8 alleen voor trambestuurders.",
+    "Wat je zag: vasthouden tijdens het rijden. Niet 'aan het appen' als je het scherm niet zag.",
+    "Wahv-gedraging. Betrokkene of bestuurder, geen verdachte voor dit feit alleen.",
   ],
   gevaar: [
     "Welk gedrag gevaar of hinder opleverde, in feiten, niet in het woord 'gevaarlijk' alleen.",
@@ -805,6 +805,33 @@ const MOET: Record<string, string[]> = {
     "Eerst de veiligheid, daarna overdracht.",
   ],
 };
+
+const BOEKJE: Record<string, string> = {
+  d517: "p D 517. Toelichting: feiten en omstandigheden vermelden waarom de vordering redelijkerwijze noodzakelijk werd geacht. Tarief € 110.",
+  d515: "* D 515. Toelichting: door welk bevoegd gezag gevraagd; verificatie; wat was onjuist; wiens gegevens gebruikt en wat was de reden. Geen vast tarief.",
+  h001: "p H 022. Toelichting: kleine hoeveelheden, zoals klein consumptieafval, blikjes, papier, peuken. Op de achterzijde van het mini-pv: het artikel van de Afvalstoffenverordening en de geconstateerde handeling. Tarief € 170.",
+  h025: "p H 004. Op de achterzijde van het mini-pv: het artikel van de Afvalstoffenverordening en de geconstateerde handeling. H 025 is een ander feit: als particulier buiten een inrichting storten, op of in de bodem brengen of verbranden, € 470. Tarief H 004: € 110.",
+  r397: "m R 584, bord E1. Toelichting: de code geldt niet voor parkeren in de berm. R 397 a is een andere code (binnen vijf meter van een kruispunt; vermeld de mate van belemmering).",
+  r584: "m R 402 b. Toelichting: een gehandicaptenvoertuig mag wel op een gehandicaptenparkeerplaats parkeren. R 584 is bord E1, niet deze plaats.",
+  f120b: "p F 121 a (gebruiken) en p F 121 b (aangebroken verpakking bij zich). Toelichting: bij een minderjarige zie E 211. F 120 b is hinderlijk ophouden, niet drank.",
+  dh45: "E 211, € 110. Het Feitenboekje verwijst bij F 121 a en F 121 b naar E 211 a en E 211 b; de tarieflijst heeft één regel E 211.",
+  d530: "p F 185. Toelichting: binnen de bebouwde kom; op welke plaats. Tarief € 170. D 530 is openbare dronkenschap, artikel 453 Sr: waaruit bleek dit; noem de symptomen. Tarief € 110.",
+  "apv-groep": "p F 120 b. Toelichting: waaruit bleek dit. Tarief € 170. F 120 a is klimmen of zich bevinden op een beeld, monument, hek of straatmeubilair. Toelichting: waarop. Tarief € 110.",
+  "wp70-1": "p E 100 a. Toelichting: geen pv als is voldaan aan artikel 48 leden 2, 3, 5 en 6 van het Besluit personenvervoer 2000 jo. artikel 70 lid 2 Wp2000. Tarief € 110.",
+  "wp70-2": "* E 103. Toelichting: niet van toepassing bij een kaart op naam van een ander zonder misbruik. Het voordeel moet blijken. Geen vast tarief.",
+  wp72: "p E 120 a: de bediening en het gebruik van voorzieningen verhinderen of belemmeren, € 290. Bij de hele reeks: altijd vragen of de verdachte handelde met toestemming van de vervoerder (artikel 52 lid 2 Besluit personenvervoer 2000).",
+  wp73: "p E 128. Toelichting: kenbaar gemaakt door. Tarief € 110.",
+  art107: "* K 055. Toelichting: welke categorie vereist; staandehouding verplicht. Alleen als de bestuurder gezien de leeftijd een Nederlands rijbewijs kan hebben.",
+  r545: "m R 545. Toelichting: noteer soort apparaat, bijvoorbeeld vorm, merk en type. Categorie 8 alleen voor trambestuurders. De code geldt niet voor de rij-instructeur.",
+  storten: "p H 025 is de feitcode voor een particulier die afval buiten een inrichting stort, op of in de bodem brengt of verbrandt. Tarief € 470. Een bedrijfsmatige dump is een andere route.",
+};
+
+export function boekjeToelichting(feit: Feit): string {
+  return (
+    BOEKJE[feit.id] ??
+    "Bij deze titel staat in het Feitenboekje 2026 geen eigen toelichtingsregel, of het feit zit in een lokale verordening. Vermeld dan het artikel van die verordening en de handeling. Bij een *-feit (misdrijf) hoort naast het mini-pv een proces-verbaal waarin de redenen van wetenschap staan."
+  );
+}
 
 export function moetInRelaas(feit: Feit): string[] {
   return (

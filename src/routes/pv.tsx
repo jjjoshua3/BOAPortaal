@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { FEITEN, moetInRelaas, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, boekjeToelichting, moetInRelaas, type Feit } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, pastFilter, type DomeinId } from "@/lib/boa/meta";
 import {
   bouwPv,
@@ -298,6 +298,7 @@ function PvPage() {
             {form.feit ? (
               <div className="border border-line bg-paper p-2 text-sm">
                 <p className="font-semibold">Redenen van wetenschap voor {form.feit.code}</p>
+                <p className="mt-1">{boekjeToelichting(form.feit)}</p>
                 <ul className="mt-1 list-disc pl-5">
                   {moetInRelaas(form.feit).map((regel) => (
                     <li key={regel}>{regel}</li>

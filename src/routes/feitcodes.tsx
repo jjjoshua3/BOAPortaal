@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
-import { FEITEN, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -62,7 +62,7 @@ function FeitPage() {
       <PageHead
         kicker="MODULE 1 | FEITCODE EN WET"
         title="Feitcodes en kernartikelen"
-        lede="Zoek op trefwoord, code of artikel. Het boetebedrag is het tarief uit de boetebase en het Feitenboekje van 1 januari 2026, exclusief € 9 administratiekosten van het CJIB. De akte van deze gemeente of vervoerder gaat voor."
+        lede="Zoek op trefwoord, code of artikel. Onder elke code staat de toelichting uit het Feitenboekje van het OM, uitgave 1 januari 2026: wat je bij die code moet vermelden. Het tarief is exclusief € 9 administratiekosten van het CJIB. De akte gaat voor."
       />
       <div className="mb-3 flex flex-wrap gap-2">
         <button type="button" className={tab === "feiten" ? "btn btn-brand" : "btn"} onClick={() => setTab("feiten")}>
@@ -317,11 +317,15 @@ function Detail({ feit }: { feit: Feit }) {
         {feit.leeftijd}
       </p>
       <p>{feit.bijzonder}</p>
+      <div className="border border-line bg-[#FEF3C7] p-2">
+        <p className="font-semibold">Toelichting Feitenboekje OM, januari 2026</p>
+        <p className="mt-1">{boekjeToelichting(feit)}</p>
+        <p className="mt-2 text-muted">
+          Artikel 153 van het Wetboek van Strafvordering: het proces-verbaal vermeldt de redenen van wetenschap. Schrijf wat je zelf zag, hoorde of na onderzoek vaststelde. Bij een *-feit (misdrijf) hoort naast het mini-pv een proces-verbaal met die redenen. Bij een plaatselijke verordening: het artikel en de handeling op de achterzijde.
+        </p>
+      </div>
       <div className="border border-line bg-paper p-2">
         <p className="font-semibold">Wat in het relaas moet staan</p>
-        <p className="mt-1 text-muted">
-          Het OM wil de redenen van wetenschap: waaruit weet je dit. Schrijf wat je zelf zag, hoorde of na onderzoek vaststelde. Een conclusie zonder die waarneming is geen bewijs. Bij deze code horen in elk geval:
-        </p>
         <ul className="mt-2 list-disc pl-5">
           {moetInRelaas(feit).map((regel) => (
             <li key={regel}>{regel}</li>
