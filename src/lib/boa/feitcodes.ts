@@ -610,6 +610,211 @@ export const FEITEN: Feit[] = [
   },
 ];
 
+const MOET: Record<string, string[]> = {
+  d517: [
+    "Je hebt je gelegitimeerd en de hoedanigheid kenbaar gemaakt.",
+    "De vordering tot inzage is duidelijk uitgesproken (art. 2 WID).",
+    "De persoon is 14 jaar of ouder. Onder de 14 is dit feit er niet.",
+    "Na de vordering is gewezen op artikel 447e Sr, en daarna is nog steeds niet voldaan.",
+    "Dit is een verdachte, geen betrokkene. Ook in het openbaar vervoer.",
+  ],
+  d515: [
+    "Letterlijk wat er is opgegeven: naam, voornaam, geboortedatum, geboorteplaats of adres.",
+    "Waaruit de onjuistheid blijkt, zonder BSN in dit portaal.",
+    "Dit is niet D 517 en niet D 505.",
+  ],
+  e115: [
+    "Het bevel of de vordering woordelijk, en het wetsartikel waar het op steunt.",
+    "Dat de persoon het redelijkerwijs kon begrijpen.",
+    "Dat er opzettelijk niet aan is voldaan.",
+  ],
+  art180: [
+    "Welke rechtmatige ambtsedige handeling er was: aanhouding, staandehouding of ander optreden.",
+    "Welk verzet je zag of voelde. Geen conclusie 'agressief' zonder die feiten.",
+    "Overdracht aan de politie. Geweld alleen binnen de Ambtsinstructie en de RTGB.",
+  ],
+  art266: [
+    "De woorden of het gebaar, zo letterlijk mogelijk.",
+    "Dat het een ambtenaar in functie betrof en dat de persoon dat kon weten.",
+    "Geen samenvatting als 'hij schold'.",
+  ],
+  art350: [
+    "Welk goed, van wie (zonder burgergegevens hier), en wat je zag gebeuren.",
+    "Opzettelijk vernielen, beschadigen of onbruikbaar maken. Niet 'rommel maken'.",
+    "Of het binnen de akte valt of wordt overgedragen.",
+  ],
+  h001: [
+    "Wat er is achtergelaten, waar, en dat het klein consumptieafval is.",
+    "Dat je zag dat deze persoon het achterliet, of hoe je dat anders vaststelde.",
+    "Het artikel van de APV of de Omgevingswet van deze gemeente, niet een landelijk verzinsel.",
+  ],
+  h025: [
+    "Welk afval, naast welk inzamelmiddel, en dat je zag wie het daar neerzette of achterliet.",
+    "Dat het niet via het aangewezen middel is aangeboden.",
+    "Het lokale artikel. Een landelijk vuistbedrag is geen grondslag.",
+  ],
+  r397: [
+    "Kenteken, plaats, bord of zone, en hoe lang of op welk moment het voertuig er stond.",
+    "Dit is een gedraging onder de Wahv. Schrijf betrokkene of kentekenhouder, geen verdachte, en geen cautie voor het parkeerfeit zelf.",
+    "De tweede waarneming als de lokale regeling die vraagt, met beide tijdstippen.",
+  ],
+  r584: [
+    "De plaats is een gehandicaptenplaats en de aanduiding was zichtbaar.",
+    "Er was geen geldige, duidelijk zichtbare kaart. Zeg wat je zag, niet alleen 'geen kaart'.",
+    "De categorie van het voertuig, omdat het tarief daarvan afhangt.",
+  ],
+  f120b: [
+    "De plaats is aangewezen. Noem de aanwijzing.",
+    "De persoon is 18 of ouder en gebruikte alcohol of had die geopend bij zich.",
+    "Wat je zag, rook of vaststelde. 'Dronken' is een conclusie.",
+  ],
+  dh45: [
+    "De persoon is onder de 18 en had alcohol aanwezig op een plaats waar dat niet mag.",
+    "Hoe de leeftijd is vastgesteld, zonder BSN.",
+    "Dit is een ander feit dan het verstrekken door een bedrijf.",
+  ],
+  art20aw: [
+    "Wie er bedrijfsmatig verstrekte, aan iemand onder de 18.",
+    "Hoe je de leeftijd en de verstrekking vaststelde.",
+    "De jongere die de drank aanwezig heeft, blijft een eigen feit (E 211), niet deze code.",
+  ],
+  d530: [
+    "De plaats ligt binnen de bebouwde kom en is openbaar.",
+    "Je zag de natuurlijke behoefte buiten een daarvoor bestemde plaats.",
+    "Geen naam of andere herleidbare gegevens in dit portaal.",
+  ],
+  "apv-groep": [
+    "De tekst van het samenscholings- of ophoudverbod van deze gemeente.",
+    "Dat de groep is aangemaand en wat er daarna gebeurde.",
+    "Een landelijke standaardzin zonder het artikel van de APV is niet genoeg.",
+  ],
+  "apv-vo": [
+    "Dat er een verblijfsontzegging gold, voor welk gebied en welke periode.",
+    "Dat de persoon daarvan op de hoogte was of behoorde te zijn.",
+    "Dat je hem of haar binnen dat gebied aantrof.",
+  ],
+  "apv-hond": [
+    "Los, of uitwerpselen niet opgeruimd: dat zijn verschillende feiten. Schrijf welke.",
+    "Het artikel van de APV en of de plaats is aangewezen.",
+    "Je zag de hond of de geleider. De naam van de geleider hoort niet in dit portaal.",
+  ],
+  art461: [
+    "Het terrein was kenbaar verboden, bijvoorbeeld door een bord of afsluiting.",
+    "De persoon had daar geen recht en is daar aangetroffen.",
+    "Een eerste aanzegging om te vertrekken, als de situatie die toelaat.",
+  ],
+  v010: [
+    "Binnenwater, één of twee hengels, en geen schriftelijke toestemming van de rechthebbende.",
+    "De VISpas is de gewone vorm van die toestemming. Schrijf wat je controleerde.",
+    "De akte moet dit feit noemen.",
+  ],
+  "natuur-hond": [
+    "Het gebied en de aanwijzing of verordening die de hond of de verstoring verbiedt.",
+    "Wat je zag: los, of welk gedrag de fauna verstoorde.",
+    "Geen feit verzinnen omdat 'het natuur is'.",
+  ],
+  storten: [
+    "Wat er is gestort of verbrand, waar, en buiten welke inrichting.",
+    "Wie dat deed, en hoe je dat zag of na onderzoek vaststelde.",
+    "Strafrecht alleen als de akte het economische delict dekt. Anders de bestuursrechtelijke last.",
+  ],
+  vuurwerk: [
+    "Buiten de toegestane periode, of verboden vuurwerk. Schrijf welke van de twee.",
+    "Wat je zag: afsteken, of aanwezig hebben. Dat zijn verschillende feiten.",
+    "Geen merk of hoeveelheid verzinnen.",
+  ],
+  dieren: [
+    "Dit is een signaal, geen automatische feitcode. Schrijf wat je zag aan het dier en de omgeving.",
+    "Geen medische conclusie. Wel: niet eten, wond, vastzitten, hitte in een voertuig.",
+    "Overdracht aan de politie of de aangewezen instantie als de akte het niet dekt.",
+  ],
+  relatief: [
+    "16 uur of meer ongeoorloofd verzuim in vier aaneengesloten lesweken.",
+    "De bron van die uren (schooladministratie) en dat het ongeoorloofd is.",
+    "De normadressaat volgens de aanwijzing. Niet het kind onder de 12 strafrechtelijk.",
+  ],
+  absoluut: [
+    "Niet ingeschreven terwijl er wel leerplicht was.",
+    "Gecontroleerd of een vrijstelling of ontheffing gold voordat je van een feit spreekt.",
+    "De ouder of de jongere, volgens de aanwijzing. Niet allebei zonder reden.",
+  ],
+  luxe: [
+    "Afwezig wegens vakantie buiten de schoolvakantie.",
+    "Geen vrijstelling van het schoolhoofd voor gewichtige omstandigheden.",
+    "De gemiste dagen, en tegen wie het PV gaat.",
+  ],
+  "wp70-1": [
+    "De verdachte maakte gebruik van het openbaar vervoer. Schrijf verdachte, niet betrokkene.",
+    "Geen geldig vervoerbewijs: niet ingecheckt, geen kaart, of onvoldoende saldo. Schrijf wat je zag.",
+    "De administratieve betaling is niet voldaan. Is die wel voldaan, dan komt er geen PV.",
+    "Dit is artikel 70 lid 1 Wp2000, feitcode E 100 a. Geen Wet Mulder.",
+  ],
+  "wp70-2": [
+    "Het bewjis was aan een ander verstrekt en deze verdachte gebruikte het.",
+    "Het voordeel dat daaruit bleek. Een kaart op naam van een ander is niet automatisch misbruik.",
+    "Artikel 71, niet artikel 70 lid 2. Lid 2 is de administratieve betalingsweg.",
+  ],
+  wp72: [
+    "De concrete gedraging die de orde, rust, veiligheid of bedrijfsgang verstoorde.",
+    "Of er toestemming van de vervoerder was.",
+    "Verwijdering is geen aanhouding. De code volgt de gedraging, niet 'overlast' in het algemeen.",
+  ],
+  wp73: [
+    "De aanwijzing woordelijk, en dat die ging over orde, rust, veiligheid of de bedrijfsgang.",
+    "Dat de aanwijzing kenbaar was.",
+    "Dat de verdachte die niet opvolgde. Een weigering van een ID vanaf 14 is daarnaast D 517, niet deze code.",
+  ],
+  "ov-vo": [
+    "De ontzegging: gebied, periode, en dat die bekend was.",
+    "Dat de verdachte zich toch in het vervoer of op het station bevond.",
+    "Een OV-ontzegging is niet dezelfde als een gemeentelijke verblijfsontzegging.",
+  ],
+  spoor: [
+    "Het terrein is spoorwegterrein en was niet voor deze persoon toegankelijk.",
+    "Je haalt niemand zelf van het spoor. Afstand en de spoorwegpolitie of de vervoerder.",
+    "Wat je vanaf een veilige plaats zag.",
+  ],
+  art17: [
+    "Welke wijziging niet is gemeld, en dat die de uitkering kan beïnvloeden.",
+    "De bron van die wetenschap, zonder dossiergegevens of BSN in dit portaal.",
+    "Dit is de inlichtingenplicht, nog niet de boete.",
+  ],
+  art18a: [
+    "De schending die aan de boete voorafgaat, en dat het college de boete oplegt.",
+    "Het bedrag staat in de verordening, niet in een bedrag dat je op straat verzint.",
+    "Bij een hoog benadelingsbedrag kan de aanwijzing naar het strafrecht wijzen. Dat schrijf je niet zelf om.",
+  ],
+  huisbezoek: [
+    "Doel en hoedanigheid vóór de drempel.",
+    "Toestemming was vrij, specifiek en intrekbaar, of er was een titel en waar nodig een machtiging.",
+    "Stilzwijgen en een voet tussen de deur zijn geen toestemming.",
+  ],
+  art107: [
+    "Geen geldig rijbewijs voor de categorie waarmee werd gereden.",
+    "Hoe je dat vaststelde. Dit is een overtreding, geen misdrijf en geen Mulder-bon.",
+    "De akte moet dit feit noemen.",
+  ],
+  r545: [
+    "Het voertuig werd bestuurd en een mobiel apparaat werd vastgehouden.",
+    "Wat je zag: in de hand, niet 'aan het appen' als je het scherm niet zag.",
+    "Dit is een Wahv-gedraging. Betrokkene of bestuurder, geen verdachte voor dit feit alleen.",
+  ],
+  gevaar: [
+    "Welk gedrag gevaar of hinder opleverde, in feiten, niet in het woord 'gevaarlijk' alleen.",
+    "Artikel 5 WVW is in de regel politiewerk, tenzij de akte het feit noemt.",
+    "Eerst de veiligheid, daarna overdracht.",
+  ],
+};
+
+export function moetInRelaas(feit: Feit): string[] {
+  return (
+    MOET[feit.id] ?? [
+      "De bestanddelen van het artikel, in gewone woorden. De feitcode alleen is niet genoeg.",
+      "De redenen van wetenschap: wat je zelf zag, hoorde of na onderzoek vaststelde.",
+    ]
+  );
+}
+
 export function boeteKop(feit: Feit): string {
   if (!feit.tarief) return "Geen vast bedrag";
   const kop = feit.tarief.split("|")[0]?.trim() ?? "";

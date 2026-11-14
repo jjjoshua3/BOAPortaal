@@ -8,6 +8,7 @@ const BRONNEN = [
   ["Algemene wet bestuursrecht", "https://wetten.overheid.nl/BWBR0005537"],
   ["Wet op de identificatieplicht", "https://wetten.overheid.nl/BWBR0006297"],
   ["Ambtsinstructie", "https://wetten.overheid.nl/BWBR0006589"],
+  ["Politiewet 2012", "https://wetten.overheid.nl/BWBR0031788"],
   ["Leerplichtwet 1969", "https://wetten.overheid.nl/BWBR0002628"],
   ["Wet personenvervoer 2000", "https://wetten.overheid.nl/BWBR0011470"],
   ["Participatiewet", "https://wetten.overheid.nl/BWBR0015703"],

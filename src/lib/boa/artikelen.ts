@@ -92,12 +92,12 @@ export const ARTIKELEN: Artikel[] = [
   },
   {
     id: "ambt7",
-    code: "Art. 7 lid 3 Ambtsinstructie",
+    code: "Art. 7 lid 3 Politiewet 2012",
     titel: "Veiligheidsfouillering",
-    bron: "Ambtsinstructie",
-    href: "https://wetten.overheid.nl/BWBR0006589",
-    kern: "Onderzoek aan de kleding, gericht op wapens of gevaarlijke voorwerpen, als dat nodig is voor de veiligheid.",
-    straat: "Geen zoeking naar bewijs. Geen inwendig onderzoek. Verbaliseer de noodzaak.",
+    bron: "Politiewet 2012",
+    href: "https://wetten.overheid.nl/BWBR0031788",
+    kern: "Onderzoek aan de kleding en aan voorwerpen die iemand bij zich draagt, alleen als uit feiten of omstandigheden een onmiddellijk gevaar voor het leven of de veiligheid blijkt, en het onderzoek nodig is ter afwending van dat gevaar.",
+    straat: "Het doel is het gevaar afwenden, niet een wapen of bewijs zoeken. Oppervlakkig aftasten (art. 20 Ambtsinstructie). Onverwijld schriftelijk melden aan de hulpofficier, met de redenen (art. 21 Ambtsinstructie). Geen onderzoek aan het lichaam.",
   },
   {
     id: "ambt22",

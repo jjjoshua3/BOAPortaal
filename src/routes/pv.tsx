@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { FEITEN, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, moetInRelaas, type Feit } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, pastFilter, type DomeinId } from "@/lib/boa/meta";
 import {
   bouwPv,
@@ -44,12 +44,20 @@ function feitOpCode(code: string) {
 }
 
 function pasFeit(huidig: PvInvoer, feit: Feit): PvInvoer {
+  const regime: Regime =
+    feit.afdoening === "wahv"
+      ? "mulder"
+      : feit.afdoening === "om" || feit.afdoening === "misdrijf" || feit.afdoening === "overdracht" || /overtreding/i.test(feit.kwalificatie)
+        ? "straf"
+        : huidig.regime === "mulder"
+          ? "bevindingen"
+          : huidig.regime;
   return {
     ...huidig,
     feit,
+    regime,
     domein: feit.domeinen.find((id) => id !== "algemeen") ?? huidig.domein,
     waarneming: huidig.waarneming.trim() ? huidig.waarneming : feit.pv,
-    regime: feit.afdoening === "bestuur" ? "mulder" : huidig.regime === "bevindingen" ? "straf" : huidig.regime,
   };
 }
 
@@ -101,7 +109,7 @@ function voorbeeld(soort: "afval" | "id" | "ov", basis: PvInvoer): PvInvoer {
   const feit = FEITEN.find((item) => item.id === "wp70-1") ?? null;
   return {
     ...leeg,
-    regime: "mulder",
+    regime: "straf",
     domein: "IV",
     uniform: "uniform",
     identiteit: "paspoort",
@@ -111,10 +119,10 @@ function voorbeeld(soort: "afval" | "id" | "ov", basis: PvInvoer): PvInvoer {
     straat: "[LIJN OF STATION]",
     locatieZin: "in een voor het publiek toegankelijk vervoermiddel / station",
     waarmee: "Geen geldig vervoerbewijs",
-    aanleiding: "Gerichte handhavingsactie",
-    cautie: false,
+    aanleiding: "Controle in het openbaar vervoer",
+    cautie: true,
     waarneming:
-      "Ik zag dat de betrokkene gebruikmaakte van het openbaar vervoer. Op mijn verzoek toonde de betrokkene geen geldig vervoerbewijs. De administratieve betaling is niet voldaan.",
+      "Ik zag dat de verdachte gebruikmaakte van het openbaar vervoer. Ik zag dat de verdachte geen geldig vervoerbewijs toonde. De administratieve betaling is niet voldaan.",
   };
 }
 
@@ -287,6 +295,16 @@ function PvPage() {
                 setForm((huidig) => pasFeit(huidig, feit));
               }}
             />
+            {form.feit ? (
+              <div className="border border-line bg-paper p-2 text-sm">
+                <p className="font-semibold">Redenen van wetenschap voor {form.feit.code}</p>
+                <ul className="mt-1 list-disc pl-5">
+                  {moetInRelaas(form.feit).map((regel) => (
+                    <li key={regel}>{regel}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
             {form.feit ? <p className="bg-[#DBEAFE] p-2 text-sm text-[#1E3A8A]">PV-aandachtspunt | {form.feit.pv}</p> : null}
           </WBlok>
 
@@ -382,7 +400,7 @@ function PvPage() {
                 "Ik hoorde dat ",
                 "Ik rook dat ",
                 "Ik stelde vast dat ",
-                "Ik sprak de betrokkene aan en deelde mede dat ",
+                `Ik sprak de ${form.regime === "mulder" ? "betrokkene" : "verdachte"} aan en deelde mede dat `,
                 "Ik vorderde inzage in een geldig identiteitsbewijs op grond van artikel 2 van de Wet op de identificatieplicht. ",
               ].map((zin) => (
                 <button key={zin} type="button" className="btn" onClick={() => plak(zin)}>
@@ -399,7 +417,7 @@ function PvPage() {
               [
                 ["sfeer", "Sfeerovergang van toezicht (Awb) naar opsporing (Sv)"],
                 ["aanhouding", "Aanhouding op heterdaad (art. 53 Sv)"],
-                ["fouillering", "Veiligheidsfouillering (art. 7 lid 3 Ambtsinstructie)"],
+                ["fouillering", "Veiligheidsfouillering (art. 7 lid 3 Politiewet 2012, ter afwending van onmiddellijk gevaar)"],
                 ["boeien", "Handboeien (art. 22 Ambtsinstructie)"],
                 ["overdracht", "Overdracht aan de politie of voorgeleiding"],
               ] as const

@@ -100,7 +100,7 @@ function identiteitZin(invoer: PvInvoer) {
 }
 
 function leeftijdZin(invoer: PvInvoer) {
-  if (invoer.leeftijd === "18") return "De betrokkene is meerderjarig.";
+  if (invoer.leeftijd === "18") return `De ${persoon(invoer)} is meerderjarig.`;
   if (invoer.leeftijd === "16") return "Het gaat om een jeugdige van 16 of 17 jaar. Bij een Mulder-gedraging geldt het volledige bedrag.";
   if (invoer.leeftijd === "12") return "Het gaat om een jeugdige van 12 tot en met 15 jaar. Het tarief wordt gehalveerd. Halt is te toetsen. Onder de 14 jaar geldt geen eigen toonplicht voor een identiteitsbewijs.";
   return "";
@@ -122,6 +122,15 @@ export function pvWaarschuwingen(invoer: PvInvoer): string[] {
   }
   if (invoer.regime === "mulder" && /verdachte/i.test(`${invoer.waarneming} ${invoer.verklaring}`)) {
     uit.push("Bij Wet Mulder schrijf je betrokkene en gedraging, niet verdachte.");
+  }
+  if (invoer.regime === "straf" && /betrokkene/i.test(`${invoer.waarneming} ${invoer.verklaring}`)) {
+    uit.push("Dit is een strafrechtelijk feit. Schrijf verdachte, niet betrokkene.");
+  }
+  if (invoer.waarneming.trim().length > 40 && !/\b(zag|hoorde|rook|stelde|vastgesteld|vast dat)\b/i.test(invoer.waarneming)) {
+    uit.push("Redenen van wetenschap ontbreken. Schrijf wat je zelf zag, hoorde, rook of na onderzoek vaststelde. Een conclusie zonder die waarneming is voor het OM niet genoeg.");
+  }
+  if (invoer.fouillering && !/onmiddellijk gevaar|afwending/i.test(invoer.waarneming)) {
+    uit.push("Veiligheidsfouillering (art. 7 lid 3 Politiewet 2012) alleen ter afwending van onmiddellijk gevaar. Schrijf de feiten waaruit dat gevaar bleek.");
   }
   return uit;
 }
@@ -188,7 +197,7 @@ export function bouwPv(invoer: PvInvoer): string {
     invoer.sfeer ? "De sfeer is overgegaan van toezicht op grond van de Algemene wet bestuursrecht naar opsporing op grond van het Wetboek van Strafvordering." : "",
     invoer.aanhouding ? `Ik heb de ${wie} op heterdaad aangehouden als bedoeld in artikel 53 van het Wetboek van Strafvordering.` : "",
     invoer.fouillering
-      ? "Ik heb een onderzoek aan de kleding gedaan als bedoeld in artikel 7, derde lid, van de Ambtsinstructie, noodzakelijk voor de veiligheid en gericht op wapens of gevaarlijke voorwerpen."
+      ? "Uit feiten of omstandigheden bleek een onmiddellijk gevaar voor het leven of de veiligheid. Ik heb een onderzoek aan de kleding gedaan als bedoeld in artikel 7, derde lid, van de Politiewet 2012, noodzakelijk ter afwending van dat gevaar. Het onderzoek bestond uit oppervlakkig aftasten. Ik heb dit onverwijld schriftelijk gemeld aan de hulpofficier van justitie."
       : "",
     invoer.boeien
       ? `Ik heb de ${wie} handboeien aangelegd op grond van artikel 22 van de Ambtsinstructie, omdat een lichter middel niet volstond.`

@@ -26,7 +26,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Ambtsinstructie",
-    uitleg: "De regeling voor geweld, handboeien (artikel 22) en veiligheidsfouillering (artikel 7). Geldt voor politie, KMar en buitengewoon opsporingsambtenaar.",
+    uitleg: "De regeling voor de wijze van geweld en handboeien (artikel 22). De bevoegdheid tot veiligheidsfouillering staat niet hier, maar in artikel 7 lid 3 van de Politiewet 2012. De Ambtsinstructie regelt wel hoe dat onderzoek gaat (artikel 20) en dat je het meldt (artikel 21).",
   },
   {
     term: "Ambtseed | ambtsbelofte",
@@ -146,7 +146,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Fouillering",
-    uitleg: "Veiligheidsfouillering aan de kleding, artikel 7 lid 3 Ambtsinstructie. Zoeken naar een wapen. Geen onderzoek aan het lichaam.",
+    uitleg: "Onderzoek aan de kleding ter afwending van onmiddellijk gevaar voor het leven of de veiligheid. Grondslag: artikel 7 lid 3 Politiewet 2012. Niet: zoeken naar een wapen of naar bewijs. Geen onderzoek aan het lichaam. Wijze: artikel 20 Ambtsinstructie. Melding aan de hulpofficier: artikel 21 Ambtsinstructie.",
   },
   {
     term: "GBT",

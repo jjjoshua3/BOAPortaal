@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
-import { FEITEN, heeftEuro, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -317,6 +317,17 @@ function Detail({ feit }: { feit: Feit }) {
         {feit.leeftijd}
       </p>
       <p>{feit.bijzonder}</p>
+      <div className="border border-line bg-paper p-2">
+        <p className="font-semibold">Wat in het relaas moet staan</p>
+        <p className="mt-1 text-muted">
+          Het OM wil de redenen van wetenschap: waaruit weet je dit. Schrijf wat je zelf zag, hoorde of na onderzoek vaststelde. Een conclusie zonder die waarneming is geen bewijs. Bij deze code horen in elk geval:
+        </p>
+        <ul className="mt-2 list-disc pl-5">
+          {moetInRelaas(feit).map((regel) => (
+            <li key={regel}>{regel}</li>
+          ))}
+        </ul>
+      </div>
       <PvTekst tekst={feit.pv} />
       <div className="flex flex-wrap gap-2">
         <CopyButton text={feit.pv} label="Kopieer PV-tekst" />
