@@ -43,7 +43,7 @@ export function FeedbackDock() {
     <>
       <button
         type="button"
-        className="no-print fixed bottom-20 right-3 z-40 min-h-10 border border-line bg-panel px-3 text-sm font-semibold text-ink shadow-none lg:bottom-20"
+        className="no-print fixed bottom-20 right-3 z-40 min-h-10 w-28 border border-line bg-panel px-3 text-sm font-semibold text-ink shadow-none"
         onClick={() => setOpen(true)}
       >
         Feedback

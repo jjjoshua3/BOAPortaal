@@ -383,13 +383,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       <FeedbackDock />
       <button
         type="button"
-        className="no-print fixed bottom-32 right-3 z-40 min-h-10 border border-line bg-panel px-3 text-sm font-semibold text-ink lg:bottom-20 lg:right-28"
+        className="no-print fixed bottom-32 right-3 z-40 min-h-10 w-28 border border-line bg-panel px-3 text-sm font-semibold text-ink"
         onClick={() => setBalie((open) => !open)}
       >
         Servicedesk
       </button>
       {balie ? (
-        <div className="panel no-print fixed bottom-44 right-3 z-40 w-72 p-3 lg:bottom-32 lg:right-28">
+        <div className="panel no-print fixed bottom-44 right-3 z-40 w-72 p-3">
           <p className="font-semibold">Servicedesk</p>
           <p className="mt-1 text-sm text-muted">Zelfde account. Een melding maken kan iedereen. De wachtrij is alleen voor medewerkers.</p>
           <a className="btn btn-brand mt-3 w-full" href="https://servicedesk.boaportaal.nl" target="_blank" rel="noreferrer">
