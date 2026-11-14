@@ -8,7 +8,7 @@ import { useKluis } from "@/lib/kluis/provider";
 import { useBoaAuth } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount } from "@/lib/supabase/client";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
-import { naarPv, useIdentiteit } from "@/lib/boa/identiteit";
+import { naarPv, useIdentiteit, noteerInlog } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
 
 export const Route = createFileRoute("/account")({
@@ -74,8 +74,9 @@ function LoginForm() {
         if (!sb) return;
         setBezig(true);
         setFout("");
-        void sb.auth.signInWithPassword({ email: email.trim(), password }).then(({ error }) => {
+        void sb.auth.signInWithPassword({ email: email.trim(), password }).then(({ data, error }) => {
           setBezig(false);
+          noteerInlog(data.session?.access_token ?? "", error ? email.trim() : "");
           if (error) setFout(mapAuthError(error.message, email));
         });
       }}

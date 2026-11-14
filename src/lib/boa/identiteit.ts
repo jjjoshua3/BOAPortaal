@@ -34,6 +34,16 @@ export function naarPv(raw: string): string {
   return init ? `${achternaam}, ${init}.` : `${achternaam}, .`;
 }
 
+export function noteerInlog(token: string, email: string) {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  void fetch("https://systeem.boaportaal.nl/.netlify/functions/inlog", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ bron: "portaal", email }),
+  }).catch(() => undefined);
+}
+
 export function useIdentiteit() {
   const { user } = useBoaAuth();
   const [identiteit, setIdentiteit] = useState<Identiteit | null>(null);

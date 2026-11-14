@@ -94,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const toggleTheme = usePrefs((state) => state.toggleTheme);
   const { user, ready } = useBoaAuth();
   const { identiteit } = useIdentiteit();
-  const [meer, setMeer] = useState(false);
+  const [info, setInfo] = useState(false);
   const [zoekOpen, setZoekOpen] = useState(false);
   const [weergave, setWeergave] = useState(false);
   const [q, setQ] = useState("");
@@ -201,9 +201,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Lock className="size-4" />
               <span className="hidden xl:inline">Kluis</span>
             </Link>
-            <Link to="/account" className="btn btn-brand min-h-10 px-2" title={identiteit ? `${identiteit.pv_naam} ${identiteit.client_id}` : "Account"}>
+            <button type="button" className="btn btn-brand min-h-10 px-2" onClick={() => setInfo((open) => !open)} title="Account en Client-ID">
+              <span>Info</span>
               <span className="font-mono text-xs">{ready && user && identiteit?.client_id ? identiteit.client_id : "Account"}</span>
-            </Link>
+            </button>
           </div>
         </div>
         {zoekOpen ? (
@@ -265,6 +266,21 @@ export function AppShell({ children }: { children: ReactNode }) {
                 ))}
               </select>
             </label>
+          </div>
+        ) : null}
+        {info ? (
+          <div className="flex flex-wrap items-center gap-3 border-t border-line bg-inset px-3 py-2">
+            <div>
+              <p className="text-xs font-semibold text-muted">Client-ID</p>
+              <p className="font-mono text-sm font-semibold">{identiteit?.client_id || "Nog niet uitgegeven"}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-muted">PV-naam</p>
+              <p className="text-sm">{identiteit?.pv_naam || "—"}</p>
+            </div>
+            <Link to="/account" className="btn btn-brand" onClick={() => setInfo(false)}>
+              Account openen
+            </Link>
           </div>
         ) : null}
       </header>
