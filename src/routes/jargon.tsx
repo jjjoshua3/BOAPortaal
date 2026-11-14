@@ -29,7 +29,7 @@ function categorieVan(woord: Woord): (typeof CATEGORIEEN)[number] {
   const hay = `${woord.term} ${woord.uitleg}`.toLowerCase();
   if (/wp2000|vervoerbewijs|incheck|ns |trein|ov-boa|openbaar vervoer/.test(hay)) return "OV";
   if (/proces-verbaal|combibon|feitcode|pv\b|dossier|ambtseed/.test(hay)) return "Documenten";
-  if (/awb|bestuurlijke|apv|toezichthouder|medewerkingsplicht|wahv/.test(hay)) return "Bestuursrecht";
+  if (/awb|bestuurlijke|apv|toezichthouder|medewerkingsplicht|wahv|bezwaar|belanghebbende|dwangsom|herstelsanctie|binnentreden|machtiging/.test(hay)) return "Bestuursrecht";
   if (/straat|bon\b|cautie|aanhoud|heterdaad|fouill/.test(hay)) return "Op straat";
   return "Strafrecht";
 }
@@ -91,7 +91,7 @@ function JargonPage() {
       <PageHead
         kicker="NASLAG | VAKTAAL"
         title="Vakjargon"
-        lede="Woorden die op straat, in de akte en in het Feitenboekje een vaste betekenis hebben."
+        lede="Straatwoorden en juridische termen. Wat het woord op straat betekent, en wat de wet eronder legt."
       />
       <div className="sticky top-14 z-20 -mx-4 mb-3 border-b border-line bg-paper px-4 py-2">
         <label className="field">

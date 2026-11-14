@@ -66,7 +66,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Boetebase",
-    uitleg: "De openbare tarievensite van het Openbaar Ministerie. De bedragen gelden vanaf 1 januari 2026 en zijn exclusief € 9 administratiekosten.",
+    uitleg: "De openbare site van het OM met de vaste bedragen voor de meest voorkomende lichtere overtredingen, geldend vanaf 1 januari 2026. Die bedragen komen uit de Tekstenbundel en zijn exclusief € 9 administratiekosten. Een OM-feit met een sterretje heeft daar geen vast bedrag. In bijzondere gevallen gelden andere bedragen of straffen.",
   },
   {
     term: "Bord E1",
@@ -78,7 +78,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Categorie-indeling B",
-    uitleg: "1 auto, bus, vrachtauto en brommobiel | 2 motor | 3 bromfiets en snorfiets | 4 fiets en gehandicaptenvoertuig. Het bedrag hangt van de categorie af. Een fiets is geen auto met een lager rond bedrag.",
+    uitleg: "1 motorvoertuig op meer dan twee wielen, en de brommobiel | 2 motorvoertuig op twee wielen | 3 bromfiets, snorfiets en bijzondere bromfiets | 4 fiets en gehandicaptenvoertuig | 5 voetganger. Het bedrag hangt van de kolom af.",
   },
   {
     term: "Cautie",
@@ -202,7 +202,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Medewerkingsplicht",
-    uitleg: "In het toezicht. De ander moet gegevens geven die het toezicht vraagt. Stopt zodra je naar betrokkenheid bij een strafbaar feit vraagt. Dan eerst de cautie.",
+    uitleg: "Artikel 5:20 Awb. De enige weigeringsgrond in dat artikel is de geheimhoudingsplicht uit ambt, beroep of wettelijk voorschrift. Het zwijgrecht van de verdachte staat niet in artikel 5:20. Dat staat in artikel 29 Sv.",
   },
   {
     term: "MEOS",
@@ -383,5 +383,173 @@ export const JARGON: Woord[] = [
   {
     term: "Zwartrijden",
     uitleg: "Reizen zonder geldig vervoerbewijs. Eerst uitstel van betaling. Komt er een PV, dan is de code E 100 a en het boetebedrag € 110.",
+  },
+  {
+    term: "Absoluut verzuim",
+    uitleg: "De jongere in de leerplichtige leeftijd staat niet ingeschreven bij een school of instelling, en een vrijstelling is niet aangetoond. Anders dan relatief verzuim.",
+  },
+  {
+    term: "Awb",
+    uitleg: "Algemene wet bestuursrecht. De wet voor toezicht, medewerking, stilhouden en de bestuurlijke boete. Geen wetboek voor het verhoor van een verdachte.",
+  },
+  {
+    term: "Belediging",
+    uitleg: "Artikel 266 en 267 Sr. Een uitlating tegen een ambtenaar in functie is een strafrechtelijk spoor, los van een Mulderbon. Noteer de woorden letterlijk.",
+  },
+  {
+    term: "Belanghebbende",
+    uitleg: "Bestuursrechtelijk begrip: wie door een besluit rechtstreeks in zijn belang wordt geraakt. Geen verdachte.",
+  },
+  {
+    term: "Beschikking",
+    uitleg: "Een besluit in een concreet geval. Een Wahv-beschikking, een strafbeschikking en een bestuurlijke boete zijn alle drie een beschikking, maar van een ander orgaan.",
+  },
+  {
+    term: "Betrokkene",
+    uitleg: "De persoon bij een Muldergedraging of in het toezicht. Geen verdachte. Zodra er een redelijk vermoeden van schuld is, wordt het een verdachte.",
+  },
+  {
+    term: "Bezwaar",
+    uitleg: "Beroep op het bestuursorgaan tegen een besluit, voordat de rechter eraan te pas komt. De termijn en het loket staan op de beschikking.",
+  },
+  {
+    term: "Binnentreden",
+    uitleg: "Een woning in. Zonder toestemming alleen met een titel en, waar de wet dat eist, een machtiging voor dat adres en dat doel.",
+  },
+  {
+    term: "Dagvaarding",
+    uitleg: "De oproep om voor de rechter te verschijnen. Die maakt de officier, niet de boa op straat.",
+  },
+  {
+    term: "Eerste vordering",
+    uitleg: "De eerste keer dat een bevoegde ambtenaar inzage vordert. De toonplicht van de WID geldt op die vordering, niet als een algemene draagplicht.",
+  },
+  {
+    term: "Geheimhoudingsplicht",
+    uitleg: "De weigeringsgrond die artikel 5:20 lid 2 Awb zelf noemt: geheim uit ambt, beroep of een wettelijk voorschrift.",
+  },
+  {
+    term: "Geweldsbevoegdheid",
+    uitleg: "Artikel 7 Politiewet 2012, alleen als de akte die bevoegdheid noemt. Geweld moet noodzakelijk zijn. De reden staat in het PV.",
+  },
+  {
+    term: "Handhaving",
+    uitleg: "Toezicht op de regel en optreden als die niet wordt nageleefd. Dat kan bestuursrechtelijk of strafrechtelijk zijn. De akte bepaalt welk spoor van jou is.",
+  },
+  {
+    term: "Herstelsanctie",
+    uitleg: "Last onder bestuursdwang of last onder dwangsom. Het doel is herstel, niet een geldboete uit het Feitenboekje.",
+  },
+  {
+    term: "Horen",
+    uitleg: "De belanghebbende mag zijn kant zeggen voordat een belastend besluit wordt genomen. Dat is bestuursrecht. Een verhoor van een verdachte is strafvordering.",
+  },
+  {
+    term: "Jeugdstrafrecht",
+    uitleg: "Vanaf 12 jaar. Onder de 12 geen strafvervolging, artikel 486 Sv. Halt is een aparte route, met bekentenis en instemming.",
+  },
+  {
+    term: "Kantonrechter",
+    uitleg: "De rechter voor overtredingen en voor Mulderzaken. De boa verschijnt daar alleen als de zaak wordt opgeroepen.",
+  },
+  {
+    term: "Legaliteitsbeginsel",
+    uitleg: "Geen feit zonder een wettelijke bepaling die het gedrag strafbaar stelt. Een ergernis is nog geen feitcode.",
+  },
+  {
+    term: "Luxe verzuim",
+    uitleg: "Vakantie buiten de schoolvakantie zonder vrijstelling van het schoolhoofd. Artikel 11 onder f en g Leerplichtwet 1969.",
+  },
+  {
+    term: "Machtiging",
+    uitleg: "Schriftelijke toestemming van een bevoegde autoriteit, bijvoorbeeld om een woning te betreden. Een algemene opdracht in de akte is niet vanzelf die machtiging.",
+  },
+  {
+    term: "Misdrijf",
+    uitleg: "Een strafbaar feit uit het tweede boek van het Wetboek van Strafrecht, of een feit dat de bijzondere wet een misdrijf noemt. Zwaarder dan een overtreding. Voorbeeld: wederspannigheid, artikel 180 Sr.",
+  },
+  {
+    term: "Muldergedraging",
+    uitleg: "Een verkeersgedraging die de Wahv bestuursrechtelijk afdoet, meestal op kenteken. Geen verdachte en geen cautie voor die gedraging zelf.",
+  },
+  {
+    term: "Nemo tenetur",
+    uitleg: "Niemand hoeft aan zijn eigen veroordeling mee te werken. In het verhoor is dat het zwijgrecht van artikel 29 Sv.",
+  },
+  {
+    term: "Normadressaat",
+    uitleg: "Degene tot wie de plicht zich richt. Bij leerplicht is dat vaak de ouder, en vanaf 12 jaar ook de jongere zelf.",
+  },
+  {
+    term: "OM-feit",
+    uitleg: "Modaliteit * in het Feitenboekje. Geen vast politiestrafbeschikkingsbedrag. De officier beslist. De Boetebase toont voor zo'n feit geen vast bedrag.",
+  },
+  {
+    term: "Opportuniteitsbeginsel",
+    uitleg: "Het OM mag beslissen om niet te vervolgen. Die keuze is niet aan de boa. Jij levert het proces-verbaal.",
+  },
+  {
+    term: "Opzet",
+    uitleg: "Willens en wetens. Een vraag daarnaar is een vraag over het feit. Eerst de cautie.",
+  },
+  {
+    term: "Overtreding",
+    uitleg: "Een lichter strafbaar feit dan een misdrijf. Veel APV-feiten en artikel 447e Sr zijn overtredingen. Een overtreding kan wel een verdachte opleveren.",
+  },
+  {
+    term: "Overtreder",
+    uitleg: "Bestuursrechtelijk woord: degene die de regel niet naleeft. In het strafrecht heet die persoon verdachte zodra er een redelijk vermoeden van schuld is.",
+  },
+  {
+    term: "Proportionaliteit",
+    uitleg: "Het middel past bij het doel. Geldt bij geweld en bij een bevoegdheid. Geen aparte feitcode.",
+  },
+  {
+    term: "Redenen van wetenschap",
+    uitleg: "Waaruit jij het weet: wat je zelf zag, hoorde of na onderzoek vaststelde. Artikel 153 Sv. Een conclusie zonder die feiten is niet genoeg.",
+  },
+  {
+    term: "Sepot",
+    uitleg: "Het OM doet de zaak niet verder. Dat besluit neemt de officier, niet de boa op straat.",
+  },
+  {
+    term: "Strafbaar feit",
+    uitleg: "Gedrag dat een wet of verordening met straf bedreigt. Zonder die bepaling is er geen feitcode.",
+  },
+  {
+    term: "Subsidiariteit",
+    uitleg: "Het lichtere middel eerst, als dat het doel ook haalt. Naast proportionaliteit een eis bij geweld.",
+  },
+  {
+    term: "Tekstenbundel",
+    uitleg: "De bron van het Feitenboekje en van de Boetebase. Uitgave 1 januari 2026. Het OM noemt die bundel als herkomst van de bedragen.",
+  },
+  {
+    term: "Transactie",
+    uitleg: "De oude afkoop van een strafzaak. De gewone OM-route is nu de strafbeschikking. Gebruik het woord transactie niet voor een bon van nu.",
+  },
+  {
+    term: "Una via",
+    uitleg: "Eén weg. Hetzelfde feit gaat niet tegelijk als bestuurlijke boete en als strafzaak door. De wet of de aanwijzing wijst de kolom.",
+  },
+  {
+    term: "Verhoor",
+    uitleg: "Vragen aan een verdachte over het feit. Artikel 29 Sv: eerst meedelen dat hij niet tot antwoorden verplicht is. Personalia zijn geen verhoor.",
+  },
+  {
+    term: "Verzet",
+    uitleg: "Verweer tegen een strafbeschikking, bij de officier. De termijn staat op de beschikking. Geen termijn uit het hoofd.",
+  },
+  {
+    term: "Voorgeleiding",
+    uitleg: "Artikel 53 lid 2 Sv. Na aanhouding ten spoedigste overbrengen naar de hulpofficier of de officier. De boa is geen hulpofficier.",
+  },
+  {
+    term: "Wederspannigheid",
+    uitleg: "Artikel 180 Sr. Verzet tegen een rechtmatige ambtsedige handeling. Een misdrijf, geen overtreding. Niet hetzelfde als geen identiteitsbewijs tonen.",
+  },
+  {
+    term: "Zwijgrecht",
+    uitleg: "Artikel 29 Sv. De verdachte hoeft geen vragen over het feit te beantwoorden. Zeg dat vóór het verhoor. Het staat niet in artikel 5:20 Awb.",
   },
 ];

@@ -18,6 +18,16 @@ export type Update = {
 
 export const UPDATES: Update[] = [
   {
+    id: "w46-juridisch",
+    datum: "2026-11-14",
+    week: "Week 46",
+    titel: "Juridische termen in het jargon",
+    tekst: "Van zwijgrecht tot OM-feit. De Boetebase vult een sterretje niet met een bedrag.",
+    naar: "/jargon",
+    domeinen: ["algemeen"],
+    nieuw: true,
+  },
+  {
     id: "w46-jargon",
     datum: "2026-11-13",
     week: "Week 46",

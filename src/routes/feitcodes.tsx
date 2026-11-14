@@ -224,8 +224,14 @@ function BoekjeResultaten({ query }: { query: string }) {
 
 function bedragZin(regel: BoekjeRegel): string {
   const bedrag = regel.bedrag.trim();
-  if (!bedrag || /^[\s*]+$/.test(bedrag)) return "Geen vast bedrag in het Feitenboekje, januari 2026.";
-  return `Bedrag in het Feitenboekje, januari 2026: ${bedrag}.`;
+  if (!bedrag || /^[\s*]+$/.test(bedrag)) return "Geen vast bedrag in het Feitenboekje en niet in de Boetebase. Januari 2026.";
+  return `Bedrag in het Feitenboekje en de Boetebase, januari 2026: ${bedrag}. Exclusief € 9 administratiekosten.`;
+}
+
+function boetebaseHref(code: string): string | null {
+  const schoon = code.trim();
+  if (!/^[A-Za-z]{1,3}\s+\d{3}/.test(schoon)) return null;
+  return `https://boetebase.om.nl/?Linked=${schoon.replace(/\s+/g, "+")}`;
 }
 
 function FeitTabel({
@@ -355,6 +361,16 @@ function Detail({ feit }: { feit: Feit }) {
         <span className="font-semibold">Tarief (2026) | </span>
         {tariefRegel(feit)}
       </p>
+      {boetebaseHref(feit.code) ? (
+        <p>
+          {heeftEuro(feit)
+            ? "De Boetebase van het OM toont dit vaste bedrag voor een lichtere overtreding, exclusief € 9 administratiekosten. De gegevens komen uit de Tekstenbundel. In bijzondere gevallen geldt een ander bedrag of een andere straf."
+            : "OM-feit. De Boetebase publiceert vaste bedragen voor de meest voorkomende lichtere overtredingen, vanaf 1 januari 2026, exclusief € 9 administratiekosten. Voor een feit met een sterretje staat daar geen vast bedrag. De officier beslist. In bijzondere gevallen gelden andere bedragen of straffen."}{" "}
+          <a className="font-semibold underline" href={boetebaseHref(feit.code) ?? undefined} target="_blank" rel="noreferrer">
+            Zoek {feit.code} in de Boetebase
+          </a>
+        </p>
+      ) : null}
       <p>
         <span className="font-semibold">Domein: </span>
         {feit.domeinen.map((id: DomeinId) => domeinLabel(id)).join(" | ")}
