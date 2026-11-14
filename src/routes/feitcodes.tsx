@@ -3,6 +3,7 @@ import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
 import { FEITEN, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
+import { zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -62,7 +63,7 @@ function FeitPage() {
       <PageHead
         kicker="MODULE 1 | FEITCODE EN WET"
         title="Feitcodes en kernartikelen"
-        lede="Zoek op trefwoord, code of artikel. Onder elke code staat de toelichting uit het Feitenboekje van het OM, uitgave 1 januari 2026: wat je bij die code moet vermelden. Het tarief is exclusief € 9 administratiekosten van het CJIB. De akte gaat voor."
+        lede="Zonder zoekwoord zie je de korte lijst. Typ een woord of code en je zoekt het hele Feitenboekje van januari 2026. Het tarief is exclusief € 9 administratiekosten van het CJIB. De akte gaat voor."
       />
       <div className="mb-3 flex flex-wrap gap-2">
         <button type="button" className={tab === "feiten" ? "btn btn-brand" : "btn"} onClick={() => setTab("feiten")}>
@@ -106,7 +107,7 @@ function FeitPage() {
                     const value = event.target.value;
                     void navigate({ search: value ? { q: value } : {}, replace: true });
                   }}
-                  placeholder="D 517, wildplassen, artikel 70"
+                  placeholder="Negeren, stopteken, D 517, wildplassen"
                   className="pr-10"
                 />
                 {q ? (
@@ -117,6 +118,10 @@ function FeitPage() {
               </span>
             </label>
           </div>
+          {q.trim() ? (
+            <BoekjeResultaten query={q} />
+          ) : (
+            <>
           <div className="mb-3 flex flex-wrap gap-2">
             <button type="button" className={weergave === "tabel" ? "btn btn-brand" : "btn"} onClick={() => setWeergave("tabel")}>
               Compacte tabel
@@ -175,10 +180,52 @@ function FeitPage() {
             });
           })()}
           {gevonden.length === 0 ? <p className="text-sm text-muted">Geen feit bij deze woorden en dit domein.</p> : null}
+            </>
+          )}
         </>
       )}
     </div>
   );
+}
+
+function BoekjeResultaten({ query }: { query: string }) {
+  const eigen = useMemo(() => zoekFeiten(query, FEITEN), [query]);
+  const treffers = useMemo(() => zoekBoekje(query), [query]);
+  const gezien = new Set(eigen.map((feit) => feit.code.replace(/\s+/g, "").toLowerCase()));
+  const rest = treffers.filter((regel) => !gezien.has(regel.code.replace(/\s+/g, "").toLowerCase()));
+  const totaal = eigen.length + rest.length;
+  return (
+    <div>
+      <p className="mb-3 text-sm text-muted">
+        {totaal === 0
+          ? "Niets gevonden in het Feitenboekje."
+          : `${totaal} treffers. Maak het zoekveld leeg om terug te gaan naar de korte lijst.`}
+      </p>
+      <ul className="grid gap-2">
+        {eigen.map((feit) => (
+          <li key={feit.id} className="panel p-3">
+            <p className="code">{feit.code}</p>
+            <p className="mt-1 font-semibold">{feit.titel}</p>
+            <p className="mt-1 text-sm">{boekjeToelichting(feit)}</p>
+          </li>
+        ))}
+        {rest.map((regel, index) => (
+          <li key={`${regel.code}-${index}`} className="panel p-3">
+            <p className="code">{regel.code}</p>
+            <p className="mt-1 font-semibold">{regel.titel}</p>
+            {regel.toelichting ? <p className="mt-1 text-sm">{regel.toelichting}</p> : null}
+            <p className="mt-1 text-sm text-muted">{bedragZin(regel)}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function bedragZin(regel: BoekjeRegel): string {
+  const bedrag = regel.bedrag.trim();
+  if (!bedrag || /^[\s*]+$/.test(bedrag)) return "Geen vast bedrag in het Feitenboekje, januari 2026.";
+  return `Bedrag in het Feitenboekje, januari 2026: ${bedrag}.`;
 }
 
 function FeitTabel({
