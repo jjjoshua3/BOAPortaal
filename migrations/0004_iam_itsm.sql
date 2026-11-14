@@ -745,7 +745,7 @@ $$;
 create or replace function public.boa_ik()
 returns jsonb
 language plpgsql
-stable
+volatile
 security definer
 set search_path = public
 as $$
