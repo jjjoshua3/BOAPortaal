@@ -49,13 +49,6 @@ const DOMEIN_KLEUR: Record<string, string> = {
 const DOMEINEN = ["I", "II", "III", "IV", "V", "VI"] as const;
 type DomeinCode = (typeof DOMEINEN)[number];
 
-const TAGS = [
-  { label: "Cautie & ID", to: "/zakkaart" as const, search: { tab: "cautie" as const } },
-  { label: "Feitcodes", to: "/feitcodes" as const },
-  { label: "7 W's PV", to: "/pv" as const },
-  { label: "Sfeerovergang", to: "/beslisbomen" as const, search: { boom: "sfeer" } },
-];
-
 type Doel =
   | { soort: "feit"; q: string }
   | { soort: "boom"; boom: string }
@@ -209,6 +202,7 @@ function Home() {
     else void navigate({ to: "/community" });
   }
 
+
   return (
     <div>
       <script
@@ -224,150 +218,123 @@ function Home() {
           }),
         }}
       />
-      <section className="border-b-4 border-[#1D4ED8] bg-[#0F172A] text-white">
-        <div className="mx-auto w-full max-w-5xl px-4 py-4 sm:py-5">
-          <p className="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-wide text-slate-300 uppercase sm:text-xs sm:tracking-wider">
-            <span className="size-2 rounded-full bg-emerald-400" />
-            Onafhankelijk vakportaal · Domein I t/m VI · Editie 2026
-          </p>
-          <h1 className="mt-2 max-w-3xl text-xl font-semibold tracking-tight sm:text-2xl">Praktijknaslag voor BOA's, studenten en docenten.</h1>
-          <p className="mt-1 max-w-2xl text-sm leading-snug text-slate-300">Feitcodes, cautie, beslisbomen en een PV-relaas. Gratis, zonder account om te zoeken.</p>
-          <form
-            className="relative mt-3"
-            onSubmit={(event) => {
-              event.preventDefault();
-              const eerste = treffers[0];
-              if (eerste) ga(eerste.doel);
-              else void navigate({ to: "/feitcodes", search: q.trim() ? { q: q.trim() } : {} });
-            }}
-          >
-            <label className="sr-only" htmlFor="hero-zoek">
-              Zoeken
-            </label>
-            <div className="flex items-center bg-white p-1.5 shadow-lg">
-              <Search className="ml-2 size-4 shrink-0 text-slate-400" aria-hidden="true" />
-              <input
-                id="hero-zoek"
-                value={q}
-                onChange={(event) => setQ(event.target.value)}
-                placeholder="Zoek op feitcode, vakjargon of onderwerp"
-                aria-expanded={treffers.length > 0}
-                aria-controls="hero-treffers"
-                className="scheme-light min-h-11 flex-1 bg-transparent px-2 text-base text-slate-900 placeholder:text-slate-500 focus:outline-none"
-              />
-              {q ? (
-                <button type="button" className="px-2 text-slate-500" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
-                  <X className="size-4" />
-                </button>
-              ) : null}
-              <button className="btn min-h-11 border-[#1D4ED8] bg-[#1D4ED8] text-white hover:bg-[#1E40AF]" type="submit">
-                Zoeken
+
+      <section className="mx-auto w-full max-w-3xl px-4 pt-12 pb-6 sm:pt-16">
+        <p className="text-sm text-muted">Onafhankelijk naslagwerk · Domein I t/m VI</p>
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Welkom.</h1>
+        <p className="mt-3 max-w-xl text-base leading-relaxed text-muted">
+          Fijn dat je er bent. Dit is de plek voor feitcodes, cautie, beslisbomen en een PV-relaas. Zoeken kan meteen, een account heb je niet nodig.
+        </p>
+        <form
+          className="relative mt-6"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const eerste = treffers[0];
+            if (eerste) ga(eerste.doel);
+            else void navigate({ to: "/feitcodes", search: q.trim() ? { q: q.trim() } : {} });
+          }}
+        >
+          <label className="sr-only" htmlFor="hero-zoek">
+            Zoeken
+          </label>
+          <div className="flex items-center border border-line bg-panel p-1.5">
+            <Search className="ml-2 size-4 shrink-0 text-muted" aria-hidden="true" />
+            <input
+              id="hero-zoek"
+              value={q}
+              onChange={(event) => setQ(event.target.value)}
+              placeholder="Zoek een feitcode, een begrip of een onderwerp"
+              aria-expanded={treffers.length > 0}
+              aria-controls="hero-treffers"
+              className="min-h-11 flex-1 bg-transparent px-2 text-base text-ink placeholder:text-muted focus:outline-none"
+            />
+            {q ? (
+              <button type="button" className="px-2 text-muted" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
+                <X className="size-4" />
               </button>
-            </div>
-            {q.trim().length >= 2 ? (
-              <ul id="hero-treffers" className="scheme-light absolute z-20 mt-1 w-full border border-slate-300 bg-white text-slate-900 shadow-sm">
-                {treffers.length === 0 ? (
-                  <li className="px-3 py-3 text-sm text-slate-600">Geen directe treffer. Enter zoekt verder in de feitcodes.</li>
-                ) : (
-                  treffers.map((item) => (
-                    <li key={item.id}>
-                      <button type="button" className="flex w-full items-start gap-3 px-3 py-2.5 text-left hover:bg-slate-100" onClick={() => ga(item.doel)}>
-                        <span className="mt-0.5 shrink-0 rounded-sm bg-slate-100 px-1.5 py-0.5 text-xs font-semibold text-slate-700">{item.badge}</span>
-                        <span className="text-sm font-semibold leading-snug">{item.titel}</span>
-                      </button>
-                    </li>
-                  ))
-                )}
-              </ul>
             ) : null}
-          </form>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {TAGS.map((tag) =>
-              "search" in tag ? (
-                <Link key={tag.label} to={tag.to} search={tag.search} className="rounded-sm border border-white/20 px-2 py-1 text-xs text-slate-200">
-                  {tag.label}
-                </Link>
+            <button className="btn btn-brand min-h-11" type="submit">
+              Zoeken
+            </button>
+          </div>
+          {q.trim().length >= 2 ? (
+            <ul id="hero-treffers" className="absolute z-20 mt-1 w-full border border-line bg-panel text-ink shadow-sm">
+              {treffers.length === 0 ? (
+                <li className="px-3 py-3 text-sm text-muted">Geen directe treffer. Enter zoekt verder in de feitcodes.</li>
               ) : (
-                <Link key={tag.label} to={tag.to} className="rounded-sm border border-white/20 px-2 py-1 text-xs text-slate-200">
-                  {tag.label}
-                </Link>
-              ),
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section id="start" className="border-b border-line bg-panel">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-4 py-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold tracking-wide text-muted uppercase">Rol</span>
-            {ROLLEN.map((item) => (
-              <button key={item.id} type="button" className={`btn min-h-8 px-2 py-1 text-xs ${rol === item.id ? "btn-brand" : ""}`} onClick={() => setRol(item.id)}>
-                {item.label}
-              </button>
-            ))}
-            <span className="text-xs font-semibold tracking-wide text-muted uppercase sm:ml-2">Domein</span>
-            <DomeinKnoppen domein={domein} onKies={setDomein} />
-          </div>
-          <details className="text-sm text-muted">
-            <summary className="cursor-pointer font-semibold text-ink">Wat betekent elke rol?</summary>
-            <ul className="mt-2 grid gap-1 sm:grid-cols-3">
-              {ROLLEN.map((item) => (
-                <li key={item.id}>
-                  <span className="font-semibold text-ink">{item.label}. </span>
-                  {item.tekst}
-                </li>
-              ))}
+                treffers.map((item) => (
+                  <li key={item.id}>
+                    <button type="button" className="flex w-full items-start gap-3 px-3 py-2.5 text-left hover:bg-inset" onClick={() => ga(item.doel)}>
+                      <span className="mt-0.5 shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-xs font-semibold text-muted">{item.badge}</span>
+                      <span className="text-sm font-semibold leading-snug">{item.titel}</span>
+                    </button>
+                  </li>
+                ))
+              )}
             </ul>
-          </details>
-        </div>
+          ) : null}
+        </form>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-3">
-        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <section className="mx-auto w-full max-w-3xl px-4 py-6">
+        <h2 className="text-base font-semibold">Waar kom je voor?</h2>
+        <p className="mt-1 text-sm text-muted">Kies wat bij je past. Het menu volgt daarna die rol.</p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+          {ROLLEN.map((item) => (
+            <li key={item.id}>
+              <button
+                type="button"
+                className={`panel h-full w-full p-4 text-left ${rol === item.id ? "border-[#1D4ED8]" : ""}`}
+                onClick={() => setRol(item.id)}
+              >
+                <span className="block font-semibold">{item.label}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted">{item.tekst}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mx-auto w-full max-w-3xl px-4 py-8">
+        <h2 className="text-base font-semibold">De onderdelen</h2>
+        <p className="mt-1 text-sm text-muted">Pak wat je nodig hebt. De rest laat je liggen.</p>
+        <ul className="mt-4 divide-y divide-line border-y border-line">
           {modules.map((item) => {
             const Icoon = item.icoon;
             return (
               <li key={item.titel}>
-                <button
-                  type="button"
-                  className="panel flex h-full w-full flex-col border-l-4 border-l-transparent p-3 text-left transition-colors hover:border-[#1D4ED8] hover:border-l-[#1D4ED8]"
-                  onClick={() => ga(item.doel)}
-                >
-                  <span className={`grid size-9 place-items-center rounded-sm ${item.tint}`}>
+                <button type="button" className="flex w-full items-center gap-3 py-3 text-left" onClick={() => ga(item.doel)}>
+                  <span className={`grid size-8 shrink-0 place-items-center rounded-sm ${item.tint}`}>
                     <Icoon className="size-4" aria-hidden="true" />
                   </span>
-                  <span className="mt-2 font-semibold">{item.titel}</span>
-                  <span className="mt-1 text-xs font-semibold text-muted">{item.badge}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold">{item.titel}</span>
+                    <span className="block text-sm text-muted">{item.badge}</span>
+                  </span>
                 </button>
               </li>
             );
           })}
         </ul>
-        <p className="mt-2 text-sm">
-          <Link to="/kluis" className="font-semibold text-[#1D4ED8] underline">
-            Kluis
-          </Link>
-          <span className="text-muted"> staat naast Account. Concepten blijven op dit apparaat versleuteld.</span>
-        </p>
       </section>
 
       <section className="border-y border-line bg-panel">
-        <div className="mx-auto w-full max-w-5xl px-4 py-8">
-          <h2 className="text-lg font-semibold tracking-tight">Direct naar praktijkonderwerp</h2>
-          <p className="mt-1 text-sm text-muted">De lijst volgt het domein in de balk hierboven.</p>
-          <ul className="mt-3 grid gap-2">
+        <div className="mx-auto w-full max-w-3xl px-4 py-10">
+          <h2 className="text-base font-semibold">Een onderwerp uit de praktijk</h2>
+          <p className="mt-1 text-sm text-muted">Filter op domein als je alleen jouw werkveld wilt zien.</p>
+          <div className="mt-3">
+            <DomeinKnoppen domein={domein} onKies={setDomein} />
+          </div>
+          <ul className="mt-4 grid gap-2">
             {themas.map((item) => {
               const Icoon = item.icoon;
               return (
                 <li key={item.id}>
-                  <button type="button" className="panel flex w-full items-center gap-3 border-l-4 border-l-transparent p-3 text-left hover:border-[#1D4ED8] hover:border-l-[#1D4ED8]" onClick={() => ga(item.doel)}>
-                    <span className="grid size-9 shrink-0 place-items-center rounded-sm bg-[#DBEAFE] text-[#1D4ED8]">
-                      <Icoon className="size-4" aria-hidden="true" />
-                    </span>
-                    <span className="min-w-0 flex-1">
+                  <button type="button" className="flex w-full items-center gap-3 py-2 text-left" onClick={() => ga(item.doel)}>
+                    <Icoon className="size-4 shrink-0 text-muted" aria-hidden="true" />
+                    <span className="min-w-0">
                       <span className="block font-semibold leading-snug">{item.titel}</span>
-                      <span className="mt-0.5 block text-sm text-muted">
+                      <span className="block text-sm text-muted">
                         {item.soort} · {item.domeinLabel}
                       </span>
                     </span>
@@ -379,33 +346,19 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-8">
-        <h2 className="text-lg font-semibold tracking-tight">Elke week completer</h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {[
-            [TELLEN.feiten, "Feitcodes"],
-            [TELLEN.jargon, "Begrippen"],
-            [TELLEN.bomen, "Beslisbomen"],
-            [TELLEN.kaarten, "Zakkaartjes"],
-          ].map(([aantal, label]) => (
-            <li key={String(label)} className="panel p-4">
-              <p className="font-mono text-2xl font-semibold">{aantal}</p>
-              <p className="mt-1 text-sm text-muted">{label}</p>
-            </li>
-          ))}
-        </ul>
-        <h3 className="mt-8 text-base font-semibold">Recent toegevoegd</h3>
-        <ul className="mt-3 grid gap-3">
+      <section className="mx-auto w-full max-w-3xl px-4 py-10">
+        <h2 className="text-base font-semibold">Wat er staat</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          {TELLEN.feiten} feitcodes, {TELLEN.jargon} begrippen, {TELLEN.bomen} beslisbomen en {TELLEN.kaarten} zakkaartjes. Elke week komt er iets bij.
+        </p>
+        <ul className="mt-4 grid gap-3">
           {updates.map((item) => (
             <li key={item.id}>
-              <Link to={item.naar} className="panel flex flex-wrap items-start justify-between gap-3 border-l-4 border-l-transparent p-4 hover:border-l-[#1D4ED8]">
-                <span>
-                  <span className="font-mono text-xs text-muted">{item.week}</span>
-                  {item.nieuw ? <span className="ml-2 rounded-sm bg-[#D1FAE5] px-1.5 py-0.5 text-xs font-semibold text-[#059669]">Nieuw</span> : null}
-                  <span className="mt-1 block font-semibold">{item.titel}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-muted">{item.tekst}</span>
-                </span>
-                <span className="text-sm text-muted">{item.domeinen[0] === "algemeen" ? "Alle domeinen" : `Domein ${item.domeinen[0]}`}</span>
+              <Link to={item.naar} className="block py-1">
+                <span className="font-mono text-xs text-muted">{item.week}</span>
+                {item.nieuw ? <span className="ml-2 text-xs font-semibold text-[#059669]">Nieuw</span> : null}
+                <span className="mt-0.5 block font-semibold">{item.titel}</span>
+                <span className="mt-0.5 block text-sm leading-relaxed text-muted">{item.tekst}</span>
               </Link>
             </li>
           ))}
