@@ -320,9 +320,7 @@ function Detail({ feit }: { feit: Feit }) {
       <div className="border border-line bg-[#FEF3C7] p-2">
         <p className="font-semibold">Toelichting Feitenboekje OM, januari 2026</p>
         <p className="mt-1">{boekjeToelichting(feit)}</p>
-        <p className="mt-2 text-muted">
-          Artikel 153 van het Wetboek van Strafvordering: het proces-verbaal vermeldt de redenen van wetenschap. Schrijf wat je zelf zag, hoorde of na onderzoek vaststelde. Bij een *-feit (misdrijf) hoort naast het mini-pv een proces-verbaal met die redenen. Bij een plaatselijke verordening: het artikel en de handeling op de achterzijde.
-        </p>
+        <p className="mt-2 text-muted">Letterlijk uit het Feitenboekje van het Openbaar Ministerie, uitgave januari 2026. Een latere uitgave gaat voor.</p>
       </div>
       <div className="border border-line bg-paper p-2">
         <p className="font-semibold">Wat in het relaas moet staan</p>

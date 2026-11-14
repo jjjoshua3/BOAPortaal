@@ -807,29 +807,52 @@ const MOET: Record<string, string[]> = {
 };
 
 const BOEKJE: Record<string, string> = {
-  d517: "p D 517. Toelichting: feiten en omstandigheden vermelden waarom de vordering redelijkerwijze noodzakelijk werd geacht. Tarief € 110.",
-  d515: "* D 515. Toelichting: door welk bevoegd gezag gevraagd; verificatie; wat was onjuist; wiens gegevens gebruikt en wat was de reden. Geen vast tarief.",
-  h001: "p H 022. Toelichting: kleine hoeveelheden, zoals klein consumptieafval, blikjes, papier, peuken. Op de achterzijde van het mini-pv: het artikel van de Afvalstoffenverordening en de geconstateerde handeling. Tarief € 170.",
-  h025: "p H 004. Op de achterzijde van het mini-pv: het artikel van de Afvalstoffenverordening en de geconstateerde handeling. H 025 is een ander feit: als particulier buiten een inrichting storten, op of in de bodem brengen of verbranden, € 470. Tarief H 004: € 110.",
-  r397: "m R 584, bord E1. Toelichting: de code geldt niet voor parkeren in de berm. R 397 a is een andere code (binnen vijf meter van een kruispunt; vermeld de mate van belemmering).",
-  r584: "m R 402 b. Toelichting: een gehandicaptenvoertuig mag wel op een gehandicaptenparkeerplaats parkeren. R 584 is bord E1, niet deze plaats.",
-  f120b: "p F 121 a (gebruiken) en p F 121 b (aangebroken verpakking bij zich). Toelichting: bij een minderjarige zie E 211. F 120 b is hinderlijk ophouden, niet drank.",
-  dh45: "E 211, € 110. Het Feitenboekje verwijst bij F 121 a en F 121 b naar E 211 a en E 211 b; de tarieflijst heeft één regel E 211.",
-  d530: "p F 185. Toelichting: binnen de bebouwde kom; op welke plaats. Tarief € 170. D 530 is openbare dronkenschap, artikel 453 Sr: waaruit bleek dit; noem de symptomen. Tarief € 110.",
-  "apv-groep": "p F 120 b. Toelichting: waaruit bleek dit. Tarief € 170. F 120 a is klimmen of zich bevinden op een beeld, monument, hek of straatmeubilair. Toelichting: waarop. Tarief € 110.",
-  "wp70-1": "p E 100 a. Toelichting: geen pv als is voldaan aan artikel 48 leden 2, 3, 5 en 6 van het Besluit personenvervoer 2000 jo. artikel 70 lid 2 Wp2000. Tarief € 110.",
-  "wp70-2": "* E 103. Toelichting: niet van toepassing bij een kaart op naam van een ander zonder misbruik. Het voordeel moet blijken. Geen vast tarief.",
-  wp72: "p E 120 a: de bediening en het gebruik van voorzieningen verhinderen of belemmeren, € 290. Bij de hele reeks: altijd vragen of de verdachte handelde met toestemming van de vervoerder (artikel 52 lid 2 Besluit personenvervoer 2000).",
-  wp73: "p E 128. Toelichting: kenbaar gemaakt door. Tarief € 110.",
-  art107: "* K 055. Toelichting: welke categorie vereist; staandehouding verplicht. Alleen als de bestuurder gezien de leeftijd een Nederlands rijbewijs kan hebben.",
-  r545: "m R 545. Toelichting: noteer soort apparaat, bijvoorbeeld vorm, merk en type. Categorie 8 alleen voor trambestuurders. De code geldt niet voor de rij-instructeur.",
-  storten: "p H 025 is de feitcode voor een particulier die afval buiten een inrichting stort, op of in de bodem brengt of verbrandt. Tarief € 470. Een bedrijfsmatige dump is een andere route.",
+  d517:
+    "p D 517. Niet voldoen aan de verplichting om een identiteitsbewijs ter inzage aan te bieden. Toelichting: feiten en omstandigheden vermelden waarom vordering redelijkerwijze noodzakelijk werd geacht. 110.",
+  d515:
+    "* D 515. Een valse naam, voornaam, geboortedatum, -plaats, BRP-adres of woon- of verblijfplaats opgeven. Toelichting: door welk bevoegd gezag gevraagd; verificatie; wat was onjuist; wiens gegevens gebruikt en wat was de reden.",
+  h001:
+    "p H 022. Huishoudelijke afvalstoffen van beperkte omvang en gewicht die zijn ontstaan buiten een perceel, achterlaten in de openbare ruimte anders dan in daartoe bestemde afvalbakken of andere middelen ter inzameling van deze afvalstoffen (Pl.V). Toelichting: betreft kleine hoeveelheden afvalstoffen zoals klein consumptieafval, blikjes, papier, peuken etc. en overige geringe hoeveelheden. 170. Noot: op de achterzijde van het mini proces-verbaal het overtreden artikel van de Afvalstoffenverordening en de geconstateerde handeling vermelden.",
+  h025:
+    "p H 004. Huishoudelijke afvalstoffen anders aanbieden dan via het aangewezen of verstrekte inzamelmiddel (Pl.V). 110. Noot: op de achterzijde van het mini proces-verbaal het overtreden artikel van de Afvalstoffenverordening en de geconstateerde handeling vermelden. p H 025 is een ander feit: als particulier zich van een afvalstof ontdoen door deze buiten een inrichting te storten, op of in de bodem te brengen of te verbranden. 470.",
+  r397:
+    "m R 584. Parkeren in strijd met parkeerverbod/parkeerverbodszone (E1). Toelichting: feitcode niet van toepassing op parkeren in de berm. 130, 130, 50, 130. m R 397 a is een andere code: bij een kruispunt op een afstand van minder dan vijf meter daarvan. Toelichting: mate van belemmering. 130, 130, 50.",
+  r584:
+    "m R 402 b. Met een motorvoertuig op meer dan twee wielen waarin duidelijk zichtbaar is aangebracht een geldige gehandicaptenparkeerkaart. Toelichting: gehandicaptenvoertuig mag wel op gehandicaptenparkeerplaats parkeren. 400, 400, 160. m R 402 c: met het voor die gereserveerde gehandicaptenparkeerplaats bestemde voertuig. 500, 500, 200.",
+  f120b:
+    "p F 121 a. Als persoon die de leeftijd van 18 jaar heeft bereikt op een openbare plaats die deel uitmaakt van een door het college of de burgemeester aangewezen gebied alcoholhoudende drank gebruiken. Toelichting: in geval van minderjarige verdachte zie E 211 a en E 211 b. 110. p F 121 b: aangebroken flessen, blikjes e.d. met alcoholhoudende drank bij zich hebben. Dezelfde toelichting. 110.",
+  dh45:
+    "p E 211. Als persoon jonger dan 18 jaar alcoholhoudende drank aanwezig hebben waar dit niet is toegestaan. Toelichting: niet van toepassing in o.a. slijterij/supermarkt waar alcoholhoudende drank bedrijfsmatig voor elders wordt verstrekt. 110. Bij F 121 a en F 121 b staat: in geval van minderjarige verdachte zie E 211 a en E 211 b. Een aparte tariefregel E 211 a of E 211 b staat niet in dit boekje.",
+  d530:
+    "p F 185. Binnen de bebouwde kom op een openbare plaats zijn natuurlijke behoefte doen buiten daarvoor bestemde plaatsen. Toelichting: binnen bebouwde kom; op welke plaats. 170. p D 530 is een ander feit: zich in kennelijke staat van dronkenschap op de openbare weg bevinden (art. 453). Toelichting: waaruit bleek dit; noem kenmerken/symptomen die duiden op dronkenschap. 110.",
+  "apv-groep":
+    "p F 120 b. Zich ophouden op een wijze die voor andere gebruikers of omwonenden onnodig overlast of hinder veroorzaakt. Toelichting: waaruit bleek dit. 170. p F 120 a: klimmen of zich bevinden op een beeld, monument, overkapping, constructie, openbare toiletgelegenheid, voertuig, hek, heining of andere afsluiting, verkeersmeubilair of daarvoor niet bestemd straatmeubilair. Toelichting: waarop. 110.",
+  "apv-hond":
+    "p F 145 a. Een openbare plaats gelegen binnen de bebouwde kom zonder dat de hond is aangelijnd. Toelichting: betreft niet door het college of de burgemeester aangewezen plaats waar hond was toegestaan. 110. p F 145 f: niet voldoen aan de verplichting ervoor te zorgen dat de uitwerpselen van die hond onmiddellijk worden verwijderd. 170. p F 145 b: kinderspeelplaats, zandbak, speelweide of andere aangewezen plaats. 170. p F 145 d: zonder een deugdelijk middel voor het verwijderen van uitwerpselen, of dat middel niet tonen. 110.",
+  v010:
+    "p H 645 a. De binnenvisserij uitoefenen zonder schriftelijke toestemming van de rechthebbende op het visrecht van dat water, met één of twee hengels. Toelichting: noem altijd de naam rechthebbende en naam water. 160. p H 645 b: één peur. 240. p H 645 c: meer dan twee hengels. Toelichting: soort en aantal vistuigen; naam water; naam rechthebbende; verhoor rechthebbende. 370.",
+  "wp70-1":
+    "p E 100 a. Zonder geldig vervoersbewijs gebruik maken van het openbaar vervoer. Toelichting: geen pv als is voldaan aan artikel 48 leden 2, 3, 5 en 6 Bp 2000 jo. 70 lid 2 Wp 2000 (adm. betalingsmogelijkheid). 110. p E 101 b: zonder geldig vervoersbewijs gebruik maken van een tot het openbaar vervoer behorende voorziening waarvan de vervoerder duidelijk kenbaar heeft gemaakt dat daarvoor een geldig vervoersbewijs vereist is. 110.",
+  "wp70-2":
+    "* E 103. Een vervoersbewijs misbruiken door gebruik te maken van een vervoersbewijs dat aan een andere persoon is verstrekt. Toelichting: niet van toepassing bij gebruik kaart op naam (van een ander persoon) zonder dat sprake is van misbruik. Dient te blijken uit voordeel dat wordt genoten e.d.",
+  wp72:
+    "p E 120 a. De bediening en het gebruik van voorzieningen te verhinderen of belemmeren. 290. Kop boven de reeks: de orde, rust, veiligheid of een goede bedrijfsgang verstoren door. Toelichting bij de reeks: altijd vragen of verdachte handelde met toestemming van de vervoerder (art. 52 lid 2 Bp 2000).",
+  wp73:
+    "p E 128. Niet opvolgen van de aanwijzingen betreffende de orde, rust, veiligheid of een goede bedrijfsgang, die door of vanwege de vervoerder duidelijk kenbaar zijn gemaakt. Toelichting: kenbaar gemaakt door. 110.",
+  art107:
+    "* K 055. Rijden zonder rijbewijs. Toelichting: welke categorie vereist; staandehouding verplicht. Noot: de feitcode K 055 is alleen van toepassing op bestuurders die gezien hun leeftijd in het bezit kunnen zijn van een Nederlands rijbewijs.",
+  r545:
+    "m R 545. Als bestuurder van een voertuig tijdens het rijden een mobiel elektronisch apparaat dat gebruikt kan worden voor communicatie of informatieverwerking vasthouden. Toelichting: noteer soort elektronisch apparaat; bijv. vorm, merk en type; gebruik cat. 8 slechts voor trambestuurders; feitcode geldt niet voor rij-instructeur. 440, 440, 300, 170, 440.",
+  storten:
+    "p H 025. Als particulier zich van een afvalstof ontdoen door deze buiten een inrichting te storten, op of in de bodem te brengen of te verbranden. 470.",
+  art461:
+    "p D 537. Zonder daartoe gerechtigd te zijn zich bevinden op eens anders grond, waarvan de toegang op blijkbare wijze was verboden. Toelichting: op welke blijkbare wijze was de toegang verboden; waar bevond verdachte zich; niet op kenteken. 110.",
 };
 
 export function boekjeToelichting(feit: Feit): string {
   return (
     BOEKJE[feit.id] ??
-    "Bij deze titel staat in het Feitenboekje 2026 geen eigen toelichtingsregel, of het feit zit in een lokale verordening. Vermeld dan het artikel van die verordening en de handeling. Bij een *-feit (misdrijf) hoort naast het mini-pv een proces-verbaal waarin de redenen van wetenschap staan."
+    "Voor dit onderwerp staat in het Feitenboekje, uitgave januari 2026, geen eigen feitregel. Er wordt dan geen bedrag uit dit boekje getoond."
   );
 }
 
