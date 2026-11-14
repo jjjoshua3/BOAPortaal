@@ -8,6 +8,8 @@ import { useKluis } from "@/lib/kluis/provider";
 import { useBoaAuth } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount } from "@/lib/supabase/client";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
+import { naarPv, useIdentiteit } from "@/lib/boa/identiteit";
+import { CopyButton } from "@/components/bits";
 
 export const Route = createFileRoute("/account")({
   component: AccountPage,
@@ -119,7 +121,7 @@ function RegisterForm() {
         void registreerAccount({
           email,
           password,
-          naam,
+          naam: naarPv(naam) || naam,
           domein,
           rol,
           redirectTo: `${window.location.origin}/account`,
@@ -138,8 +140,8 @@ function RegisterForm() {
       }}
     >
       <label className="field">
-        Naam, zoals je die in een PV zet
-        <input value={naam} onChange={(event) => setNaam(event.target.value)} required />
+        Naam zoals in een proces-verbaal: ACHTERNAAM, Voorletter
+        <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="BOSMA, J." required />
       </label>
       <Mail email={email} setEmail={setEmail} fout={domeinFout} />
       <label className="field">
@@ -250,6 +252,7 @@ function Mail({ email, setEmail, fout }: { email: string; setEmail: (value: stri
 
 function Profiel() {
   const { user } = useBoaAuth();
+  const { identiteit, fout: idFout, setIdentiteit } = useIdentiteit();
   const kluis = useKluis();
   const setDomein = usePrefs((state) => state.setDomein);
   const setRol = usePrefs((state) => state.setRol);
@@ -274,7 +277,20 @@ function Profiel() {
 
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-5">
-      <PageHead kicker="ACCOUNT" title="Profiel" lede={user?.email ?? ""} />
+      <PageHead
+        kicker="ACCOUNT"
+        title="Mijn profiel"
+        lede={identiteit ? `${identiteit.pv_naam} · ${identiteit.client_id}` : "Client-ID wordt uitgegeven zodra het identiteitsregister actief is."}
+      />
+      <div className="panel mb-4 grid gap-2 p-3">
+        <p className="text-xs font-semibold text-muted">Client-ID</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="font-mono text-lg font-semibold">{identiteit?.client_id || "BP-····-··"}</p>
+          <CopyButton text={identiteit?.client_id ?? ""} label="Kopieer Client-ID" />
+        </div>
+        <p className="text-sm">PV-naam: {identiteit?.pv_naam || "nog niet vastgelegd"}</p>
+        {idFout ? <p className="text-xs text-muted">Het identiteitsregister is nog niet actief in de database. Je e-mailadres blijft verborgen.</p> : null}
+      </div>
       <div className="mb-4">
         <p className="text-xs font-semibold text-muted">Weergave</p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -294,11 +310,14 @@ function Profiel() {
           if (!sb) return;
           setFout("");
           setMelding("");
-          void sb.auth.updateUser({ data: { naam, domein, rol } }).then(({ error }) => {
+          void sb.auth.updateUser({ data: { naam: naarPv(naam) || naam, domein, rol } }).then(async ({ error }) => {
             if (error) {
               setFout(mapAuthError(error.message));
               return;
             }
+            const pv = naarPv(naam) || naam;
+            const { data, error: rpcFout } = await sb.rpc("boa_zet_pv_naam", { p_naam: pv, p_organisatie: null });
+            if (!rpcFout && data && typeof data === "object") setIdentiteit(data as typeof identiteit);
             if (domein !== "algemeen") setDomein(domein);
             setRol(rol);
             setMelding("Profiel opgeslagen. Het filter staat op dit domein en deze rol.");
@@ -306,8 +325,8 @@ function Profiel() {
         }}
       >
         <label className="field">
-          Naam
-          <input value={naam} onChange={(event) => setNaam(event.target.value)} />
+          PV-naam
+          <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="BOSMA, J." />
         </label>
         <label className="field">
           Standaarddomein

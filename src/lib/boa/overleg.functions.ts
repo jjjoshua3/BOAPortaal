@@ -169,6 +169,7 @@ export const plaatsOverleg = createServerFn({ method: "POST" })
     const user = await gebruiker(invoer.token);
     if (!user) throw new Error("Meld je aan met een zakelijk of schooladres.");
     const sb = client(invoer.token);
+    const { data: ident } = await sb.from("boa_identiteit").select("pv_naam, client_id").eq("user_id", user.id).maybeSingle();
     const { data: rij, error } = await sb
       .from("boa_community")
       .insert({
@@ -178,8 +179,8 @@ export const plaatsOverleg = createServerFn({ method: "POST" })
         domein: invoer.domein,
         titel: invoer.titel,
         tekst: invoer.tekst,
-        weergave: user.weergave,
-        organisatie: user.organisatie,
+        weergave: ident?.pv_naam || "collega",
+        organisatie: ident?.client_id || user.organisatie,
       })
       .select("id")
       .single();

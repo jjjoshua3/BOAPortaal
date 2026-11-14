@@ -21,6 +21,7 @@ import { CopyButton } from "@/components/bits";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs, pasWeergave } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
+import { useIdentiteit } from "@/lib/boa/identiteit";
 
 const ICONS = {
   "/feitcodes": Search,
@@ -92,6 +93,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const setTekst = usePrefs((state) => state.setTekst);
   const toggleTheme = usePrefs((state) => state.toggleTheme);
   const { user, ready } = useBoaAuth();
+  const { identiteit } = useIdentiteit();
   const [meer, setMeer] = useState(false);
   const [zoekOpen, setZoekOpen] = useState(false);
   const [weergave, setWeergave] = useState(false);
@@ -199,8 +201,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Lock className="size-4" />
               <span className="hidden xl:inline">Kluis</span>
             </Link>
-            <Link to="/account" className="btn btn-brand min-h-10 px-2">
-              {ready && user?.email ? user.email.split("@")[0] : "Account"}
+            <Link to="/account" className="btn btn-brand min-h-10 px-2" title={identiteit ? `${identiteit.pv_naam} ${identiteit.client_id}` : "Account"}>
+              <span className="font-mono text-xs">{ready && user && identiteit?.client_id ? identiteit.client_id : "Account"}</span>
             </Link>
           </div>
         </div>
