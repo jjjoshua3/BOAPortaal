@@ -15,7 +15,7 @@ export const DOMEIN_INFO: { id: DomeinId; label: string; kort: string; tekst: st
     id: "I",
     label: "Domein I | Openbare ruimte",
     kort: "APV, afval, parkeren/RVV 1990, Alcoholwet, jeugdoverlast",
-    tekst: "Orde in de openbare ruimte: afval, parkeren, alcohol, honden en samenscholing. Veel feiten staan in de APV en zijn dus lokaal.",
+    tekst: "Eén domein in de Regeling domeinlijsten: openbare ruimte. Welke feiten jij mag opnemen, staat in jouw akte en taakomschrijving. Jeugd, wijk, horeca, parkeren of ondermijning zijn geen aparte wettelijke boa-soorten.",
   },
   {
     id: "II",

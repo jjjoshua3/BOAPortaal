@@ -177,12 +177,12 @@ export const VRAGEN: Vraag[] = [
     vraag: "Je hebt iemand op heterdaad aangehouden. Wat moet er daarna?",
     opties: [
       "Verhoor op het gemeentehuis en daarna naar huis",
-      "Onverwijlde overdracht aan de politie of hulpofficier",
+      "Ten spoedigste overbrengen ter voorgeleiding aan de hulpofficier of de officier",
       "Een Mulder-bon laten tekenen",
       "24 uur ophouden voor raadpleging van de burgemeester",
     ],
     juist: 1,
-    toelichting: "Artikel 154 Sv en het Besluit boa: de boa draagt de verdachte onverwijld over.",
+    toelichting: "Artikel 53 lid 2 Sv. Artikel 154 Sv is vervallen sinds 1 januari 2013.",
   },
   {
     id: "q8",

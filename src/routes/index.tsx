@@ -23,14 +23,10 @@ import { FEITEN, type Feit } from "@/lib/boa/feitcodes";
 import { JARGON } from "@/lib/boa/jargon";
 import { type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
-import { seo } from "@/lib/seo";
+import { HOME_TEKST, HOME_TITEL, seo } from "@/lib/seo";
 import { BOMEN } from "@/lib/boa/trees";
 import { TELLEN, recenteUpdates } from "@/lib/boa/updates";
 import { KAARTEN } from "@/lib/boa/zakkaart";
-
-const HOME_TITEL = "BOA Portaal | Feitcodes 2026, Zakkaartjes, Beslisbomen & PV-bouwer (Domein I–VI)";
-const HOME_TEKST =
-  "Gratis en onafhankelijk naslag- en praktijkplatform voor BOA's, HTV-studenten en vakdocenten. Zoek direct feitcodes 2026, cautie, ID-vordering, beslisbomen en 7 W's PV-bouwstenen.";
 
 export const Route = createFileRoute("/")({
   head: () => seo("/", HOME_TITEL, HOME_TEKST),
@@ -205,19 +201,6 @@ function Home() {
 
   return (
     <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "BOA Portaal",
-            url: "https://boaportaal.nl/",
-            description: HOME_TEKST,
-            inLanguage: "nl-NL",
-          }),
-        }}
-      />
 
       <section className="mx-auto w-full max-w-3xl px-4 pt-12 pb-6 sm:pt-16">
         <p className="text-sm text-muted">Onafhankelijk naslagwerk · Domein I t/m VI</p>
@@ -293,6 +276,25 @@ function Home() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mx-auto w-full max-w-3xl px-4 py-6">
+        <h2 className="text-base font-semibold">Namen op de werkvloer, domein I</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Jeugd-BOA, wijk-BOA, BOA ondermijning, horeca- en Alcoholwet-BOA, verkeers- en parkeer-BOA, senior BOA en teamleider komen niet voor als categorie in de Regeling domeinlijsten buitengewoon opsporingsambtenaar of in paragraaf 6 van de Beleidsregels. Het blijft één domein: openbare ruimte. De grens is de akte en de taakomschrijving.
+        </p>
+        <ul className="mt-3 list-disc pl-5 text-sm leading-relaxed">
+          <li>Beleidsregels, paragraaf 6.1: handhaving van leefbaarheid, overlast en kleine ergernissen in de openbare ruimte.</li>
+          <li>Paragraaf 6.2: rijdend verkeer is alleen ongemotoriseerd, tenzij het feit in onderdeel 10 van de domeinlijst staat. Die motorvoertuigfeiten alleen binnen een gedeeld handhavingsarrangement.</li>
+          <li>De Alcoholwet, de artikelen 45 en 45a, staat op de domeinlijst. Of jij die feiten mag opnemen, staat in de akte. Er is geen aparte horeca-boa in de regeling.</li>
+          <li>De boa openbare ruimte kan optioneel de bevoegdheden van artikel 7, eerste, derde en vierde lid, Politiewet 2012 krijgen, en optioneel handboeien, wapenstok of pepperspray. Een ingehuurde boa stopt bij die politiebevoegdheden en handboeien.</li>
+          <li>Het seniorenbeleid als ontheffing van de bekwaamheidseis is per 1 januari 2016 afgeschaft. Senior of teamleider is een functie van de werkgever, geen titel in de akte.</li>
+        </ul>
+        <p className="mt-2 text-sm">
+          <a className="font-semibold underline" href="https://wetten.overheid.nl/BWBR0039766" target="_blank" rel="noreferrer">Beleidsregels</a>
+          {" · "}
+          <a className="font-semibold underline" href="https://wetten.overheid.nl/BWBR0041447" target="_blank" rel="noreferrer">Regeling domeinlijsten</a>
+        </p>
       </section>
 
       <section className="mx-auto w-full max-w-3xl px-4 py-8">

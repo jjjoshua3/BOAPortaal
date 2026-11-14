@@ -517,7 +517,7 @@ function Vermist() {
 const DELEN = [
   {
     titel: "Politie",
-    wel: "Overdracht van een aangehouden verdachte: feit, tijd, cautie, geweld en letsel. Artikel 154 Sv.",
+    wel: "Overbrenging na aanhouding: feit, tijd, cautie, geweld en letsel. Artikel 53 lid 2 Sv. Artikel 154 Sv is vervallen.",
     niet: "Een uitkeringsdossier, een medisch gegeven of een lijst namen 'voor de zekerheid'.",
   },
   {

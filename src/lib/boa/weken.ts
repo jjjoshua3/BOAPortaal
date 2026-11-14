@@ -3,8 +3,8 @@ import type { Vraag } from "@/lib/boa/trainer";
 import { EXTRA_SETS } from "@/lib/boa/weken-extra";
 
 const ROLLEN: Vraag["rollen"] = ["boa", "student", "docent"];
-const SV = "https://wetten.overheid.nl/BWBR0001854";
-const SR = "https://wetten.overheid.nl/BWBR0001903";
+const SV = "https://wetten.overheid.nl/BWBR0001903";
+const SR = "https://wetten.overheid.nl/BWBR0001854";
 const WID = "https://wetten.overheid.nl/BWBR0006297";
 const LEER = "https://wetten.overheid.nl/BWBR0002628";
 const WP = "https://wetten.overheid.nl/BWBR0011470";
@@ -57,7 +57,7 @@ const BASIS: Vraag[][] = [
       ["Halt", "Proces-verbaal en vervolging", "Geen strafvervolging", "D 517 wegens geen identiteitskaart"],
       2,
       "Onder de 12 jaar is er geen strafrechtelijke vervolging. Halt begint bij 12. De toonplicht van de WID begint bij 14.",
-      "https://wetten.overheid.nl/BWBR0001854",
+      "https://wetten.overheid.nl/BWBR0001903",
     ),
     v(
       "w1-3",

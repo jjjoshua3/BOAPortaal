@@ -21,14 +21,14 @@ const WACHT: { id: string; label: string; url: string; naald: string; uitleg: st
   {
     id: "sv29",
     label: "Wetboek van Strafvordering | cautie",
-    url: "https://wetten.overheid.nl/BWBR0001854",
+    url: "https://wetten.overheid.nl/BWBR0001903",
     naald: "niet tot antwoorden verplicht",
     uitleg: "Artikel 29 lid 2. De cautie gaat vóór de verhoorvraag.",
   },
   {
     id: "sr447e",
     label: "Wetboek van Strafrecht | artikel 447e",
-    url: "https://wetten.overheid.nl/BWBR0001903",
+    url: "https://wetten.overheid.nl/BWBR0001854",
     naald: "447e",
     uitleg: "Niet voldoen aan de inzagevordering. Alleen waar de toonplicht geldt.",
   },

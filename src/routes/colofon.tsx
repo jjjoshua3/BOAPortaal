@@ -3,8 +3,8 @@ import { PageHead } from "@/components/bits";
 import { seo } from "@/lib/seo";
 
 const BRONNEN = [
-  ["Wetboek van Strafrecht", "https://wetten.overheid.nl/BWBR0001903"],
-  ["Wetboek van Strafvordering", "https://wetten.overheid.nl/BWBR0001854"],
+  ["Wetboek van Strafrecht", "https://wetten.overheid.nl/BWBR0001854"],
+  ["Wetboek van Strafvordering", "https://wetten.overheid.nl/BWBR0001903"],
   ["Algemene wet bestuursrecht", "https://wetten.overheid.nl/BWBR0005537"],
   ["Wet op de identificatieplicht", "https://wetten.overheid.nl/BWBR0006297"],
   ["Ambtsinstructie", "https://wetten.overheid.nl/BWBR0006589"],
@@ -16,6 +16,8 @@ const BRONNEN = [
   ["RVV 1990", "https://wetten.overheid.nl/BWBR0004825"],
   ["Visserijwet 1963", "https://wetten.overheid.nl/BWBR0002416"],
   ["Alcoholwet", "https://wetten.overheid.nl/BWBR0002458"],
+  ["Beleidsregels boa", "https://wetten.overheid.nl/BWBR0039766"],
+  ["Regeling domeinlijsten boa", "https://wetten.overheid.nl/BWBR0041447"],
   ["Omgevingswet", "https://wetten.overheid.nl/BWBR0037885"],
   ["Open data RDW", "https://opendata.rdw.nl/"],
   ["Vermiste personen | politie", "https://www.politie.nl/vermist"],
