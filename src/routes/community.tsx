@@ -75,7 +75,7 @@ function CommunityPage() {
     <div className="mx-auto w-full max-w-3xl px-4 py-5">
       <PageHead
         kicker="COMMUNITY"
-        title="Praktijkvragen"
+        title="Community"
         lede="Vaste onderwerpen per domein, plus het bord voor aangemelde collega's. Geen namen van burgers."
       />
       <ul className="grid gap-2">
