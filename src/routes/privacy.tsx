@@ -7,7 +7,7 @@ export const Route = createFileRoute("/privacy")({
     seo(
       "/privacy",
       "Privacy | BOA Portaal",
-      "Welke gegevens BOA Portaal verwerkt, waarom, en wat je eraan kunt doen. Geen BSN en geen dossier van burgers.",
+      "Hoe BOA Portaal accounts, inzage, de kluis en het auditlog behandelt. Geen e-mail in beeld, geen dossier van burgers.",
     ),
   component: PrivacyPage,
 });
@@ -18,64 +18,110 @@ function PrivacyPage() {
       <PageHead
         kicker="PRIVACY | AVG"
         title="Hoe dit portaal met gegevens omgaat"
-        lede="BOA Portaal is een onafhankelijke naslag. Geen systeem van het Openbaar Ministerie, de politie, het CJIB of een gemeente. Hier staat welke persoonsgegevens er zijn, waarom, en wat je eraan kunt doen."
+        lede="BOA Portaal is een onafhankelijke naslag. Geen systeem van het Openbaar Ministerie, de politie, het CJIB of een gemeente. Hier staat wat er van een account wordt bewaard, wie het mag inzien, en wat buiten beeld blijft."
       />
       <div className="grid gap-3 text-sm">
         <section className="panel p-3">
-          <h2 className="font-semibold">Verantwoordelijke en beginselen</h2>
+          <h2 className="font-semibold">Verantwoordelijke</h2>
           <p className="mt-2">
-            De beheerder van BOA Portaal is verwerkingsverantwoordelijke voor het account, de kluis en het overlegbord. Artikel 5 van de Algemene verordening gegevensbescherming geldt: zo min mogelijk gegevens, voor een duidelijk doel, juist, niet langer dan nodig, en beveiligd. Er is geen reclameprofiel en geen geautomatiseerd besluit over jou.
+            De beheerder van BOA Portaal is verwerkingsverantwoordelijke voor het account, de kluis, het overlegbord, de servicedesk en het auditlog. Er is geen reclameprofiel en geen geautomatiseerd besluit over jou. We bewaren zo min mogelijk, en niet langer dan hieronder staat.
           </p>
         </section>
+
         <section className="panel p-3">
           <h2 className="font-semibold">Zonder account</h2>
           <p className="mt-2">
-            Feitcodes, zakkaartjes, beslisbomen, de PV-bouwer en de trainer sturen geen dossier naar een server. Domein, rol en dag- of nachtdienst blijven in deze browser. Een melding via de knop Klopt dit niet blijft zonder account ook alleen op dit apparaat. Er wordt dan niets naar de server gestuurd.
+            Feitcodes, zakkaartjes, beslisbomen, de PV-bouwer en de trainer sturen geen dossier naar een server. Domein, rol en dag- of nachtdienst blijven in deze browser. Een melding via Feedback blijft zonder account ook op dit apparaat.
           </p>
         </section>
+
         <section className="panel p-3">
-          <h2 className="font-semibold">Account | artikel 6 AVG</h2>
+          <h2 className="font-semibold">Wat een account is</h2>
           <p className="mt-2">
-            Een account vraagt een zakelijk, overheids-, vervoers- of schooladres. Gratis mailboxen worden geweigerd. Bewaard worden het e-mailadres, het wachtwoord in de vorm die de aanmelddienst daarvan maakt, en wat je zelf invult: naam, rol en standaarddomein. Grondslag: je maakt het account zelf aan om de werkbank en de kluis te gebruiken, artikel 6 lid 1 onder a en b AVG. Het wachtwoord staat niet in leesbare tekst.
+            Een account vraagt een zakelijk, overheids-, vervoers- of schooladres. Gratis mailboxen worden geweigerd. Het adres en het wachtwoord staan alleen in de aanmelddienst. Het wachtwoord is niet leesbaar. In het portaal zelf zie je geen e-mailadres en geen voornaam.
+          </p>
+          <p className="mt-2">
+            In plaats daarvan krijgt het account een Client-ID, bijvoorbeeld BP-3200-YE, en een PV-naam in de vorm ACHTERNAAM, V. Die twee zijn wat collega's en het beheer zien. Grondslag: je maakt het account zelf aan om de kluis en het overleg te gebruiken, artikel 6 lid 1 onder a en b AVG. Een medewerkersaccount maakt alleen de hoofdbeheerder aan, in systeem.boaportaal.nl. Daarmee krijgt die persoon toegang tot de servicedesk.
           </p>
         </section>
+
         <section className="panel p-3">
-          <h2 className="font-semibold">Kluis | versleuteling</h2>
+          <h2 className="font-semibold">Inzage door beheer</h2>
           <p className="mt-2">
-            Notities, PV-concepten, combibonnen en eigen tariefkaarten worden in de browser versleuteld met AES-GCM. De sleutel wordt met PBKDF2 afgeleid van het account. De opslag ontvangt cijfertekst. De databasefunctie wikkelt die cijfertekst nog een keer met pgcrypto. Zonder de sleutel is de tekst niet terug te lezen, ook niet door de beheerder.
+            Support en de hoofdbeheerder kunnen een account opzoeken op Client-ID of ticketnummer. Dat mag alleen met een reden van minstens twaalf tekens. Elke opvraag wordt een regel in het auditlog: wie, wanneer, welk dossier, en waarom. Die regel is INZAGE.
+          </p>
+          <p className="mt-2">
+            In het dossier staat de Client-ID, de PV-naam, de organisatie en of het account vergrendeld is. Het e-mailadres komt niet op het scherm. De inhoud van de kluis ook niet. De beheerder ziet alleen tellers: hoeveel notities, concepten en favorieten er versleuteld staan, en wanneer de kluis voor het laatst synchroniseerde.
+          </p>
+          <p className="mt-2">
+            Zoeken op e-mailadres kan alleen de hoofdbeheerder, en alleen als het adres anders niet te vinden is. Dat is een nood-opvraag. Die schrijft een zware regel (BREAK_GLASS). Het adres komt niet terug in het dossier.
           </p>
         </section>
+
         <section className="panel p-3">
-          <h2 className="font-semibold">Overleg en correcties</h2>
+          <h2 className="font-semibold">Wachtwoord en adres</h2>
           <p className="mt-2">
-            Een bericht op het prikbord of een melding die je doorzet, wordt met AES-GCM versleuteld opgeslagen. Aangemelde collega's kunnen het lezen, omdat een overlegbord anders niet werkt. De database bewaart cijfertekst, geen leesbare kolom met de inhoud. Je ziet een weergavenaam en het domein van het e-mailadres, niet een apart adresboek.
+            Je wijzigt je wachtwoord zelf op de accountpagina. Een medewerker kan een herstel-link laten sturen naar het zakelijke adres, zonder dat adres te zien. Alleen de hoofdbeheerder kan het wachtwoord direct zetten of het zakelijke adres wijzigen. Het nieuwe wachtwoord en het nieuwe adres komen niet in het auditlog. Wel staat daar dat de wijziging is gedaan, door wie, en met welke reden. Zo'n regel is een kritieke auth-wijziging.
+          </p>
+          <p className="mt-2">De hoofdbeheerder kan een account vergrendelen en weer openen. Ook dat wordt gelogd.</p>
+        </section>
+
+        <section className="panel p-3">
+          <h2 className="font-semibold">Inloggen en IP-adres</h2>
+          <p className="mt-2">
+            Een aanmelding op boaportaal.nl, de servicedesk en het beheersysteem wordt gelogd: moment, site, uitkomst en Client-ID als die bekend is. Het IP-adres hoort bij die regel en is alleen zichtbaar voor de hoofdbeheerder. Support ziet de poging, niet het adres.
           </p>
         </section>
+
+        <section className="panel p-3">
+          <h2 className="font-semibold">Kluis</h2>
+          <p className="mt-2">
+            Notities, PV-concepten, combibonnen en eigen kaarten worden in de browser versleuteld met AES-256-GCM. De sleutel komt van je account. De database krijgt cijfertekst. Zonder die sleutel is de tekst niet te lezen, ook niet door de beheerder. Die ziet alleen de tellers hierboven.
+          </p>
+        </section>
+
+        <section className="panel p-3">
+          <h2 className="font-semibold">Overleg en servicedesk</h2>
+          <p className="mt-2">
+            Een bericht op het prikbord wordt versleuteld bewaard. Aangemelde collega's kunnen het lezen, anders werkt het bord niet. Onder het bericht staat de PV-naam en de Client-ID, niet het e-mailadres.
+          </p>
+          <p className="mt-2">
+            Een ticket op de servicedesk bevat Client-ID, PV-naam, categorie, onderwerp en je omschrijving. Geen e-mailadres in het scherm van de behandelaar. Een ticket is een vraag over het portaal, geen proces-verbaal en geen dossier van een burger.
+          </p>
+        </section>
+
         <section className="panel accent-stop p-3">
-          <h2 className="font-semibold">Bijzondere gegevens | artikel 9 AVG</h2>
+          <h2 className="font-semibold">Geen dossier van burgers</h2>
           <p className="mt-2">
-            Geen BSN. Geen gezondheidsgegevens. Geen namen, adressen of telefoonnummers van burgers. Geen zaaknummers uit een bronsysteem. De PV-bouwer, de combibon en het overlegbord blokkeren BSN, telefoon, e-mail en IBAN voordat een tekst wordt bewaard. Dit portaal is geen procesdossier.
+            Geen BSN. Geen gezondheidsgegevens. Geen namen, adressen of telefoonnummers van burgers. Geen zaaknummers uit een bronsysteem. De PV-bouwer, de combibon en het overlegbord blokkeren BSN, telefoon, e-mail en IBAN voordat een tekst wordt bewaard.
           </p>
         </section>
+
         <section className="panel p-3">
           <h2 className="font-semibold">Kenteken en vermiste personen</h2>
           <p className="mt-2">
-            Een kentekenopvraag leest de open data van de RDW. Daar staat geen naam van de houder. Het portaal bewaart die opvraag niet, tenzij je zelf een combibon in de kluis zet. De lijst vermiste personen komt live van de politie, alleen als de vermissing niet langer dan drie weken duurt en er een foto op politie.nl staat. Die lijst wordt niet in onze database opgeslagen.
+            Een kentekenopvraag leest de open data van de RDW. Daar staat geen naam van de houder. Het portaal bewaart die opvraag niet, tenzij je zelf een combibon in de kluis zet. De lijst vermiste personen komt live van de politie en wordt niet in onze database opgeslagen.
           </p>
         </section>
+
         <section className="panel p-3">
-          <h2 className="font-semibold">Bewaartermijn, verwerkers, doorgifte</h2>
+          <h2 className="font-semibold">Hoe lang het blijft staan</h2>
           <ul className="mt-2 grid gap-2">
-            <li>Account, kluis en overleg: tot je ze wist, of tot je het account verwijdert.</li>
-            <li>Verwerkers: de aanmelddienst voor het account, en de database waarin de cijfertekst staat. Zij zien het e-mailadres en de cijfertekst, niet de inhoud van de kluis.</li>
-            <li>Geen verkoop van gegevens. Geen advertentiecookies. Een sessiecookie houdt je aangemeld.</li>
-            <li>De open naslag gebruikt geen volgprofiel.</li>
+            <li>Account en kluis: tot je het account verwijdert, of tot de hoofdbeheerder het op jouw verzoek sluit.</li>
+            <li>Inlogpogingen: 30 dagen. Een mislukte poging zonder account: 7 dagen.</li>
+            <li>Audit, gewone inzage: 90 dagen. Zware opvraag: 180 dagen. Kritieke auth-wijziging: 365 dagen.</li>
+            <li>Gesloten tickets: 90 dagen, daarna weg, inclusief het logboek van dat ticket.</li>
+            <li>Open tickets blijven staan tot ze zijn afgehandeld.</li>
           </ul>
+          <p className="mt-2">
+            De aanmelddienst en de database zijn de verwerkers. Zij zien het e-mailadres en de cijfertekst van de kluis, niet de inhoud. Geen verkoop van gegevens. Geen advertentiecookies. Een sessiecookie houdt je aangemeld.
+          </p>
         </section>
+
         <section className="panel p-3">
           <h2 className="font-semibold">Jouw rechten</h2>
           <p className="mt-2">
-            Je kunt inzage vragen, een verbetering, wissing, beperking, en je gegevens meenemen. Op de accountpagina exporteer je de kluis, wijzig je het wachtwoord en verwijder je het account. Typ VERWIJDER om de lokale kluis te wissen en het account te sluiten. Een klacht kan bij de Autoriteit Persoonsgegevens.
+            Je kunt inzage vragen, een verbetering, wissing, beperking, en je gegevens meenemen. Op de accountpagina exporteer je de kluis, wijzig je het wachtwoord en verwijder je het account. Typ VERWIJDER om de lokale kluis te wissen en het account te sluiten. Wil je weten wat het beheer van jouw Client-ID heeft ingezien, dan vraag je dat bij de hoofdbeheerder. Die ziet het in het auditlog. Een klacht kan bij de Autoriteit Persoonsgegevens.
           </p>
           <p className="mt-2">
             <Link to="/account" className="underline">
@@ -87,12 +133,13 @@ function PrivacyPage() {
             </a>
           </p>
         </section>
+
         <p className="text-xs text-muted">
           Ontworpen door{" "}
           <a className="underline" href="https://jjjoshua3.netlify.app/" target="_blank" rel="noreferrer">
             Joshua
           </a>
-          . Dit portaal vervangt geen privacyverklaring van je werkgever of opleiding. Deel met politie, jongerenwerk of zorg alleen wat een wet of een convenant toestaat. De werkbank heeft daar een aparte kaart voor.
+          . Dit portaal vervangt geen privacyverklaring van je werkgever of opleiding. Deel met politie, jongerenwerk of zorg alleen wat een wet of een convenant toestaat.
         </p>
       </div>
     </div>
