@@ -200,9 +200,9 @@ export function bouwPv(invoer: PvInvoer): string {
       ? "Uit feiten of omstandigheden bleek een onmiddellijk gevaar voor het leven of de veiligheid. Ik heb een onderzoek aan de kleding gedaan als bedoeld in artikel 7, derde lid, van de Politiewet 2012, noodzakelijk ter afwending van dat gevaar. Het onderzoek bestond uit oppervlakkig aftasten. Ik heb dit onverwijld schriftelijk gemeld aan de hulpofficier van justitie."
       : "",
     invoer.boeien
-      ? `Ik heb de ${wie} handboeien aangelegd op grond van artikel 22 van de Ambtsinstructie, omdat een lichter middel niet volstond.`
+      ? `Ik heb de ${wie}, die rechtens van zijn vrijheid was beroofd, handboeien aangelegd ten behoeve van het vervoer, op grond van artikel 22 van de Ambtsinstructie, omdat redelijkerwijs gevaar voor ontvluchting of de veiligheid viel te vrezen.`
       : "",
-    invoer.overdracht ? `De ${wie} is overgedragen aan de politie dan wel voorgeleid aan een hulpofficier van justitie.` : "",
+    invoer.overdracht ? `De ${wie} is ten spoedigste overgebracht ter voorgeleiding aan de hulpofficier van justitie of de officier van justitie, als bedoeld in artikel 53, tweede lid, van het Wetboek van Strafvordering.` : "",
   ].filter(Boolean);
   const feitZin = invoer.feit
     ? `Het betreft ${invoer.regime === "mulder" ? "de gedraging" : "het strafbare feit"} ${invoer.feit.code}, ${invoer.feit.titel} (${invoer.feit.artikel}).`

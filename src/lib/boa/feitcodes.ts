@@ -31,7 +31,7 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Overtreding",
     leeftijd: "Alleen vanaf 14 jaar. Onder de 14 jaar geen D 517, omdat de toonplicht dan niet geldt.",
     bijzonder:
-      "Er is geen draagplicht, wel een toonplicht (art. 2 WID, Rijksoverheid). De vordering moet duidelijk zijn, na kenbaar maken van hoedanigheid. Personalia vragen is nog geen verhoor. Bij weigering: waarschuwen, dan pas het feit. In het openbaar vervoer kan bij reizen zonder geldig vervoerbewijs vanaf 12 jaar om een ID worden gevraagd; het niet tonen is onder de 14 geen zelfstandig feit.",
+      "Er is geen draagplicht, wel een toonplicht. Artikel 2 WID: op de eerste vordering, vanaf veertien jaar. Artikel 8 lid 2 Politiewet 2012 geeft die bevoegdheid aan de buitengewoon opsporingsambtenaar voor zover dat redelijkerwijs noodzakelijk is voor zijn taak. De vordering moet duidelijk zijn, na kenbaar maken van hoedanigheid. Personalia vragen is nog geen verhoor. Bij weigering: waarschuwen, dan pas het feit. In het openbaar vervoer kan bij reizen zonder geldig vervoerbewijs vanaf 12 jaar om een ID worden gevraagd; het niet tonen is onder de 14 geen zelfstandig feit.",
     tarief: "€ 110 | politiestrafbeschikking | " + BRON,
     pv: "Ik, verbalisant, heb mij gelegitimeerd en [VERDACHTE] gevorderd een identiteitsbewijs ter inzage te tonen, als bedoeld in artikel 2 van de Wet op de identificatieplicht. [VERDACHTE] is 14 jaar of ouder en heeft aan die vordering niet voldaan. Ik heb [VERDACHTE] erop gewezen dat dit strafbaar is gesteld in artikel 447e van het Wetboek van Strafrecht.",
     trefwoorden: "identiteitsbewijs id-bewijs wid 447e vordering inzage legitimatie",
@@ -155,7 +155,7 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Mulder (Wahv), bestuursrecht",
     leeftijd: "Geen verdachte. De kentekenhouder is aansprakelijk.",
     bijzonder:
-      "R 397 is niet het bord E1. R 397 a is parkeren binnen vijf meter van een kruispunt, R 397 b voor een in- of uitrit. Bord E1 is R 584. De code geldt niet voor parkeren in de berm. Dit is toezicht: stilhouden is art. 5:19 Awb, geen staandehouding en geen cautie.",
+      "R 397 is niet het bord E1. R 397 a is parkeren binnen vijf meter van een kruispunt, R 397 b voor een in- of uitrit. Bord E1 is R 584. De code geldt niet voor parkeren in de berm. Dit is toezicht, geen staandehouding en geen cautie. De Wahv heeft geen stilhoudartikel. Artikel 5:19 lid 4 Awb is een vordering om een rijdend vervoermiddel stil te houden en naar een aangewezen plaats over te brengen, met het oog op de bevoegdheden van dat artikel.",
     tarief: "Categorie-indeling B: € 130 cat. 1 (auto, bus, vrachtauto, brommobiel) en cat. 2 (motor) | € 50 cat. 3 (bromfiets en snorfiets) | € 130 cat. 4 (fiets) | " + BRON,
     pv: "Ik stelde vast dat het voertuig met kenteken [KENTEKEN] te [PLAATS] geparkeerd stond in strijd met bord E1, parkeerverbod. Positie van het bord: [BORD]. Ik heb een Wahv-beschikking op het kenteken aangezegd onder feitcode R 584. Er is geen verdachte aangemerkt.",
     trefwoorden: "parkeren parkeerverbod mulder wahv kenteken e1 r584",

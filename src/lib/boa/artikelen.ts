@@ -60,8 +60,8 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Toonplicht identiteitsbewijs",
     bron: "Wet op de identificatieplicht",
     href: "https://wetten.overheid.nl/BWBR0006297",
-    kern: "Vanaf 14 jaar moet iemand een identiteitsbewijs ter inzage geven als een bevoegde ambtenaar dat vordert. Dat is een toonplicht. Een algemene draagplicht kent de wet niet.",
-    straat: "Onder 14 jaar geen toonplicht en dus geen D 517. Wel de identiteit vaststellen als het feit dat vraagt.",
+    kern: "Een ieder van veertien jaar of ouder is verplicht op de eerste vordering van een ambtenaar als bedoeld in artikel 8 van de Politiewet 2012, of van artikel 6a van de Wet op de bijzondere opsporingsdiensten, een identiteitsbewijs ter inzage aan te bieden. Die verplichting geldt ook als een toezichthouder vordert. Artikel 8 lid 2 Politiewet geeft die bevoegdheid aan de buitengewoon opsporingsambtenaar, voor zover dat redelijkerwijs noodzakelijk is voor zijn taak. Een algemene draagplicht staat niet in dit artikel.",
+    straat: "Onder 14 jaar geen toonplicht en dus geen D 517. De vordering moet voor de taak nodig zijn.",
   },
   {
     id: "awb516",
@@ -69,8 +69,8 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Inlichtingen en identiteit in het toezicht",
     bron: "Algemene wet bestuursrecht",
     href: "https://wetten.overheid.nl/BWBR0005537",
-    kern: "Een toezichthouder kan inlichtingen en inzage vorderen, en in aangewezen gevallen de identiteit.",
-    straat: "Dit is geen verhoor. Zodra je een verklaring over een strafbaar feit wilt, stopt deze plicht.",
+    kern: "Artikel 5:16: een toezichthouder is bevoegd inlichtingen te vorderen. Artikel 5:16a: een toezichthouder is bevoegd van personen inzage te vorderen van een identiteitsbewijs als bedoeld in artikel 1 van de Wet op de identificatieplicht.",
+    straat: "Geen van beide artikelen noemt een verhoor. Een vraag naar betrokkenheid bij een strafbaar feit is artikel 29 Sv, niet artikel 5:16.",
   },
   {
     id: "awb519",
@@ -78,8 +78,8 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Stilhouden van een vervoermiddel",
     bron: "Algemene wet bestuursrecht",
     href: "https://wetten.overheid.nl/BWBR0005537",
-    kern: "De toezichthouder kan een bestuurder verzoeken het vervoermiddel stil te houden en te blijven staan.",
-    straat: "Gebruik dit bij Wahv en ander toezicht. Noem het in het dossier geen staandehouding.",
+    kern: "Artikel 5:19 lid 4: de toezichthouder is bevoegd, met het oog op de bevoegdheden van dat artikel, van de bestuurder van een voertuig of de schipper van een vaartuig te vorderen dat deze het vervoermiddel stilhoudt en naar een door hem aangewezen plaats overbrengt.",
+    straat: "De wet zegt vorderen, niet verzoeken, en niet alleen blijven staan. De Wahv noemt dit artikel niet. Een auto die al stilstaat, houd je niet stil. In het dossier is dit geen staandehouding.",
   },
   {
     id: "awb520",
@@ -87,8 +87,8 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Medewerkingsplicht",
     bron: "Algemene wet bestuursrecht",
     href: "https://wetten.overheid.nl/BWBR0005537",
-    kern: "Iedereen is verplicht een toezichthouder te helpen, binnen de grenzen van de wet.",
-    straat: "De plicht geldt niet voor een verklaring als verdachte. Dan gelden cautie en zwijgrecht.",
+    kern: "Een ieder is verplicht aan een toezichthouder binnen de door hem gestelde redelijke termijn alle medewerking te verlenen die deze redelijkerwijs kan vorderen bij de uitoefening van zijn bevoegdheden.",
+    straat: "Artikel 5:20 noemt als weigeringsgrond de geheimhoudingsplicht uit ambt, beroep of wettelijk voorschrift. Het zwijgrecht van de verdachte staat niet in dit artikel. Dat staat in artikel 29 Sv.",
   },
   {
     id: "ambt7",
@@ -97,7 +97,7 @@ export const ARTIKELEN: Artikel[] = [
     bron: "Politiewet 2012",
     href: "https://wetten.overheid.nl/BWBR0031788",
     kern: "Onderzoek aan de kleding en aan voorwerpen die iemand bij zich draagt, alleen als uit feiten of omstandigheden een onmiddellijk gevaar voor het leven of de veiligheid blijkt, en het onderzoek nodig is ter afwending van dat gevaar.",
-    straat: "Het doel is het gevaar afwenden, niet een wapen of bewijs zoeken. Oppervlakkig aftasten (art. 20 Ambtsinstructie). Onverwijld schriftelijk melden aan de hulpofficier, met de redenen (art. 21 Ambtsinstructie). Geen onderzoek aan het lichaam.",
+    straat: "Het artikel noemt de ambtenaar van politie. Een boa heeft deze bevoegdheid alleen als zij op de akte is toegekend. Het doel is het gevaar afwenden, niet een wapen of bewijs zoeken. Oppervlakkig aftasten: artikel 20 Ambtsinstructie. Onverwijld schriftelijk melden aan de hulpofficier, met de redenen: artikel 21. Geen onderzoek aan het lichaam.",
   },
   {
     id: "ambt22",
@@ -105,8 +105,8 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Handboeien",
     bron: "Ambtsinstructie",
     href: "https://wetten.overheid.nl/BWBR0006589",
-    kern: "Handboeien alleen bij vluchtgevaar of onmiddellijk gevaar voor de veiligheid, als een lichter middel niet volstaat.",
-    straat: "Altijd de reden in het PV. Letsel: medische zorg en melding volgens de RTGB.",
+    kern: "Ten behoeve van het vervoer of een verplaatsing kan de ambtenaar een persoon die rechtens van zijn vrijheid is beroofd handboeien aanleggen, indien op grond van de feiten of omstandigheden redelijkerwijs gevaar valt te vrezen voor ontvluchting, of voor de veiligheid van die persoon, van de ambtenaar of van derden.",
+    straat: "Niet bij iedere aanhouding, en niet omdat een identiteitsbewijs ontbreekt. De reden hoort in het proces-verbaal.",
   },
   {
     id: "lpw",
@@ -123,7 +123,7 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Wet personenvervoer 2000",
     bron: "Wet personenvervoer 2000",
     href: "https://wetten.overheid.nl/BWBR0011470",
-    kern: "Artikel 70 het bewjis, artikel 72 de orde, artikel 73 de aanwijzing, artikel 101 de strafbaarstelling.",
+    kern: "Artikel 70: verbod om zonder geldig vervoerbewijs van het openbaar vervoer gebruik te maken. Artikel 71: misbruik van een vervoerbewijs of belemmeren van de controle. Artikel 72: verbod om zich zo te gedragen dat orde, rust, veiligheid of een goede bedrijfsgang wordt of kan worden verstoord. Artikel 73: verplichting de daarop slaande aanwijzingen van de vervoerder op te volgen. Artikel 101 lid 1: niet-naleving van de artikelen 70 tot en met 73 is een overtreding.",
     straat: "UvB, verwijdering en aanhouding zijn drie verschillende uitkomsten.",
   },
   {
@@ -132,7 +132,7 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Inlichtingenplicht",
     bron: "Participatiewet",
     href: "https://wetten.overheid.nl/BWBR0015703",
-    kern: "Artikel 17: alles melden wat de uitkering kan beïnvloeden. Artikel 18a: de bestuurlijke boete.",
+    kern: "Artikel 17 lid 1: de belanghebbende doet aan het college op verzoek of onverwijld uit eigen beweging mededeling van alle feiten en omstandigheden waarvan hem redelijkerwijs duidelijk moet zijn dat zij van invloed kunnen zijn op zijn arbeidsinschakeling of het recht op bijstand. Artikel 18a is de bestuurlijke boete.",
     straat: "Het huisbezoek is geen huiszoeking.",
   },
   {
@@ -150,7 +150,7 @@ export const ARTIKELEN: Artikel[] = [
     titel: "Toestemming om te vissen",
     bron: "Visserijwet 1963",
     href: "https://wetten.overheid.nl/BWBR0002416",
-    kern: "In binnenwater vissen mag alleen met schriftelijke toestemming van de rechthebbende.",
-    straat: "De VISpas is de gewone vorm van die toestemming, niet een identiteitsbewijs.",
+    kern: "Het is verboden te vissen in water waar een ander rechthebbende is op het visrecht. Dat verbod geldt niet voor wie schriftelijke toestemming van die rechthebbende heeft voor de visserij die hij uitoefent.",
+    straat: "De VISpas is de gangbare vorm van die toestemming. Het is geen identiteitsbewijs.",
   },
 ];

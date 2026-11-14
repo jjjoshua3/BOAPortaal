@@ -26,7 +26,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Ambtsinstructie",
-    uitleg: "De regeling voor de wijze van geweld en handboeien (artikel 22). De bevoegdheid tot veiligheidsfouillering staat niet hier, maar in artikel 7 lid 3 van de Politiewet 2012. De Ambtsinstructie regelt wel hoe dat onderzoek gaat (artikel 20) en dat je het meldt (artikel 21).",
+    uitleg: "Artikel 22 geldt alleen bij vervoer of verplaatsing van iemand die rechtens van zijn vrijheid is beroofd, als redelijkerwijs ontvluchting of gevaar voor de veiligheid valt te vrezen. De bevoegdheid tot veiligheidsfouillering staat in artikel 7 lid 3 van de Politiewet 2012, en alleen als die op de akte staat. Artikel 20 regelt het oppervlakkig aftasten. Artikel 21 de schriftelijke melding.",
   },
   {
     term: "Ambtseed | ambtsbelofte",
@@ -162,7 +162,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Handboeien",
-    uitleg: "Artikel 22 Ambtsinstructie. Alleen bij vluchtgevaar of direct gevaar voor de veiligheid, als een lichter middel niet volstaat. De reden hoort in het PV.",
+    uitleg: "Artikel 22 Ambtsinstructie. Alleen bij vervoer of verplaatsing van iemand die rechtens van zijn vrijheid is beroofd, als redelijkerwijs ontvluchting of gevaar voor de veiligheid valt te vrezen.",
   },
   {
     term: "Heterdaad",
@@ -294,7 +294,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Stilhouden",
-    uitleg: "Een voertuig laten stoppen voor toezicht of een Wahv-gedraging. Geen verdachte en geen cautie, tot iemand gaat schelden of een strafbaar feit bekent.",
+    uitleg: "Artikel 5:19 lid 4 Awb: de toezichthouder kan vorderen dat een bestuurder het vervoermiddel stilhoudt en naar een aangewezen plaats overbrengt, met het oog op de bevoegdheden van dat artikel. De Wahv noemt dit niet. Geen staandehouding en geen cautie, tot er een strafrechtelijk spoor ontstaat.",
   },
   {
     term: "Strafbeschikking",

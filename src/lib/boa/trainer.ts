@@ -152,7 +152,7 @@ export const VRAGEN: Vraag[] = [
       "Artikel 184 Sr omdat de bestuurder het bord negeerde",
     ],
     juist: 2,
-    toelichting: "Kentekenaansprakelijkheid. Geen verdachte, geen cautie. Stilhouden alleen als het voertuig nog rijdt, via artikel 5:19 Awb.",
+    toelichting: "Kentekenaansprakelijkheid. Geen verdachte, geen cautie. De Wahv noemt geen stilhouden. Artikel 5:19 lid 4 Awb is een vordering om een rijdend vervoermiddel stil te houden en over te brengen.",
   },
   {
     id: "q6",
@@ -193,11 +193,11 @@ export const VRAGEN: Vraag[] = [
     opties: [
       "Bij elke aanhouding, als standaard",
       "Als de verdachte geen ID bij zich heeft",
-      "Bij vluchtgevaar of onmiddellijk gevaar, als een lichter middel niet volstaat",
+      "Alleen bij vervoer of verplaatsing van iemand die al rechtens van zijn vrijheid is beroofd, als redelijkerwijs ontvluchting of gevaar voor de veiligheid valt te vrezen",
       "Alleen met voorafgaande schriftelijke toestemming van de officier",
     ],
     juist: 2,
-    toelichting: "Artikel 22 Ambtsinstructie. De concrete reden hoort in het PV. Letsel meld je.",
+    toelichting: "Artikel 22 Ambtsinstructie. Niet bij elke aanhouding, en niet omdat een identiteitsbewijs ontbreekt.",
   },
   {
     id: "q9",
@@ -227,7 +227,7 @@ export const VRAGEN: Vraag[] = [
       "Art. 73 is alleen een huisregel zonder strafbedreiging",
     ],
     juist: 1,
-    toelichting: "Artikel 70 is het vervoerbewijs, artikel 72 de orde, artikel 73 de aanwijzing. In het Feitenboekje 2026 is E 128 (artikel 73) een politiestrafbeschikking, geen misdrijf.",
+    toelichting: "Artikel 70 is het vervoerbewijs. Artikel 72 verbiedt gedrag dat orde, rust, veiligheid of een goede bedrijfsgang verstoort. Artikel 73 is de plicht de aanwijzingen daarover op te volgen. Artikel 101 lid 1 maakt niet-naleving van de artikelen 70 tot en met 73 tot een overtreding. E 128 is in het Feitenboekje 2026 een politiestrafbeschikking.",
   },
   {
     id: "q11",

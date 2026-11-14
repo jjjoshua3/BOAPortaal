@@ -71,7 +71,7 @@ const BASIS: Vraag[][] = [
         "Alleen bij een fiets",
       ],
       1,
-      "R 584 (bord E1) is een Mulderfeit op kenteken. Stilhouden kan via art. 5:19 Awb. Schelden daarna is een ander, strafrechtelijk spoor.",
+      "R 584 (bord E1) is een Mulderfeit op kenteken. De Wahv noemt geen stilhouden. Artikel 5:19 lid 4 Awb is een vordering voor een rijdend vervoermiddel. Schelden daarna is een ander, strafrechtelijk spoor.",
       RVV,
     ),
     v(

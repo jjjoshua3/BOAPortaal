@@ -218,7 +218,7 @@ export const BOMEN: Tree[] = [
     titel: "Geweld, handboeien en de meldplicht",
     domeinen: ["algemeen"],
     inleiding:
-      "Geweld en handboeien zijn uitzonderingen. Toets proportionaliteit en subsidiariteit, waarschuw als het kan, en meld letsel en aanwending volgens de RTGB en je meerdere.",
+      "Geweld staat in artikel 7 lid 1 Politiewet 2012: alleen als het doel het rechtvaardigt en niet anders kan, met zo mogelijk een waarschuwing vooraf. Handboeien staan apart in artikel 22 Ambtsinstructie: alleen bij vervoer of verplaatsing van iemand die al rechtens van zijn vrijheid is beroofd, als redelijkerwijs ontvluchting of gevaar voor de veiligheid valt te vrezen.",
     start: "nodig",
     nodes: [
       {
@@ -259,7 +259,7 @@ export const BOMEN: Tree[] = [
         id: "grond",
         soort: "vraag",
         titel: "Grond voor de boeien of het geweld",
-        tekst: "Gaat het om vluchtgevaar bij een aanhouding, of om onmiddellijk gevaar voor de veiligheid?",
+        tekst: "Bij geweld: artikel 7 lid 1 Politiewet, het doel kan niet anders. Bij handboeien: artikel 22 Ambtsinstructie, en alleen voor vervoer of verplaatsing van iemand die al rechtens van zijn vrijheid is beroofd.",
         keuzes: [
           { label: "Vluchtgevaar", naar: "warn" },
           { label: "Onmiddellijk gevaar", naar: "warn" },
@@ -282,7 +282,7 @@ export const BOMEN: Tree[] = [
         toon: "amber",
         titel: "Verantwoorden en melden",
         tekst: "Zet de feitelijke grond, het lichtere middel en het tijdstip in het PV. Meld de aanwending aan je meerdere binnen de termijn van je organisatie. De RTGB bepaalt of ook de hulpofficier moet worden gemeld. 'Standaard geboeid' is geen tekst.",
-        pv: "Ik heb geweld / handboeien toegepast omdat [VLUCHTGEVAAR OF GEVAAR], namelijk [FEITEN]. Een lichter middel volstond niet. Waarschuwing: [WEL / KON NIET]. Letsel: geen. Gemeld aan [MEERDERE] om [TIJD].",
+        pv: "Geweld: artikel 7 lid 1 Politiewet 2012, omdat [DOEL] niet anders kon. Handboeien: artikel 22 Ambtsinstructie, ten behoeve van vervoer, omdat [ONTVLUCHTING OF VEILIGHEID] redelijkerwijs viel te vrezen, namelijk [FEITEN]. Waarschuwing: [WEL / KON NIET]. Letsel: geen. Gemeld aan [MEERDERE] om [TIJD].",
       },
       {
         id: "letsel",
