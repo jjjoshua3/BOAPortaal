@@ -6,6 +6,7 @@ import { NotFoundView } from "@/components/not-found";
 import { AppShell } from "@/components/shell";
 import { KluisProvider } from "@/lib/kluis/provider";
 import { BoaAuthProvider } from "@/lib/supabase/auth";
+import { HOME_TEKST, HOME_TITEL, ROBOTS_INDEX } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
 const THEME_BOOT = `try{var raw=localStorage.getItem("boa-prefs");if(raw){var s=JSON.parse(raw).state;if(s&&s.theme==="night")document.documentElement.classList.add("night");if(s&&s.tekst==="groot")document.documentElement.classList.add("lees-groot");}}catch(e){}`;
@@ -15,13 +16,26 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BOA Portaal" },
-      { name: "description", content: "Naslag, feitcodes, zakkaartjes en praktijk voor buitengewoon opsporingsambtenaren. Domein I t/m VI." },
+      { title: HOME_TITEL },
+      { name: "description", content: HOME_TEKST },
+      { name: "robots", content: ROBOTS_INDEX },
       { name: "theme-color", content: "#0F2537" },
       { name: "application-name", content: "BOA Portaal" },
       { name: "apple-mobile-web-app-title", content: "BOA Portaal" },
+      { property: "og:locale", content: "nl_NL" },
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "BOA Portaal" },
+      { property: "og:title", content: HOME_TITEL },
+      { property: "og:description", content: HOME_TEKST },
+      { property: "og:url", content: "https://boaportaal.nl/" },
+      { property: "og:image", content: "https://boaportaal.nl/og-image.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: HOME_TITEL },
+      { name: "twitter:description", content: HOME_TEKST },
+      { name: "twitter:image", content: "https://boaportaal.nl/og-image.png" },
     ],
     links: [
+      { rel: "canonical", href: "https://boaportaal.nl/", id: "canonical-link" },
       { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/favicon-180.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
