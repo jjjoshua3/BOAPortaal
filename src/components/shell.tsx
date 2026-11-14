@@ -306,6 +306,15 @@ export function AppShell({ children }: { children: ReactNode }) {
               Colofon
             </Link>
             {" · "}
+            <a
+              className="inline-flex items-center gap-1 rounded border border-[#FF5E5B]/40 bg-[#FF5E5B]/10 px-2 py-0.5 font-semibold text-ink no-underline hover:bg-[#FF5E5B]/20"
+              href="https://ko-fi.com/E3Q72ANPUA"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span aria-hidden="true">☕</span> Steun dit project
+            </a>
+            {" · "}
             Ontworpen door{" "}
             <a className="underline" href="https://jjjoshua3.netlify.app/" target="_blank" rel="noreferrer">
               Joshua

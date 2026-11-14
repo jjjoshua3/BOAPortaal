@@ -47,6 +47,13 @@ function ColofonPage() {
         <p className="panel p-3">
           Persoonlijke notities, combibonnen en tariefkaarten worden in de browser versleuteld met AES-GCM. De database bewaart die cijfertekst en wikkelt de kluis nog een keer. Overlegberichten staan eveneens als cijfertekst, leesbaar voor aangemelde collega's. Er horen geen BSN-nummers of namen van burgers in.
         </p>
+        <p className="panel p-3">
+          BOA Portaal is onafhankelijk en zonder advertenties. Wil je het project steunen, dan kan dat via{" "}
+          <a className="underline" href="https://ko-fi.com/E3Q72ANPUA" target="_blank" rel="noreferrer">
+            Ko-fi
+          </a>
+          .
+        </p>
         <section>
           <h2 className="text-lg font-semibold">Bronnen</h2>
           <ul className="mt-2 grid gap-1">
