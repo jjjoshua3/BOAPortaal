@@ -94,6 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const toggleTheme = usePrefs((state) => state.toggleTheme);
   const { user, ready } = useBoaAuth();
   const { identiteit } = useIdentiteit();
+  const [meer, setMeer] = useState(false);
   const [info, setInfo] = useState(false);
   const [balie, setBalie] = useState(false);
   const [zoekOpen, setZoekOpen] = useState(false);
