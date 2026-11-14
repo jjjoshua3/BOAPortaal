@@ -214,7 +214,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             onSubmit={(event) => {
               event.preventDefault();
               setZoekOpen(false);
-              void navigate({ to: "/feitcodes", search: q.trim() ? { q: q.trim() } : {} });
+              void navigate({ to: "/zoek", search: q.trim() ? { q: q.trim() } : {} });
             }}
           >
             <input
@@ -222,7 +222,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="min-h-10 flex-1 border border-line bg-paper px-3 text-sm"
               value={q}
               onChange={(event) => setQ(event.target.value)}
-              placeholder="Zoek op feitcode, vakjargon of onderwerp"
+              placeholder="Zoek door de hele site: feitcode, jargon, boom, pagina"
             />
             {q ? (
               <button type="button" className="btn px-2" aria-label="Wis zoekopdracht" onClick={() => setQ("")}>
