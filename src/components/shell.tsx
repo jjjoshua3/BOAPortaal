@@ -17,7 +17,6 @@ import {
   X,
 } from "lucide-react";
 import { FeedbackDock } from "@/components/feedback";
-import { CopyButton } from "@/components/bits";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs, pasWeergave } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
@@ -295,6 +294,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               Privacy
             </Link>
             {" · "}
+            <a className="underline" href="https://status.boaportaal.nl">
+              Status
+            </a>
+            {" · "}
             <Link to="/jargon" className="underline">
               Vakjargon
             </Link>
@@ -361,11 +364,13 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Link to="/privacy" className="btn justify-start">
                 Privacy
               </Link>
+              <a href="https://status.boaportaal.nl" className="btn justify-start">
+                Status
+              </a>
             </div>
           </div>
         </div>
       ) : null}
-      <Spiekbrief />
       <FeedbackDock />
       <button
         type="button"
@@ -384,61 +389,5 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       ) : null}
     </div>
-  );
-}
-
-const SPIEK = [
-  {
-    titel: "Cautie · art. 29 lid 2 Sv",
-    tekst: "U bent niet tot antwoorden verplicht.",
-  },
-  {
-    titel: "ID-vordering · art. 2 WID / art. 5:16a Awb",
-    tekst: "Ik vorder van u inzage in een geldig identiteitsbewijs op grond van de Wet op de identificatieplicht.",
-  },
-] as const;
-
-function Spiekbrief() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <button type="button" className="no-print fixed bottom-20 left-3 z-30 btn border-[#1D4ED8] bg-white font-semibold text-[#1D4ED8] shadow-sm" onClick={() => setOpen(true)}>
-        Spiekbrief
-      </button>
-      {open ? (
-        <div className="fixed inset-0 z-40">
-          <button type="button" className="absolute inset-0 bg-[#0F172A]/70" aria-label="Sluit spiekbrief" onClick={() => setOpen(false)} />
-          <div className="panel absolute inset-x-3 bottom-20 max-h-[70vh] overflow-auto p-3">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-semibold">Spiekbrief</p>
-              <button type="button" className="btn min-h-10 px-2" aria-label="Sluiten" onClick={() => setOpen(false)}>
-                <X className="size-4" />
-              </button>
-            </div>
-            <ul className="grid gap-3">
-              {SPIEK.map((item) => (
-                <li key={item.titel} className="border border-line p-3">
-                  <p className="text-xs font-semibold tracking-wide text-muted uppercase">{item.titel}</p>
-                  <p className="mt-1 text-sm font-semibold">{item.tekst}</p>
-                  <div className="mt-2">
-                    <CopyButton text={item.tekst} label="Kopieer" />
-                  </div>
-                </li>
-              ))}
-              <li className="border border-line p-3 text-sm">
-                <p className="text-xs font-semibold tracking-wide text-muted uppercase">Leeftijd en tarief</p>
-                <ul className="mt-2 grid gap-1">
-                  <li>Onder 12 jaar: geen strafrechtelijke vervolging (art. 486 Sv).</li>
-                  <li>12–13 jaar: wel strafrecht. Nog geen eigen toonplicht, dus geen D 517. Tarief 50%. Halt kan.</li>
-                  <li>14–15 jaar: wel toonplicht. Tarief 50% en Halt kan.</li>
-                  <li>16–17 jaar: bij Mulder het volledige bedrag. Ouders in beeld.</li>
-                  <li>18 jaar en ouder: volledig tarief en volledige toonplicht.</li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      ) : null}
-    </>
   );
 }

@@ -10,6 +10,7 @@ import { getSupabase, registreerAccount } from "@/lib/supabase/client";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
 import { naarPv, useIdentiteit, noteerInlog } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
+import { onthoudSessie } from "@/lib/supabase/auth";
 
 export const Route = createFileRoute("/account")({
   component: AccountPage,
@@ -56,6 +57,7 @@ function Gast() {
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [onthoud, setOnthoud] = useState(false);
   const [fout, setFout] = useState("");
   const [bezig, setBezig] = useState(false);
   const domeinFout = email ? emailDomainError(email) : null;
@@ -77,7 +79,11 @@ function LoginForm() {
         void sb.auth.signInWithPassword({ email: email.trim(), password }).then(({ data, error }) => {
           setBezig(false);
           noteerInlog(data.session?.access_token ?? "", error ? email.trim() : "");
-          if (error) setFout(mapAuthError(error.message, email));
+          if (error || !data.session) {
+            setFout(mapAuthError(error?.message ?? "Aanmelden lukt niet.", email));
+            return;
+          }
+          onthoudSessie(onthoud ? "30" : "12");
         });
       }}
     >
@@ -87,6 +93,10 @@ function LoginForm() {
         <input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
       </label>
       <Meter score={passwordScore(password)} />
+      <label className="flex items-start gap-2 text-sm">
+        <input className="mt-1" type="checkbox" checked={onthoud} onChange={(event) => setOnthoud(event.target.checked)} />
+        Onthoud mij 30 dagen. De code uit de authenticator blijft bij elke nieuwe aanmelding verplicht.
+      </label>
       {fout ? <p className="accent-stop panel p-3 text-sm">{fout}</p> : null}
       <button className="btn btn-brand" type="submit" disabled={bezig || Boolean(domeinFout)}>
         {bezig ? "Bezig…" : "Inloggen"}
@@ -290,6 +300,9 @@ function Profiel() {
           <CopyButton text={identiteit?.client_id ?? ""} label="Kopieer Client-ID" />
         </div>
         <p className="text-sm">PV-naam: {identiteit?.pv_naam || "nog niet vastgelegd"}</p>
+        <p className="text-sm text-muted">
+          Medewerkersmail staat op mail.boaportaal.nl. Log in met je Client-ID, joshua.bosma of account. Zonder @boaportaal.nl. Niet via de mailserver zelf.
+        </p>
         {idFout ? <p className="text-xs text-muted">Het identiteitsregister is nog niet actief in de database. Je e-mailadres blijft verborgen.</p> : null}
       </div>
       <div className="mb-4">
