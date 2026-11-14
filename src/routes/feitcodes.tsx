@@ -317,10 +317,10 @@ function Detail({ feit }: { feit: Feit }) {
         {feit.leeftijd}
       </p>
       <p>{feit.bijzonder}</p>
-      <div className="border border-line bg-[#FEF3C7] p-2">
+      <div className="border border-[#FDE68A] bg-[#FEF3C7] p-2 text-[#1c1917]">
         <p className="font-semibold">Toelichting Feitenboekje OM, januari 2026</p>
         <p className="mt-1">{boekjeToelichting(feit)}</p>
-        <p className="mt-2 text-muted">Letterlijk uit het Feitenboekje van het Openbaar Ministerie, uitgave januari 2026. Een latere uitgave gaat voor.</p>
+        <p className="mt-2 text-[#78350f]">Letterlijk uit het Feitenboekje van het Openbaar Ministerie, uitgave januari 2026. Een latere uitgave gaat voor.</p>
       </div>
       <div className="border border-line bg-paper p-2">
         <p className="font-semibold">Wat in het relaas moet staan</p>
