@@ -173,7 +173,7 @@ export const KAARTEN: Kaart[] = [
     regels: [
       "Relatief: ingeschreven, en zestien uren in vier opeenvolgende lesweken. Dat is artikel 21a. Artikel 21 is vervallen.",
       "Absoluut: niet ingeschreven, nadat je een vrijstelling hebt getoetst.",
-      "Luxe: vakantie buiten de schoolvakantie zonder vrijstelling, artikel 11.",
+      "Luxe verzuim: vakantie buiten de schoolvakantie zonder vrijstelling. Artikel 11 onder f is alleen de vrijstelling wegens de aard van het beroep. Onder g zijn andere gewichtige omstandigheden.",
       "De jongere is vanaf 12 zelf ook normadressaat. Onder de 12 geen strafrecht tegen het kind.",
     ],
     niet: "Geen D 517 tegen een 13-jarige. De toonplicht begint bij 14. Een draagplicht is er niet.",

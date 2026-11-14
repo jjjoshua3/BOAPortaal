@@ -378,7 +378,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "navy",
         titel: "PV naar het OM",
-        tekst: "Geen Halt-verwijzing. Maak een gewoon proces-verbaal. Bij 12 tot 17 jaar gelden de jeugdwaarborgen: terughoudend met aanhouding, ouders informeren volgens de instructie, overdracht aan de politie als je aanhoudt.",
+        tekst: "Geen Halt-verwijzing. Maak een gewoon proces-verbaal. Bij 12 tot 17 jaar gelden de jeugdwaarborgen: terughoudend met aanhouding, ouders informeren volgens de instructie. Houd je aan, dan artikel 53 lid 2 Sv: ten spoedigste overbrengen ter voorgeleiding.",
       },
     ],
   },
@@ -704,7 +704,7 @@ export const BOMEN: Tree[] = [
     titel: "Soort schoolverzuim",
     domeinen: ["III"],
     inleiding:
-      "Eerst het soort verzuim, dan de normadressaat, dan Halt of PV. Artikel 4a is de kwalificatieplicht en is niet hetzelfde als de meldnorm van zestien uur.",
+      "Eerst het soort verzuim, dan de normadressaat, dan Halt of PV. Paragraaf 2a is de kwalificatieplicht. Artikel 4b noemt het einde: 18 jaar of een startkwalificatie. Artikel 21a is de zestien-uursnorm.",
     start: "ingeschreven",
     nodes: [
       {
@@ -793,7 +793,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "ok",
         titel: "De meldnorm is nog niet gehaald",
-        tekst: "Eén gemist uur is nog geen relatief verzuim volgens artikel 21a. De school blijft registreren. Een PV op die norm is dan te vroeg. Kwalificatieplicht (art. 4a) is een andere vraag en gaat niet vanzelf op in deze telling.",
+        tekst: "Eén gemist uur is nog geen relatief verzuim volgens artikel 21a. De school blijft registreren. Een PV op die norm is dan te vroeg. De kwalificatieplicht (paragraaf 2a, einde in artikel 4b) is een andere vraag en gaat niet vanzelf op in deze telling.",
       },
     ],
   },

@@ -51,7 +51,7 @@ const WACHT: { id: string; label: string; url: string; naald: string; uitleg: st
     label: "Leerplichtwet 1969",
     url: "https://wetten.overheid.nl/BWBR0002628",
     naald: "Artikel 21a",
-    uitleg: "De meldnorm van relatief verzuim staat in artikel 21a. Artikel 21 is vervallen.",
+    uitleg: "Artikel 21a: leveringsverplichting van het hoofd bij zestien uren in vier opeenvolgende lesweken. Artikel 21 is vervallen per 1 januari 2024.",
   },
   {
     id: "pw",

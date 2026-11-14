@@ -190,7 +190,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Kwalificatieplicht",
-    uitleg: "Artikel 4a Leerplichtwet 1969. Een andere route dan relatief schoolverzuim. Niet door elkaar halen.",
+    uitleg: "Artikel 4a Leerplichtwet 1969, in de paragraaf kwalificatieplicht. Dat artikel gaat over inschrijving. Niet de zestien-uursnorm van artikel 21a.",
   },
   {
     term: "Last onder dwangsom",
@@ -198,7 +198,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Leerplicht",
-    uitleg: "Artikel 2 Leerplichtwet 1969. Artikel 21 is vervallen. De school meldt relatief verzuim bij 16 uur in vier opeenvolgende lesweken, artikel 21a.",
+    uitleg: "Artikel 2 Leerplichtwet 1969. Artikel 21 is vervallen per 1 januari 2024. Artikel 21a: het hoofd krijgt een leveringsverplichting bij zestien uren les- of praktijktijd in vier opeenvolgende lesweken.",
   },
   {
     term: "Medewerkingsplicht",

@@ -156,7 +156,7 @@ const BASIS: Vraag[][] = [
         "Als de leerling niet op een school staat ingeschreven",
       ],
       1,
-      "Relatief verzuim: wel ingeschreven, niet geregeld aanwezig. De meldnorm staat in artikel 21a Leerplichtwet 1969.",
+      "Relatief verzuim: wel ingeschreven, niet geregeld aanwezig. Artikel 21a: leveringsverplichting van het hoofd bij zestien uren les- of praktijktijd in vier opeenvolgende lesweken.",
       LEER,
     ),
     v(
@@ -430,7 +430,7 @@ const BASIS: Vraag[][] = [
       "w2-10",
       ["III"],
       "rechtskennis",
-      "De kwalificatieplicht (art. 4a Leerplichtwet) ziet op:",
+      "Tot wanneer loopt de kwalificatieplicht (art. 4b Leerplichtwet)?",
       [
         "Kinderen tot 12 jaar",
         "Jongeren tot 18 jaar zonder startkwalificatie, een andere route dan relatief verzuim",
@@ -438,7 +438,7 @@ const BASIS: Vraag[][] = [
         "Ouders die te hard rijden",
       ],
       1,
-      "Artikel 4a is niet hetzelfde als de meldnorm van zestien uur. Niet door elkaar gebruiken in het PV.",
+      "Artikel 4b: de kwalificatieplicht begint na de leerplicht en eindigt bij 18 jaar of een startkwalificatie. Artikel 4a is de inschrijvingsplicht in die paragraaf. Artikel 21a is de zestien-uursnorm.",
       LEER,
     ),
     v(

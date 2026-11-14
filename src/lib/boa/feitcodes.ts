@@ -388,7 +388,7 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Overtreding",
     leeftijd: "De jongere is vanaf 12 jaar zelf normadressaat (art. 2 lid 3). De ouder blijft dat ook.",
     bijzonder:
-      "Relatief verzuim: de jongere staat ingeschreven en bezoekt de school niet geregeld. De school moet leveren als het verzuim in vier opeenvolgende lesweken zestien uren les- of praktijktijd bedraagt (art. 21a). Artikel 21 is per 1 januari 2024 vervallen. Artikel 4a is de kwalificatieplicht, een andere route. Geen leerlingdossier in dit portaal.",
+      "Relatief verzuim: de jongere staat ingeschreven en bezoekt de school niet geregeld. Artikel 21a: het hoofd krijgt een leveringsverplichting als het verzuim in vier opeenvolgende lesweken zestien uren les- of praktijktijd bedraagt. Artikel 21 is per 1 januari 2024 vervallen. Artikel 4a is de inschrijvingsplicht in de paragraaf kwalificatieplicht, niet deze urennorm. Geen leerlingdossier in dit portaal.",
     pv: "De leerling [LEERLING ALS ROL, ZONDER NAAM IN DIT PORTAAL] staat ingeschreven bij [SCHOOL] en was in vier opeenvolgende lesweken zestien uren of meer zonder geldige reden afwezig, namelijk [UREN EN WEKEN]. Grondslag: artikel 2, eerste en derde lid, Leerplichtwet 1969. Melding van de school: artikel 21a. Route: [HALT / PV OUDER / PV JEUGDIGE].",
     trefwoorden: "relatief verzuim 16 uur leerplicht spijbelen",
   },
