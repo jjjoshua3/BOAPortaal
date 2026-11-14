@@ -13,7 +13,7 @@ type AuthValue = {
   closeRecovery: () => void;
 };
 
-type Poort = { modus: "setup" | "code"; factorId: string; qr: string; geheim: string } | null;
+type Poort = { modus: "setup" | "code"; factorId: string; qr: string; geheim: string; naam: "portaal" | "beheer" } | null;
 
 const Ctx = createContext<AuthValue | null>(null);
 const ONTHOUD = "boa-onthoud";
@@ -24,6 +24,7 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
   const [recovery, setRecovery] = useState(false);
   const [poort, setPoort] = useState<Poort>(null);
   const [vergeten, setVergeten] = useState(false);
+  const [mfaUit, setMfaUit] = useState(false);
 
   useEffect(() => {
     const sb = getSupabase();
@@ -77,7 +78,13 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
     let weg = false;
     void leesTweestap(sb).then((uitkomst) => {
       if (weg) return;
-      if (uitkomst === "klaar" || uitkomst === "uit") setPoort(null);
+      if (uitkomst === "uit") {
+        setPoort(null);
+        setMfaUit(true);
+        return;
+      }
+      setMfaUit(false);
+      if (uitkomst === "klaar") setPoort(null);
       else setPoort(uitkomst);
     });
     return () => {
@@ -109,9 +116,18 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
           stap={poort}
           onKlaar={() => {
             setPoort(null);
+            setMfaUit(false);
             void sb.auth.getSession().then(({ data }) => setSession(data.session));
           }}
         />
+      ) : null}
+      {mfaUit && session && !poort ? (
+        <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-[#E3D9CC] bg-[#F3E6D4] px-4 py-3 text-center text-sm text-[#9A5B12]">
+          Tweestapsverificatie staat nog uit. Je bent ingelogd met alleen je wachtwoord.
+          <button type="button" className="ml-3 underline" onClick={() => setMfaUit(false)}>
+            Sluiten
+          </button>
+        </div>
       ) : null}
       {vergeten ? <Vergeten onSluit={() => setVergeten(false)} /> : null}
     </Ctx.Provider>

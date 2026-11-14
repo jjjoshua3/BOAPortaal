@@ -6,33 +6,46 @@ type Stap = {
   factorId: string;
   qr: string;
   geheim: string;
+  naam: "portaal" | "beheer";
 };
 
-export async function leesTweestap(sb: SupabaseClient): Promise<Stap | "klaar" | "uit"> {
-  const niveau = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
-  if (niveau.error) return "uit";
-  if (niveau.data.currentLevel === "aal2") return "klaar";
-  if (niveau.data.nextLevel === "aal1" && niveau.data.currentLevel === "aal1") {
-    const probeer = await bereid(sb);
-    return probeer ?? "uit";
+async function bereid(sb: SupabaseClient, naam: "portaal" | "beheer"): Promise<Stap | "klaar" | "uit"> {
+  const lijst = await sb.auth.mfa.listFactors();
+  if (lijst.error) return "uit";
+  const bevestigd = (lijst.data?.totp ?? []).filter((factor) => factor.status === "verified");
+  const passend = bevestigd.filter((factor) => {
+    const label = factor.friendly_name || "";
+    if (naam === "beheer") return label === "beheer";
+    return label === "" || label === "portaal" || label === "BOA Portaal";
+  });
+  if (passend[0]) return { modus: "code", factorId: passend[0].id, qr: "", geheim: "", naam };
+  for (const factor of lijst.data?.all ?? []) {
+    if (factor.status === "verified") continue;
+    const label = factor.friendly_name || "";
+    if (naam === "portaal" && label === "beheer") continue;
+    if (naam === "beheer" && label !== "beheer") continue;
+    await sb.auth.mfa.unenroll({ factorId: factor.id });
   }
-  return (await bereid(sb)) ?? "uit";
+  const vers = await sb.auth.mfa.enroll({
+    factorType: "totp",
+    friendlyName: naam,
+    issuer: naam === "beheer" ? "BOA Beheer" : "BOA Portaal",
+  });
+  if (vers.error || !vers.data?.totp?.qr_code) return "uit";
+  return {
+    modus: "setup",
+    factorId: vers.data.id,
+    qr: vers.data.totp.qr_code,
+    geheim: vers.data.totp.secret ?? "",
+    naam,
+  };
 }
 
-async function bereid(sb: SupabaseClient): Promise<Stap | "klaar" | null> {
-  const lijst = await sb.auth.mfa.listFactors();
-  if (lijst.error) return null;
-  const bevestigd = (lijst.data?.totp ?? []).filter((factor) => factor.status === "verified");
-  if (bevestigd[0]) return { modus: "code", factorId: bevestigd[0].id, qr: "", geheim: "" };
-  for (const factor of lijst.data?.all ?? []) {
-    if (factor.status !== "verified") await sb.auth.mfa.unenroll({ factorId: factor.id });
-  }
-  const vers = await sb.auth.mfa.enroll({ factorType: "totp", issuer: "BOA Portaal" });
-  if (vers.error || !vers.data) return null;
-  const qr = vers.data.totp?.qr_code ?? "";
-  const geheim = vers.data.totp?.secret ?? "";
-  if (!qr) return null;
-  return { modus: "setup", factorId: vers.data.id, qr, geheim };
+export async function leesTweestap(sb: SupabaseClient, naam: "portaal" | "beheer" = "portaal"): Promise<Stap | "klaar" | "uit"> {
+  const niveau = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (niveau.error) return "uit";
+  if (niveau.data.currentLevel === "aal2" && naam === "portaal") return "klaar";
+  return bereid(sb, naam);
 }
 
 export function Tweestap({
@@ -75,11 +88,11 @@ export function Tweestap({
     <div className="fixed inset-0 z-[70] grid place-items-center bg-[#0F172A]/75 px-4">
       <form className="panel w-full max-w-md p-4" onSubmit={bevestig}>
         <p className="text-xs font-semibold tracking-wide text-muted">TWEEDE STAP</p>
-        <h2 className="mt-1 text-xl font-semibold">{stap.modus === "setup" ? "Authenticator instellen" : "Authenticator"}</h2>
+        <h2 className="mt-1 text-xl font-semibold">{stap.modus === "setup" ? "Portaal-authenticator instellen" : "Portaal-authenticator"}</h2>
         <p className="mt-2 text-sm text-muted">
           {stap.modus === "setup"
-            ? "Scan de code met Google Authenticator of een andere authenticator. Daarna vul je de 6 cijfers in. Dit vragen we bij elke nieuwe aanmelding."
-            : "Vul de 6 cijfers uit je authenticator in. Dit hoort bij elke nieuwe aanmelding."}
+            ? "Scan de code en noem hem BOA Portaal. Dezelfde code geldt als je op de servicedesk als indiener inlogt. Niet voor systeem, behandelaar of mail."
+            : "Vul de 6 cijfers van BOA Portaal in. Dezelfde code als indiener op de servicedesk. Niet de code van systeem of mail."}
         </p>
         {stap.modus === "setup" && stap.qr ? (
           <img src={stap.qr} alt="QR-code voor de authenticator" className="mx-auto mt-4 h-48 w-48 bg-white p-2" />

@@ -95,7 +95,7 @@ function LoginForm() {
       <Meter score={passwordScore(password)} />
       <label className="flex items-start gap-2 text-sm">
         <input className="mt-1" type="checkbox" checked={onthoud} onChange={(event) => setOnthoud(event.target.checked)} />
-        Onthoud mij 30 dagen. De code uit de authenticator blijft bij elke nieuwe aanmelding verplicht.
+        Onthoud mij 30 dagen. Zolang de tweede stap nog uitstaat, is het wachtwoord genoeg. Staat die aan, dan blijft de code uit de portaal-authenticator bij elke nieuwe aanmelding verplicht.
       </label>
       {fout ? <p className="accent-stop panel p-3 text-sm">{fout}</p> : null}
       <button className="btn btn-brand" type="submit" disabled={bezig || Boolean(domeinFout)}>

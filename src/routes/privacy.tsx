@@ -51,7 +51,7 @@ function PrivacyPage() {
         <section className="panel p-3">
           <h2 className="font-semibold">Inloggen en de tweede stap</h2>
           <p className="mt-2">
-            Op boaportaal.nl, systeem.boaportaal.nl en mail.boaportaal.nl hoort bij elke nieuwe aanmelding een tweede stap: een code van 6 cijfers uit een authenticator-app, zoals Google Authenticator. De eerste keer stel je die app in met een QR-code. Die code vervangt het wachtwoord niet. Beide zijn nodig. De tweede stap slaan we niet over, ook niet als je hieronder aangevinkt hebt dat we je onthouden.
+            Er zijn twee codes in dezelfde authenticator-app, op hetzelfde account. Boaportaal.nl en de servicedesk als indiener vragen de code BOA Portaal. Systeem, de servicedesk als behandelaar en mail vragen een andere code: BOA Beheer. Die drie delen die ene code. De code vervangt het wachtwoord niet. Tot de tweede stap in de aanmelddienst aanstaat, log je in met alleen het wachtwoord. Dat staat dan ook zo op het scherm.
           </p>
           <p className="mt-2">
             Op boaportaal.nl kun je aanvinken: onthoud mij 30 dagen. Dan blijf je op dit apparaat aangemeld. Na die 30 dagen zetten we de sessie uit en vragen we opnieuw wie je bent. Zonder dat vinkje blijft de sessie hooguit 12 uur staan. Afmelden kan altijd zelf.
