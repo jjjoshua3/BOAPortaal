@@ -543,7 +543,7 @@ const BASIS: Vraag[][] = [
         "Halt, want het is een overtreding",
       ],
       1,
-      "De medewerkingsplicht van artikel 5:20 Awb stopt zodra je een verklaring over een strafbaar feit zoekt.",
+      "Artikel 5:20 noemt die stop niet. De weigeringsgrond in dat artikel is de geheimhoudingsplicht. Een vraag naar betrokkenheid bij een strafbaar feit is verhoor: artikel 29 Sv, cautie vooraf.",
       AWB,
     ),
     v(

@@ -156,7 +156,7 @@ export const FEITEN: Feit[] = [
     leeftijd: "Geen verdachte. De kentekenhouder is aansprakelijk.",
     bijzonder:
       "R 397 is niet het bord E1. R 397 a is parkeren binnen vijf meter van een kruispunt, R 397 b voor een in- of uitrit. Bord E1 is R 584. De code geldt niet voor parkeren in de berm. Dit is toezicht, geen staandehouding en geen cautie. De Wahv heeft geen stilhoudartikel. Artikel 5:19 lid 4 Awb is een vordering om een rijdend vervoermiddel stil te houden en naar een aangewezen plaats over te brengen, met het oog op de bevoegdheden van dat artikel.",
-    tarief: "Categorie-indeling B: € 130 cat. 1 (auto, bus, vrachtauto, brommobiel) en cat. 2 (motor) | € 50 cat. 3 (bromfiets en snorfiets) | € 130 cat. 4 (fiets) | " + BRON,
+    tarief: "Categorie-indeling B: € 130 categorie 1 (motorvoertuig op meer dan twee wielen, en de brommobiel) en categorie 2 (motorvoertuig op twee wielen) | € 50 categorie 3 (bromfiets, snorfiets en bijzondere bromfiets) | € 130 categorie 4 (fiets en gehandicaptenvoertuig) | " + BRON,
     pv: "Ik stelde vast dat het voertuig met kenteken [KENTEKEN] te [PLAATS] geparkeerd stond in strijd met bord E1, parkeerverbod. Positie van het bord: [BORD]. Ik heb een Wahv-beschikking op het kenteken aangezegd onder feitcode R 584. Er is geen verdachte aangemerkt.",
     trefwoorden: "parkeren parkeerverbod mulder wahv kenteken e1 r584",
   },
@@ -171,8 +171,8 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Mulder (Wahv), bestuursrecht",
     leeftijd: "Kentekenhouder. Noteer het kaartnummer niet in dit portaal.",
     bijzonder:
-      "R 584 is het parkeerverbod van bord E1, niet de gehandicaptenplaats. Categorie-indeling B: R 402 b is € 400 (cat. 1 en 2) en € 160 (cat. 3). Een plaats die voor één kenteken is gereserveerd is R 402 c: € 500 (cat. 1 en 2) en € 200 (cat. 3). De kaart moet geldig én duidelijk zichtbaar zijn. Een gehandicaptenvoertuig mag er wel staan.",
-    tarief: "Categorie-indeling B: € 400 cat. 1 en cat. 2 | € 160 cat. 3 (bromfiets) | " + BRON,
+      "R 584 is het parkeerverbod van bord E1, niet de gehandicaptenplaats. Categorie-indeling B: R 402 b is € 400 (categorie 1 en 2) en € 160 (categorie 3). Een plaats die voor één kenteken is gereserveerd is R 402 c: € 500 (categorie 1 en 2) en € 200 (categorie 3). De kaart moet geldig én duidelijk zichtbaar zijn. Een gehandicaptenvoertuig mag er wel staan.",
+    tarief: "Categorie-indeling B: € 400 categorie 1 en 2 | € 160 categorie 3 (bromfiets, snorfiets en bijzondere bromfiets) | " + BRON,
     pv: "Het voertuig met kenteken [KENTEKEN] stond te [PLAATS] geparkeerd op een gehandicaptenparkeerplaats. Een geldige gehandicaptenparkeerkaart was niet duidelijk zichtbaar, omdat [WAARNEMING]. Ik heb een Wahv-beschikking opgemaakt onder feitcode R 402 b.",
     trefwoorden: "gehandicaptenparkeerplaats invalidenplaats rvv 26 r402",
   },
@@ -273,15 +273,15 @@ export const FEITEN: Feit[] = [
   {
     id: "apv-hond",
     code: "F 145 a",
-    titel: "Hond los of uitwerpselen niet opruimen",
-    artikel: "APV | feitcode F 145 a/b",
+    titel: "Hond onaangelijnd binnen de bebouwde kom",
+    artikel: "APV | feitcode F 145 a",
     domeinen: ["I"],
     afdoening: "om",
     afdoeningLabel: "Lokale overtreding",
     kwalificatie: "Overtreding",
     leeftijd: "De houder of begeleider. Strafrecht vanaf 12 jaar.",
     bijzonder:
-      "Aanlijn- en opruimplicht zijn lokaal. In een natuurgebied kan de Omgevingswet of een provinciale verordening voorgaan (domein II).",
+      "F 145 a is een hond onaangelijnd op een openbare plaats binnen de bebouwde kom, € 110. Niet op een plaats waar het college of de burgemeester de hond los toestaat. F 145 b is een kinderspeelplaats, zandbak of andere aangewezen plaats, € 170, en gaat niet over uitwerpselen. Uitwerpselen niet meteen verwijderen is F 145 f, € 170. Geen middel bij je hebben of dat niet tonen is F 145 d, € 110.",
     pv: "Ik zag te [PLAATS] een hond [LOSLANG / UITWERPSELEN NIET OPGERUIMD]. Begeleider was [VERDACHTE]. De norm staat in [ARTIKEL APV].",
     trefwoorden: "hond aanlijnplicht uitwerpselen loslopend apv",
   },
@@ -588,8 +588,8 @@ export const FEITEN: Feit[] = [
     kwalificatie: "Mulder (Wahv)",
     leeftijd: "De bestuurder. Dezelfde feitcode geldt voor de fietser, met een lager tarief.",
     bijzonder:
-      "R 545 is de code in het Feitenboekje van 1 januari 2026. Vasthouden is het criterium, niet het bellen op zich. Een telefoon die alleen in een houder zit en die je niet omsluit, is een andere situatie. Omsluit je het toestel met de hand, ook als het in een houder zit, dan kan dat wél vasthouden zijn. Niet voor de rijinstructeur. Categorie 8 is alleen de trambestuurder.",
-    tarief: "Categorie-indeling B: € 440 cat. 1 (auto, bus, vrachtauto, brommobiel) en cat. 2 (motor) | € 300 cat. 3 (bromfiets en snorfiets) | € 170 cat. 4 (fiets) | " + BRON,
+      "R 545 is de code in het Feitenboekje van 1 januari 2026. Vasthouden is het criterium, niet het bellen op zich. Een telefoon die alleen in een houder zit en die je niet omsluit, is een andere situatie. Omsluit je het toestel met de hand, ook als het in een houder zit, dan kan dat wél vasthouden zijn. Niet voor de rijinstructeur. De toelichting zegt: categorie 8 alleen voor de trambestuurder. De tabel drukt in de vijfde kolom ook € 440. Categorie 5 van indeling B is de voetganger; het feit zelf ziet op de bestuurder van een voertuig.",
+    tarief: "Categorie-indeling B: € 440 categorie 1 (motorvoertuig op meer dan twee wielen, en de brommobiel) en categorie 2 (motorvoertuig op twee wielen) | € 300 categorie 3 (bromfiets, snorfiets en bijzondere bromfiets) | € 170 categorie 4 (fiets en gehandicaptenvoertuig) | vijfde kolom € 440 | " + BRON,
     pv: "Ik zag dat de bestuurder van [FIETS / BROMFIETS / MOTORRIJTUIG] tijdens het rijden een mobiel elektronisch apparaat vasthield, namelijk [SOORT]. Plaats: [PLAATS]. Grondslag: artikel 61a RVV 1990, feitcode R 545.",
     trefwoorden: "telefoon bellen fiets 61a appen mobiel r545",
   },
@@ -645,7 +645,7 @@ const MOET: Record<string, string[]> = {
   h001: [
     "Wat er is achtergelaten, waar, en dat het klein consumptieafval is.",
     "Dat je zag dat deze persoon het achterliet, of hoe je dat anders vaststelde.",
-    "Het artikel van de APV of de Omgevingswet van deze gemeente, niet een landelijk verzinsel.",
+    "Het artikel van de Afvalstoffenverordening van deze gemeente, en de geconstateerde handeling. Niet de APV als die het feit niet stelt.",
   ],
   h025: [
     "Welk afval, naast welk inzamelmiddel, en dat je zag wie het daar neerzette of achterliet.",

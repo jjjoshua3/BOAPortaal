@@ -34,7 +34,7 @@ export const BOMEN: Tree[] = [
     titel: "Sfeerovergang: van toezicht naar opsporing",
     domeinen: ["algemeen"],
     inleiding:
-      "De medewerkingsplicht van artikel 5:20 Awb stopt zodra je een verklaring zoekt over een strafbaar feit. Dan beginnen zwijgrecht en cautie (art. 29 Sv).",
+      "Artikel 5:20 Awb noemt als weigeringsgrond alleen de geheimhoudingsplicht. Het zwijgrecht van de verdachte staat in artikel 29 Sv. Gebruik artikel 5:20 niet om een verklaring over een strafbaar feit af te dwingen.",
     start: "vermoeden",
     nodes: [
       {
@@ -793,7 +793,7 @@ export const BOMEN: Tree[] = [
         soort: "uitkomst",
         toon: "ok",
         titel: "De meldnorm is nog niet gehaald",
-        tekst: "Eén gemist uur is nog geen relatief verzuim volgens artikel 21a. De school blijft registreren. Een PV op die norm is dan te vroeg. De kwalificatieplicht (paragraaf 2a, einde in artikel 4b) is een andere vraag en gaat niet vanzelf op in deze telling.",
+        tekst: "Eén gemist uur haalt de meldnorm van artikel 21a niet. Relatief verzuim zelf is iets anders: de jongere staat ingeschreven en bezoekt de school niet geregeld (artikel 2). Een PV alleen omdat de zestien uur zou zijn gehaald, is bij één uur te vroeg.",
       },
     ],
   },

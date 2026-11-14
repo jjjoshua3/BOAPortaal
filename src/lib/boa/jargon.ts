@@ -154,7 +154,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Gehandicaptenparkeerkaart",
-    uitleg: "Moet geldig én duidelijk zichtbaar zijn. Zonder kaart op een gehandicaptenplaats: R 402 b, € 400 voor categorie 1 en 2, € 160 voor categorie 3.",
+    uitleg: "Moet geldig én duidelijk zichtbaar zijn. Zonder kaart op een gehandicaptenplaats: R 402 b. Categorie-indeling B: € 400 voor categorie 1 en 2, € 160 voor categorie 3 (bromfiets, snorfiets en bijzondere bromfiets).",
   },
   {
     term: "Halt",

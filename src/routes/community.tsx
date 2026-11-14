@@ -47,7 +47,7 @@ const ONDERWERPEN: { domein: "I" | "II" | "III" | "IV" | "V" | "VI" | "algemeen"
   {
     domein: "III",
     titel: "Relatief, absoluut, luxe",
-    tekst: "Absoluut: niet ingeschreven. Relatief: 16 uur of meer ongeoorloofd in vier aaneengesloten lesweken. Luxe: vakantie buiten de schoolvakantie zonder vrijstelling.",
+    tekst: "Absoluut: niet ingeschreven. Relatief: wel ingeschreven, maar de school niet geregeld bezoeken. De zestien uur in vier lesweken is de meldnorm van artikel 21a, niet de omschrijving van het feit. Luxe: vakantie buiten de schoolvakantie zonder vrijstelling.",
   },
   {
     domein: "V",
