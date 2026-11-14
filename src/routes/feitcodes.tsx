@@ -3,7 +3,7 @@ import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
 import { FEITEN, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
-import { zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
+import { bedragRegels, zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -214,7 +214,7 @@ function BoekjeResultaten({ query }: { query: string }) {
             <p className="code">{regel.code}</p>
             <p className="mt-1 font-semibold">{regel.titel}</p>
             {regel.toelichting ? <p className="mt-1 text-sm">{regel.toelichting}</p> : null}
-            <p className="mt-1 text-sm text-muted">{bedragZin(regel)}</p>
+            <Bedrag regel={regel} />
           </li>
         ))}
       </ul>
@@ -222,10 +222,30 @@ function BoekjeResultaten({ query }: { query: string }) {
   );
 }
 
-function bedragZin(regel: BoekjeRegel): string {
-  const bedrag = regel.bedrag.trim();
-  if (!bedrag || /^[\s*]+$/.test(bedrag)) return "Geen vast bedrag in het Feitenboekje en niet in de Boetebase. Januari 2026.";
-  return `Bedrag in het Feitenboekje en de Boetebase, januari 2026: ${bedrag}. Exclusief € 9 administratiekosten.`;
+function Bedrag({ regel }: { regel: BoekjeRegel }) {
+  const regels = bedragRegels(regel.code, regel.bedrag);
+  if (!regels.length) {
+    return <p className="mt-1 text-sm text-muted">Geen vast bedrag in het Feitenboekje en niet in de Boetebase. Januari 2026.</p>;
+  }
+  if (!regels[0].wie) {
+    return <p className="mt-1 text-sm text-muted">{regels[0].bedrag}. Exclusief € 9 administratiekosten. Feitenboekje en Boetebase, januari 2026.</p>;
+  }
+  return (
+    <div className="mt-2">
+      <p className="text-sm text-muted">Feitenboekje en Boetebase, januari 2026. Exclusief € 9 administratiekosten.</p>
+      <ul className="mt-1 grid gap-1">
+        {regels.map((rij) => (
+          <li key={rij.wie} className="flex items-baseline justify-between gap-3 text-sm">
+            <span>
+              <span className="font-semibold">{rij.wie}</span>
+              {rij.uitleg.toLowerCase() !== rij.wie.toLowerCase() ? <span className="text-muted">. {rij.uitleg}</span> : null}
+            </span>
+            <span className="shrink-0 font-semibold">{rij.bedrag}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 function boetebaseHref(code: string): string | null {

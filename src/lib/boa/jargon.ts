@@ -78,7 +78,7 @@ export const JARGON: Woord[] = [
   },
   {
     term: "Categorie-indeling B",
-    uitleg: "1 motorvoertuig op meer dan twee wielen, en de brommobiel | 2 motorvoertuig op twee wielen | 3 bromfiets, snorfiets en bijzondere bromfiets | 4 fiets en gehandicaptenvoertuig | 5 voetganger. Het bedrag hangt van de kolom af.",
+    uitleg: "1 auto: motorvoertuig op meer dan twee wielen, en de brommobiel | 2 motor: motorvoertuig op twee wielen | 3 brommer: bromfiets, snorfiets en bijzondere bromfiets | 4 fiets en gehandicaptenvoertuig | 5 voetganger. Het bedrag hangt van de kolom af.",
   },
   {
     term: "Cautie",
