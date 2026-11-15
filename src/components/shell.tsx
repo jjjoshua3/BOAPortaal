@@ -161,6 +161,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             ))}
           </nav>
           <div className="ml-auto flex shrink-0 items-center gap-1">
+            <a className="btn min-h-10 px-2" href="https://faq.boaportaal.nl">
+              FAQ
+            </a>
             <button type="button" className="btn min-h-10 px-2" onClick={() => setZoekOpen((open) => !open)} title="Zoeken (Ctrl+K)">
               <Search className="size-4" />
               <span className="hidden xl:inline">Zoeken</span>
@@ -299,7 +302,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </a>
             {" · "}
             <a className="underline" href="https://faq.boaportaal.nl">
-              Vragen
+              FAQ
             </a>
             {" · "}
             <a className="underline" href="https://wa.me/31644912282" target="_blank" rel="noreferrer">
@@ -385,7 +388,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 Status
               </a>
               <a href="https://faq.boaportaal.nl" className="btn justify-start">
-                Vragen
+                FAQ
               </a>
             </div>
           </div>
