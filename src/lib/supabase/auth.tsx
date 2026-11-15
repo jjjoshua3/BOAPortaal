@@ -24,6 +24,7 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
   const [recovery, setRecovery] = useState(false);
   const [poort, setPoort] = useState<Poort>(null);
   const [vergeten, setVergeten] = useState(false);
+  const [gecontroleerd, setGecontroleerd] = useState(false);
   const [mfaUit, setMfaUit] = useState(false);
 
   useEffect(() => {
@@ -73,19 +74,21 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
     const sb = getSupabase();
     if (!sb || !session || recovery) {
       setPoort(null);
+      setGecontroleerd(true);
       return;
     }
     let weg = false;
+    setGecontroleerd(false);
     void leesTweestap(sb).then((uitkomst) => {
       if (weg) return;
       if (uitkomst === "uit") {
         setPoort(null);
         setMfaUit(true);
-        return;
+      } else {
+        setMfaUit(false);
+        setPoort(uitkomst === "klaar" ? null : uitkomst);
       }
-      setMfaUit(false);
-      if (uitkomst === "klaar") setPoort(null);
-      else setPoort(uitkomst);
+      setGecontroleerd(true);
     });
     return () => {
       weg = true;
@@ -108,7 +111,7 @@ export function BoaAuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider value={value}>
-      {children}
+      {gecontroleerd && !poort ? children : <div className="fixed inset-0 bg-[#0b1320]" />}
       {recovery ? <RecoveryModal onClose={() => setRecovery(false)} /> : null}
       {poort && sb ? (
         <Tweestap

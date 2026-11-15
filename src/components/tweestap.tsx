@@ -85,7 +85,7 @@ export function Tweestap({
   }
 
   return (
-    <div className="fixed inset-0 z-[70] grid place-items-center bg-[#0F172A]/75 px-4">
+    <div className="fixed inset-0 z-[70] grid place-items-center bg-[#0b1320] px-4">
       <form className="panel w-full max-w-md p-4" onSubmit={bevestig}>
         <p className="text-xs font-semibold tracking-wide text-muted">TWEEDE STAP</p>
         <h2 className="mt-1 text-xl font-semibold">{stap.modus === "setup" ? "Portaal-authenticator instellen" : "Portaal-authenticator"}</h2>
