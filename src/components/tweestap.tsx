@@ -42,6 +42,8 @@ async function bereid(sb: SupabaseClient, naam: "portaal" | "beheer"): Promise<S
 }
 
 export async function leesTweestap(sb: SupabaseClient, naam: "portaal" | "beheer" = "portaal"): Promise<Stap | "klaar" | "uit"> {
+  const open = await sb.rpc("boa_mfa_open");
+  if (!open.error && open.data === true) return "klaar";
   const niveau = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
   if (niveau.error) return "uit";
   if (niveau.data.currentLevel === "aal2" && naam === "portaal") return "klaar";
@@ -81,6 +83,7 @@ export function Tweestap({
       setFout("Die code klopt niet.");
       return;
     }
+    await sb.rpc("boa_mfa_stempel");
     onKlaar();
   }
 
