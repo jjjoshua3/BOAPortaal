@@ -298,6 +298,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               Status
             </a>
             {" · "}
+            <a className="underline" href="https://faq.boaportaal.nl">
+              Vragen
+            </a>
+            {" · "}
             <a className="underline" href="https://wa.me/31644912282" target="_blank" rel="noreferrer">
               WhatsApp Only: 06 4491 2282
             </a>
@@ -379,6 +383,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
               <a href="https://status.boaportaal.nl" className="btn justify-start">
                 Status
+              </a>
+              <a href="https://faq.boaportaal.nl" className="btn justify-start">
+                Vragen
               </a>
             </div>
           </div>
