@@ -6,13 +6,21 @@ import { Meter } from "@/components/recovery-modal";
 import { PageHead } from "@/components/bits";
 import { useKluis } from "@/lib/kluis/provider";
 import { useBoaAuth } from "@/lib/supabase/auth";
-import { getSupabase, registreerAccount } from "@/lib/supabase/client";
+import { getSupabase, registreerAccount, bevestigCode } from "@/lib/supabase/client";
+import { seo } from "@/lib/seo";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
 import { naarPv, useIdentiteit, noteerInlog } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
 import { onthoudSessie } from "@/lib/supabase/auth";
 
 export const Route = createFileRoute("/account")({
+  head: () =>
+    seo(
+      "/account",
+      "Account | BOA Portaal",
+      "Zakelijk aanmelden, registreren of een wachtwoord herstellen. De mail komt van account@boaportaal.nl.",
+      false,
+    ),
   component: AccountPage,
 });
 
@@ -76,15 +84,37 @@ function LoginForm() {
         if (!sb) return;
         setBezig(true);
         setFout("");
-        void sb.auth.signInWithPassword({ email: email.trim(), password }).then(({ data, error }) => {
+        void (async () => {
+          const viaSlot = await fetch("https://systeem.boaportaal.nl/.netlify/functions/slot", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email.trim(), wachtwoord: password }),
+          }).then(async (res) => ({ status: res.status, json: await res.json().catch(() => ({})) })).catch(() => null);
+          if (!viaSlot || viaSlot.status === 503 || viaSlot.status === 404) {
+            const { data, error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
+            setBezig(false);
+            noteerInlog(data.session?.access_token ?? "", error ? email.trim() : "");
+            if (error || !data.session) {
+              setFout(mapAuthError(error?.message ?? "Aanmelden lukt niet.", email));
+              return;
+            }
+            onthoudSessie(onthoud ? "30" : "12");
+            return;
+          }
           setBezig(false);
-          noteerInlog(data.session?.access_token ?? "", error ? email.trim() : "");
-          if (error || !data.session) {
-            setFout(mapAuthError(error?.message ?? "Aanmelden lukt niet.", email));
+          if (!viaSlot.json.sessie) {
+            noteerInlog("", email.trim());
+            setFout(viaSlot.json.fout || "Onjuist e-mailadres of wachtwoord.");
+            return;
+          }
+          const gezet = await sb.auth.setSession(viaSlot.json.sessie);
+          noteerInlog(gezet.data.session?.access_token ?? "", gezet.error ? email.trim() : "");
+          if (gezet.error || !gezet.data.session) {
+            setFout("Aanmelden lukt niet.");
             return;
           }
           onthoudSessie(onthoud ? "30" : "12");
-        });
+        })();
       }}
     >
       <Mail email={email} setEmail={setEmail} fout={domeinFout} />
@@ -145,7 +175,7 @@ function RegisterForm() {
           setOk(
             result.ok === "session"
               ? "Account aangemaakt. Je bent aangemeld."
-              : "Account aangemaakt. Bevestig het adres via de mail en log daarna in.",
+              : "Account aangemaakt. De bevestigingscode staat in de mail van account@boaportaal.nl. Vul die hieronder in. Er zit geen eenmalige link in, zodat een mailscanner van je gemeente de code niet alvast kan verbruiken.",
           );
         });
       }}
@@ -198,6 +228,9 @@ function RegisterForm() {
       </p>
       {fout ? <p className="accent-stop panel p-3 text-sm">{fout}</p> : null}
       {ok ? <p className="accent-ok panel p-3 text-sm">{ok}</p> : null}
+      {ok.startsWith("Account aangemaakt. De bevestigingscode") ? (
+        <CodeForm email={email.trim()} type="signup" onKlaar={() => setOk("Adres bevestigd. Je bent aangemeld.")} />
+      ) : null}
       <button className="btn btn-brand" type="submit" disabled={disabled}>
         {bezig ? "Bezig…" : "Account aanmaken"}
       </button>
@@ -206,6 +239,7 @@ function RegisterForm() {
 }
 
 function ResetForm() {
+  const { openRecovery } = useBoaAuth();
   const [email, setEmail] = useState("");
   const [fout, setFout] = useState("");
   const [ok, setOk] = useState("");
@@ -227,24 +261,80 @@ function ResetForm() {
         setBezig(true);
         setFout("");
         setOk("");
-        const redirectTo = `${window.location.origin}/#reset-wachtwoord`;
+        const redirectTo = `${window.location.origin}/account#reset-wachtwoord`;
         void sb.auth.resetPasswordForEmail(email.trim(), { redirectTo }).then(({ error }) => {
           setBezig(false);
           if (error && !/user|not found|signups?/i.test(error.message)) {
             setFout(mapAuthError(error.message, email));
             return;
           }
-          setOk("Als dit zakelijke adres bij ons bekend is, staat de herstelmail onderweg. Open de link op dit apparaat. Het scherm om een nieuw wachtwoord te kiezen opent dan vanzelf.");
+          setOk("Als dit zakelijke adres bij ons bekend is, staat de code onderweg vanaf account@boaportaal.nl. Vul die hier in. Open geen link uit de mail: een scanner van Microsoft 365 kan die anders al verbruiken.");
         });
       }}
     >
       <Mail email={email} setEmail={setEmail} fout={domeinFout} />
       {fout ? <p className="accent-stop panel p-3 text-sm">{fout}</p> : null}
       {ok ? <p className="accent-ok panel p-3 text-sm">{ok}</p> : null}
+      {ok ? (
+        <CodeForm
+          email={email.trim()}
+          type="recovery"
+          onKlaar={() => {
+            setOk("");
+            openRecovery();
+          }}
+        />
+      ) : null}
       <button className="btn btn-brand" type="submit" disabled={bezig || Boolean(domeinFout)}>
         {bezig ? "Versturen…" : "Herstelmail sturen"}
       </button>
     </form>
+  );
+}
+
+function CodeForm({ email, type, onKlaar }: { email: string; type: "signup" | "recovery"; onKlaar: () => void }) {
+  const [code, setCode] = useState("");
+  const [fout, setFout] = useState("");
+  const [bezig, setBezig] = useState(false);
+
+  function controleer() {
+    if (bezig || code.trim().length < 6) return;
+    setBezig(true);
+    setFout("");
+    void bevestigCode(email, code, type).then((result) => {
+      setBezig(false);
+      if ("fout" in result) {
+        setFout(mapAuthError(result.fout, email));
+        return;
+      }
+      onKlaar();
+    });
+  }
+
+  return (
+    <div className="grid gap-3">
+      <label className="field">
+        Code uit de mail van account@boaportaal.nl
+        <input
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          value={code}
+          onChange={(event) => setCode(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              controleer();
+            }
+          }}
+          placeholder="123456"
+          required
+        />
+      </label>
+      {fout ? <p className="accent-stop panel p-3 text-sm">{fout}</p> : null}
+      <button className="btn" type="button" disabled={bezig || code.trim().length < 6} onClick={controleer}>
+        {bezig ? "Controleren…" : type === "recovery" ? "Code controleren" : "Adres bevestigen"}
+      </button>
+    </div>
   );
 }
 
