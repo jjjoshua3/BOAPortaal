@@ -73,6 +73,20 @@ export async function registreerAccount(input: {
   return { ok: "mail" };
 }
 
+export async function bevestigCode(
+  email: string,
+  code: string,
+  type: "signup" | "recovery",
+): Promise<{ fout: string } | { ok: true }> {
+  const sb = getSupabase();
+  if (!sb) return { fout: "Geen verbinding met het accountsysteem." };
+  const token = code.replace(/\s/g, "");
+  if (!/^\d{6,10}$/.test(token)) return { fout: "Vul de code uit de mail in. Alleen cijfers." };
+  const { error } = await sb.auth.verifyOtp({ email: email.trim(), token, type });
+  if (error) return { fout: error.message };
+  return { ok: true };
+}
+
 export async function sessieToken(): Promise<string | null> {
   const sb = getSupabase();
   if (!sb) return null;
