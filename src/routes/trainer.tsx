@@ -267,33 +267,63 @@ function Kader({ titel, items }: { titel: string; items: string[] }) {
 function Quiz({ vragen }: { vragen: ReturnType<typeof filterVragen> }) {
   const [index, setIndex] = useState(0);
   const [gekozen, setGekozen] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
+  const [antwoorden, setAntwoorden] = useState<number[]>([]);
   const [klaar, setKlaar] = useState(false);
   const vraag = vragen[index];
+  const score = antwoorden.filter((keuze, nummer) => keuze === vragen[nummer]?.juist).length;
 
   if (!vragen.length) return <p className="text-sm text-muted">Geen vragen in deze combinatie van rol en domein.</p>;
-  if (klaar || !vraag) {
+  if (klaar) {
+    const gemist = vragen
+      .map((item, nummer) => ({ item, keuze: antwoorden[nummer] ?? -1 }))
+      .filter((rij) => rij.keuze !== rij.item.juist);
     return (
-      <section className="panel p-4">
-        <h2 className="text-lg font-semibold">Resultaat</h2>
-        <p className="mt-2 text-sm">
-          {score} van {vragen.length} in één keer goed. Loop de toelichting na bij wat je miste. Dit telt niet mee voor het ExTH.
-        </p>
-        <button
-          type="button"
-          className="btn btn-brand mt-3"
-          onClick={() => {
-            setIndex(0);
-            setGekozen(null);
-            setScore(0);
-            setKlaar(false);
-          }}
-        >
-          Opnieuw
-        </button>
+      <section className="grid gap-3">
+        <div className="panel p-4">
+          <h2 className="text-lg font-semibold">Resultaat</h2>
+          <p className="mt-2 text-sm">
+            {score} van {vragen.length} in één keer goed.
+            {gemist.length ? " Hieronder staan de vragen die fout waren, met dezelfde toelichting als tijdens het invullen." : " Alles in één keer goed."}
+          </p>
+          <button
+            type="button"
+            className="btn btn-brand mt-3"
+            onClick={() => {
+              setIndex(0);
+              setGekozen(null);
+              setAntwoorden([]);
+              setKlaar(false);
+            }}
+          >
+            Opnieuw
+          </button>
+        </div>
+        {gemist.map(({ item, keuze }) => (
+          <article key={item.id} className="panel p-4">
+            <h3 className="font-semibold">{item.vraag}</h3>
+            <div className="mt-3 grid gap-2">
+              {item.opties.map((optie, optieIndex) => {
+                const toon = optieIndex === item.juist ? "btn-ok" : optieIndex === keuze ? "btn-stop" : "";
+                return (
+                  <button key={optie} type="button" className={`btn justify-start text-left ${toon}`} disabled>
+                    {optie}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-3 text-sm">{item.toelichting}</p>
+            {item.bron ? (
+              <a className="mt-2 inline-block text-sm underline" href={item.bron} target="_blank" rel="noreferrer">
+                Bron
+              </a>
+            ) : null}
+          </article>
+        ))}
       </section>
     );
   }
+
+  if (!vraag) return null;
 
   return (
     <section className="panel p-4">
@@ -312,7 +342,11 @@ function Quiz({ vragen }: { vragen: ReturnType<typeof filterVragen> }) {
               disabled={gekozen !== null}
               onClick={() => {
                 setGekozen(optieIndex);
-                if (optieIndex === vraag.juist) setScore((huidig) => huidig + 1);
+                setAntwoorden((huidig) => {
+                  const kopie = [...huidig];
+                  kopie[index] = optieIndex;
+                  return kopie;
+                });
               }}
             >
               {optie}
@@ -330,18 +364,18 @@ function Quiz({ vragen }: { vragen: ReturnType<typeof filterVragen> }) {
         <div className="mt-3 flex flex-wrap gap-2">
           <FeedbackKnop plek="/trainer" onderwerp={vraag.vraag.slice(0, 80)} />
           <button
-          type="button"
-          className="btn btn-brand mt-3"
-          onClick={() => {
-            if (index + 1 >= vragen.length) setKlaar(true);
-            else {
-              setIndex((huidig) => huidig + 1);
-              setGekozen(null);
-            }
-          }}
-        >
-          {index + 1 >= vragen.length ? "Resultaat" : "Volgende"}
-        </button>
+            type="button"
+            className="btn btn-brand mt-3"
+            onClick={() => {
+              if (index + 1 >= vragen.length) setKlaar(true);
+              else {
+                setIndex((huidig) => huidig + 1);
+                setGekozen(null);
+              }
+            }}
+          >
+            {index + 1 >= vragen.length ? "Resultaat" : "Volgende"}
+          </button>
         </div>
       ) : null}
     </section>
