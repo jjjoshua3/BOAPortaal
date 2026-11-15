@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import { PageHead } from "@/components/bits";
 import { JARGON, type Woord } from "@/lib/boa/jargon";
-import { seo } from "@/lib/seo";
+import { useLiveTick } from "@/lib/boa/live-poort";
 import { useKluis } from "@/lib/kluis/provider";
 
 type Search = { q?: string };
@@ -62,7 +62,8 @@ function JargonPage() {
     setSterren(leesSterren());
   }, []);
 
-  const metKat = useMemo(() => JARGON.map((woord) => ({ ...woord, categorie: categorieVan(woord) })), []);
+  const tick = useLiveTick();
+  const metKat = useMemo(() => JARGON.map((woord) => ({ ...woord, categorie: categorieVan(woord) })), [tick]);
   const gevonden = useMemo(() => {
     const delen = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
     return metKat

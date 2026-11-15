@@ -9,7 +9,7 @@ import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
-import { useKluis } from "@/lib/kluis/provider";
+import { useLiveTick } from "@/lib/boa/live-poort";
 
 type Search = { q?: string };
 
@@ -36,6 +36,7 @@ function FeitPage() {
   const [weergave, setWeergave] = useState<"tabel" | "kaarten">("tabel");
   const [open, setOpen] = useState<string | null>(null);
   const [groepFilter, setGroepFilter] = useState("alle");
+  const tick = useLiveTick();
   const gevonden = useMemo(() => {
     const basis = zoekFeiten(q, FEITEN);
     if (groepFilter === "alle") return basis;
@@ -51,7 +52,7 @@ function FeitPage() {
       const hay = `${feit.titel} ${feit.trefwoorden} ${feit.artikel}`.toLowerCase();
       return keys.some((woord) => hay.includes(woord));
     });
-  }, [groepFilter, q]);
+  }, [groepFilter, q, tick]);
   const groepen = DOMEIN_INFO.filter((info) => {
     if (domein === "alle") return true;
     return info.id === domein || info.id === "algemeen";
@@ -189,7 +190,8 @@ function FeitPage() {
 }
 
 function BoekjeResultaten({ query }: { query: string }) {
-  const eigen = useMemo(() => zoekFeiten(query, FEITEN), [query]);
+  const tick = useLiveTick();
+  const eigen = useMemo(() => zoekFeiten(query, FEITEN), [query, tick]);
   const treffers = useMemo(() => zoekBoekje(query), [query]);
   const gezien = new Set(eigen.map((feit) => feit.code.replace(/\s+/g, "").toLowerCase()));
   const rest = treffers.filter((regel) => !gezien.has(regel.code.replace(/\s+/g, "").toLowerCase()));

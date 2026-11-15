@@ -7,6 +7,7 @@ import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
+import { useLiveTick } from "@/lib/boa/live-poort";
 import { WEEKSETS, weeksetOp } from "@/lib/boa/weken";
 
 export const Route = createFileRoute("/trainer")({
@@ -111,12 +112,13 @@ const CASUS_KEUZE: Record<string, { label: string; goed: boolean; waarom: string
 };
 
 function TrainerPage() {
+  const tick = useLiveTick();
   const rol = usePrefs((state) => state.rol);
   const domein = usePrefs((state) => state.domein);
   const [modus, setModus] = useState<Modus>("kennis");
-  const vragen = useMemo(() => filterVragen(rol, domein, "rechtskennis").slice(0, 10), [rol, domein]);
+  const vragen = useMemo(() => filterVragen(rol, domein, "rechtskennis").slice(0, 10), [rol, domein, tick]);
   const week = useMemo(() => weeksetOp(new Date()), []);
-  const kaarten = useMemo(() => FEITEN.filter((feit) => pastFilter(feit.domeinen, domein)).slice(0, 12), [domein]);
+  const kaarten = useMemo(() => FEITEN.filter((feit) => pastFilter(feit.domeinen, domein)).slice(0, 12), [domein, tick]);
   const casussen = CASUSSEN.filter((casus) => pastFilter(casus.domeinen, domein));
 
   return (

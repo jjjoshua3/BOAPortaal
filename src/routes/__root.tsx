@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { type ReactNode } from "react";
+import { LivePoort } from "@/lib/boa/live-poort";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { NotFoundView } from "@/components/not-found";
@@ -76,9 +77,11 @@ function RootApp() {
     <AuthProvider>
       <BoaAuthProvider>
         <KluisProvider>
-          <AppShell>
-            <Outlet />
-          </AppShell>
+          <LivePoort>
+            <AppShell>
+              <Outlet />
+            </AppShell>
+          </LivePoort>
         </KluisProvider>
       </BoaAuthProvider>
     </AuthProvider>
