@@ -50,6 +50,11 @@ export function bedragRegels(code: string, ruw: string): BedragRegel[] {
   }));
 }
 
+export function regelVanCode(code: string): BoekjeRegel | undefined {
+  const compact = code.replace(/\s+/g, "").toLowerCase();
+  return BOEKJE_REGELS.find((regel) => regel.code.replace(/\s+/g, "").toLowerCase() === compact);
+}
+
 export function zoekBoekje(query: string): BoekjeRegel[] {
   const delen = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (!delen.length) return [];

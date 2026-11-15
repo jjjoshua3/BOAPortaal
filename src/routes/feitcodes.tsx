@@ -3,7 +3,7 @@ import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
 import { FEITEN, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
-import { bedragRegels, zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
+import { bedragRegels, regelVanCode, zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -202,13 +202,17 @@ function BoekjeResultaten({ query }: { query: string }) {
           : `${totaal} treffers. Maak het zoekveld leeg om terug te gaan naar de korte lijst.`}
       </p>
       <ul className="grid gap-2">
-        {eigen.map((feit) => (
-          <li key={feit.id} className="panel p-3">
-            <p className="code">{feit.code}</p>
-            <p className="mt-1 font-semibold">{feit.titel}</p>
-            <p className="mt-1 text-sm">{boekjeToelichting(feit)}</p>
-          </li>
-        ))}
+        {eigen.map((feit) => {
+          const regel = regelVanCode(feit.code);
+          return (
+            <li key={feit.id} className="panel p-3">
+              <p className="code">{feit.code}</p>
+              <p className="mt-1 font-semibold">{feit.titel}</p>
+              {regel?.toelichting ? <p className="mt-1 text-sm">{regel.toelichting}</p> : <p className="mt-1 text-sm">{boekjeToelichting(feit)}</p>}
+              {regel ? <Bedrag regel={regel} /> : null}
+            </li>
+          );
+        })}
         {rest.map((regel, index) => (
           <li key={`${regel.code}-${index}`} className="panel p-3">
             <p className="code">{regel.code}</p>
@@ -375,6 +379,7 @@ function Detail({ feit }: { feit: Feit }) {
   const { isFavoriet, toggleFavoriet, saveNote } = useKluis();
   const navigate = useNavigate();
   const [melding, setMelding] = useState("");
+  const regel = regelVanCode(feit.code);
   return (
     <div className="mt-3 grid gap-2 text-sm">
       <p className="bg-inset p-2">
@@ -402,7 +407,8 @@ function Detail({ feit }: { feit: Feit }) {
       <p>{feit.bijzonder}</p>
       <div className="border border-[#FDE68A] bg-[#FEF3C7] p-2 text-[#1c1917]">
         <p className="font-semibold">Toelichting Feitenboekje OM, januari 2026</p>
-        <p className="mt-1">{boekjeToelichting(feit)}</p>
+        {regel?.toelichting ? <p className="mt-1">{regel.toelichting}</p> : <p className="mt-1">{boekjeToelichting(feit)}</p>}
+        {regel ? <Bedrag regel={regel} /> : null}
         <p className="mt-2 text-[#78350f]">Letterlijk uit het Feitenboekje van het Openbaar Ministerie, uitgave januari 2026. Een latere uitgave gaat voor.</p>
       </div>
       <div className="border border-line bg-paper p-2">
