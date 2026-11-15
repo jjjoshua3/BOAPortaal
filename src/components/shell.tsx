@@ -298,6 +298,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               Status
             </a>
             {" · "}
+            <a className="underline" href="https://wa.me/31644912282" target="_blank" rel="noreferrer">
+              WhatsApp Only: 06 4491 2282
+            </a>
+            {" · "}
             <Link to="/jargon" className="underline">
               Vakjargon
             </Link>
@@ -394,6 +398,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <p className="mt-1 text-sm text-muted">Zelfde account. Een melding maken kan iedereen. De wachtrij is alleen voor medewerkers.</p>
           <a className="btn btn-brand mt-3 w-full" href="https://servicedesk.boaportaal.nl" target="_blank" rel="noreferrer">
             Open de servicedesk
+          </a>
+          <a className="btn mt-2 w-full" href="https://wa.me/31644912282" target="_blank" rel="noreferrer">
+            WhatsApp Only: 06 4491 2282
           </a>
         </div>
       ) : null}
