@@ -80,14 +80,21 @@ export function useIdentiteit() {
     const sb = getSupabase();
     if (!sb) return;
     let weg = false;
-    void sb.rpc("boa_mijn_identiteit").then(({ data, error }) => {
+    void sb.rpc("boa_mijn_identiteit").then(async ({ data, error }) => {
       if (weg) return;
       if (error || !data || typeof data !== "object") {
         setFout(error?.message ?? "Client-ID niet beschikbaar.");
         setIdentiteit(null);
         return;
       }
-      const rij = data as Identiteit;
+      let rij = data as Identiteit;
+      const metaNaam = String((user.user_metadata as { naam?: string } | undefined)?.naam || "");
+      const hersteld = naarPv(metaNaam);
+      if ((rij.pv_naam === "ONBEKEND, ." || !rij.pv_naam) && hersteld && hersteld !== "ONBEKEND, .") {
+        const gezet = await sb.rpc("boa_zet_pv_naam", { p_naam: metaNaam, p_organisatie: null });
+        if (!weg && !gezet.error && gezet.data && typeof gezet.data === "object") rij = gezet.data as Identiteit;
+      }
+      if (weg) return;
       setFout("");
       setIdentiteit({
         client_id: String(rij.client_id ?? ""),
