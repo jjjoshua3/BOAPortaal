@@ -11,7 +11,7 @@ import { HOME_TEKST, HOME_TITEL, ROBOTS_INDEX } from "@/lib/seo";
 import appCss from "../styles.css?url";
 
 const THEME_BOOT = `try{var raw=localStorage.getItem("boa-prefs");if(raw){var s=JSON.parse(raw).state;if(s&&s.theme==="night")document.documentElement.classList.add("night");if(s&&s.tekst==="groot")document.documentElement.classList.add("lees-groot");}}catch(e){}`;
-const IP_WACHT = `(function(){var h=document.documentElement;h.style.background="#1a0000";h.style.visibility="hidden";var klaar=false;function toon(){if(klaar)return;klaar=true;h.style.visibility="";h.style.background="";}setTimeout(toon,1800);fetch("https://systeem.boaportaal.nl/.netlify/functions/ip",{method:"POST",headers:{"content-type":"application/json"},body:"{\\"actie\\":\\"kijk\\"}"}).then(function(r){return r.json()}).then(function(d){if(d&&d.blok){location.replace("https://ip.boaportaal.nl/");return;}toon();}).catch(toon);})();`;
+const IP_WACHT = `(function(){fetch("https://systeem.boaportaal.nl/.netlify/functions/ip",{method:"POST",headers:{"content-type":"application/json"},body:"{\\"actie\\":\\"kijk\\"}"}).then(function(r){return r.json()}).then(function(d){if(d&&d.blok)location.replace("https://ip.boaportaal.nl/");}).catch(function(){});})();`;
 
 export const Route = createRootRoute({
   head: () => ({
