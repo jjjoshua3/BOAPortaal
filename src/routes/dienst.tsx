@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { zichtbareNaam } from "@/lib/boa/identiteit";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   Accessibility,
@@ -716,7 +717,7 @@ function Overleg() {
         {lijst.map((bericht) => (
           <li key={bericht.id} className="panel p-3">
             <p className="text-xs font-semibold text-muted">
-              {bericht.soort === "correctie" ? "Antwoord" : "Vraag / tip"} | Domein {bericht.domein} | {bericht.anoniem ? `Anoniem ${bericht.organisatie}` : bericht.weergave}
+              {bericht.soort === "correctie" ? "Antwoord" : "Vraag / tip"} | Domein {bericht.domein} | {bericht.anoniem ? `Anoniem ${bericht.organisatie}` : zichtbareNaam(bericht.weergave)}
             </p>
             <h3 className="mt-1 font-semibold">{bericht.titel}</h3>
             <p className="mt-1 text-sm">{bericht.tekst}</p>

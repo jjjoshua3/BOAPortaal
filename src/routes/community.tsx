@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { PageHead } from "@/components/bits";
 import { pastFilter } from "@/lib/boa/meta";
+import { zichtbareNaam } from "@/lib/boa/identiteit";
 import { lijstOverleg, plaatsOverleg, stemOverleg, verwijderOverleg, type OverlegBericht } from "@/lib/boa/overleg.functions";
 import { usePrefs } from "@/lib/boa/prefs";
 import { seo } from "@/lib/seo";
@@ -212,11 +213,11 @@ function Bord() {
         <div className="overflow-hidden rounded-lg border border-line bg-panel shadow-sm">
           <div className="flex items-start gap-3 p-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-inset text-xs font-semibold text-ink">
-              {bericht.anoniem ? "A" : (bericht.weergave || "C").slice(0, 1).toUpperCase()}
+              {bericht.anoniem ? "A" : zichtbareNaam(bericht.weergave || "C").slice(0, 1).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-muted">
-                <span className="font-semibold text-ink">{bericht.anoniem ? "Anoniem" : bericht.weergave || "collega"}</span>
+                <span className="font-semibold text-ink">{bericht.anoniem ? "Anoniem" : zichtbareNaam(bericht.weergave || "collega")}</span>
                 <span>·</span>
                 {bericht.anoniem ? <span className="font-mono text-ink">{bericht.organisatie}</span> : <span>{bericht.organisatie}</span>}
                 <span>·</span>

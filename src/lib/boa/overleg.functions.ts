@@ -3,6 +3,17 @@ import { createClient } from "@supabase/supabase-js";
 import { scanPii } from "@/lib/boa/privacy";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/client";
 
+function zichtbareNaam(ruw: string): string {
+  const t = String(ruw || "").trim().replace(/\s+/g, " ");
+  if (!t) return "collega";
+  if (!t.includes(",")) return t;
+  const [links, rechts] = t.split(",", 2);
+  const init = (rechts || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase();
+  const woorden = links.trim().split(" ").filter((woord) => woord && !/^(de|van|der|den|ten|ter|het|t)$/i.test(woord));
+  const letter = (woorden[0] || links.trim()).slice(0, 1).toUpperCase();
+  return init && letter ? `${init}. ${letter}.` : t;
+}
+
 export type OverlegBericht = {
   id: string;
   eigen: boolean;
@@ -215,7 +226,7 @@ export const plaatsOverleg = createServerFn({ method: "POST" })
         domein: invoer.domein,
         titel: invoer.titel,
         tekst: invoer.tekst,
-        weergave: ident?.pv_naam || "collega",
+        weergave: zichtbareNaam(ident?.pv_naam || "collega"),
         organisatie: ident?.client_id || user.organisatie,
       })
       .select("id")

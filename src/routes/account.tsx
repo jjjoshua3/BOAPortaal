@@ -9,7 +9,7 @@ import { useBoaAuth } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount, bevestigCode } from "@/lib/supabase/client";
 import { seo } from "@/lib/seo";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
-import { naarPv, useIdentiteit, noteerInlog } from "@/lib/boa/identiteit";
+import { naarPv, useIdentiteit, noteerInlog, zichtbareNaam } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
 import { onthoudSessie } from "@/lib/supabase/auth";
 
@@ -381,7 +381,7 @@ function Profiel() {
       <PageHead
         kicker="ACCOUNT"
         title="Mijn profiel"
-        lede={identiteit ? `${identiteit.pv_naam} · ${identiteit.client_id}` : "Client-ID wordt uitgegeven zodra het identiteitsregister actief is."}
+        lede={identiteit ? `${zichtbareNaam(identiteit.pv_naam)} · ${identiteit.client_id}` : "Client-ID wordt uitgegeven zodra het identiteitsregister actief is."}
       />
       <div className="panel mb-4 grid gap-2 p-3">
         <p className="text-xs font-semibold text-muted">Client-ID</p>
@@ -390,6 +390,7 @@ function Profiel() {
           <CopyButton text={identiteit?.client_id ?? ""} label="Kopieer Client-ID" />
         </div>
         <p className="text-sm">PV-naam: {identiteit?.pv_naam || "nog niet vastgelegd"}</p>
+        <p className="text-sm">Zichtbaar voor collega's: {identiteit?.pv_naam ? zichtbareNaam(identiteit.pv_naam) : "nog niet vastgelegd"}</p>
         <p className="text-sm text-muted">
           Medewerkersmail staat op mail.boaportaal.nl. Log in met je Client-ID, joshua.bosma of account. Zonder @boaportaal.nl. Niet via de mailserver zelf.
         </p>

@@ -34,6 +34,28 @@ export function naarPv(raw: string): string {
   return init ? `${achternaam}, ${init}.` : `${achternaam}, .`;
 }
 
+const TUSSEN = /^(de|van|der|den|ten|ter|het|t)$/i;
+
+export function zichtbareNaam(ruw: string): string {
+  const t = String(ruw || "").trim().replace(/\s+/g, " ");
+  if (!t || t === "Anoniem" || t === "collega") return t;
+  if (t.includes(",")) {
+    const [links, rechts] = t.split(",", 2);
+    const init = (rechts || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase();
+    const woorden = links.trim().split(" ").filter((woord) => woord && !TUSSEN.test(woord));
+    const letter = (woorden[0] || links.trim()).slice(0, 1).toUpperCase();
+    if (init && letter) return `${init}. ${letter}.`;
+    return t;
+  }
+  const delen = t.split(" ");
+  const voorRaw = delen[0].replace(/\./g, "");
+  const voor = voorRaw.slice(0, 1).toUpperCase() + voorRaw.slice(1).toLowerCase();
+  const rest = delen.slice(1).filter((woord) => woord && !TUSSEN.test(woord.replace(/\./g, "")));
+  const bron = (rest[0] || "").replace(/\./g, "");
+  if (!bron) return voor;
+  return `${voor} ${bron.slice(0, 1).toUpperCase()}.`;
+}
+
 export function noteerInlog(token: string, email: string) {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
