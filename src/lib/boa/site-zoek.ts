@@ -17,7 +17,7 @@ const PAGINAS: ZoekHit[] = [
   {
     soort: "pagina",
     titel: "Namen op de werkvloer: jeugd-BOA, wijk-BOA, ondermijning",
-    tekst: "Jeugd-BOA, wijk-BOA, BOA ondermijning, horeca- en Alcoholwet-BOA, verkeers- en parkeer-BOA, senior BOA en teamleider zijn geen aparte categorie in de Regeling domeinlijsten. Het blijft domein I, openbare ruimte. De grens is de akte en de taakomschrijving.",
+    tekst: "Jeugd-BOA, wijk-BOA, BOA ondermijning, horeca- en Alcoholwet-BOA, verkeers- en parkeer-BOA, dierenwelzijn-BOA, senior BOA en teamleider zijn geen aparte categorie in de Regeling domeinlijsten. Dierenwelzijn-BOA is een naam op de werkvloer, met als taakaccent vooral bijtincidenten in de gemeente. Het blijft domein I, openbare ruimte. De grens is de akte en de taakomschrijving.",
     naar: "/",
   },
   {

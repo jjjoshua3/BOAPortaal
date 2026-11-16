@@ -281,13 +281,14 @@ function Home() {
       <section className="mx-auto w-full max-w-3xl px-4 py-6">
         <h2 className="text-base font-semibold">Namen op de werkvloer, domein I</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Jeugd-BOA, wijk-BOA, BOA ondermijning, horeca- en Alcoholwet-BOA, verkeers- en parkeer-BOA, senior BOA en teamleider komen niet voor als categorie in de Regeling domeinlijsten buitengewoon opsporingsambtenaar of in paragraaf 6 van de Beleidsregels. Het blijft één domein: openbare ruimte. De grens is de akte en de taakomschrijving.
+          Jeugd-BOA, wijk-BOA, BOA ondermijning, horeca- en Alcoholwet-BOA, verkeers- en parkeer-BOA, dierenwelzijn-BOA, senior BOA en teamleider komen niet voor als categorie in de Regeling domeinlijsten buitengewoon opsporingsambtenaar of in paragraaf 6 van de Beleidsregels. Het blijft één domein: openbare ruimte. De grens is de akte en de taakomschrijving.
         </p>
         <ul className="mt-3 list-disc pl-5 text-sm leading-relaxed">
           <li>Beleidsregels, paragraaf 6.1: handhaving van leefbaarheid, overlast en kleine ergernissen in de openbare ruimte.</li>
           <li>Paragraaf 6.2: rijdend verkeer is alleen ongemotoriseerd, tenzij het feit in onderdeel 10 van de domeinlijst staat. Die motorvoertuigfeiten alleen binnen een gedeeld handhavingsarrangement.</li>
           <li>De Alcoholwet, de artikelen 45 en 45a, staat op de domeinlijst. Of jij die feiten mag opnemen, staat in de akte. Er is geen aparte horeca-boa in de regeling.</li>
           <li>De boa openbare ruimte kan optioneel de bevoegdheden van artikel 7, eerste, derde en vierde lid, Politiewet 2012 krijgen, en optioneel handboeien, wapenstok of pepperspray. Een ingehuurde boa stopt bij die politiebevoegdheden en handboeien.</li>
+          <li>Dierenwelzijn-BOA is zo'n naam op de werkvloer. Het taakaccent is vooral bijtincidenten in de gemeente. Geen aparte categorie in de regeling.</li>
           <li>Het seniorenbeleid als ontheffing van de bekwaamheidseis is per 1 januari 2016 afgeschaft. Senior of teamleider is een functie van de werkgever, geen titel in de akte.</li>
         </ul>
         <p className="mt-2 text-sm">
