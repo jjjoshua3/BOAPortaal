@@ -9,7 +9,7 @@ import { useBoaAuth } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount, bevestigCode } from "@/lib/supabase/client";
 import { seo } from "@/lib/seo";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
-import { naarPv, useIdentiteit, noteerInlog, zichtbareNaam } from "@/lib/boa/identiteit";
+import { useIdentiteit, noteerInlog, zichtbareNaam } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
 import { onthoudSessie } from "@/lib/supabase/auth";
 
@@ -162,7 +162,8 @@ function RegisterForm() {
         void registreerAccount({
           email,
           password,
-          naam: naarPv(naam) || naam,
+          naam: zichtbareNaam(naam) || naam,
+          roep: naam.trim(),
           domein,
           rol,
           redirectTo: `${window.location.origin}/account`,
@@ -181,8 +182,9 @@ function RegisterForm() {
       }}
     >
       <label className="field">
-        Naam zoals in een proces-verbaal: ACHTERNAAM, Voorletter
-        <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="BOSMA, J." required />
+        Je naam
+        <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="Jasper de Graaff" required />
+        <span className="text-xs text-muted">Collega's zien {naam.trim() ? zichtbareNaam(naam) : "Jasper, D G."}</span>
       </label>
       <Mail email={email} setEmail={setEmail} fout={domeinFout} />
       <label className="field">
@@ -359,8 +361,8 @@ function Profiel() {
   const setRol = usePrefs((state) => state.setRol);
   const theme = usePrefs((state) => state.theme);
   const setTheme = usePrefs((state) => state.setTheme);
-  const meta = (user?.user_metadata ?? {}) as { naam?: string; domein?: DomeinId; rol?: Rol };
-  const [naam, setNaam] = useState(meta.naam ?? "");
+  const meta = (user?.user_metadata ?? {}) as { naam?: string; roep?: string; domein?: DomeinId; rol?: Rol };
+  const [naam, setNaam] = useState(meta.roep ?? "");
   const [domein, setDomeinVeld] = useState<DomeinId>(meta.domein ?? "I");
   const [rol, setRolVeld] = useState<Rol>(meta.rol ?? "boa");
   const [password, setPassword] = useState("");
@@ -371,10 +373,10 @@ function Profiel() {
   const issues = password ? passwordIssues(password) : [];
 
   useEffect(() => {
-    setNaam(meta.naam ?? "");
+    setNaam(meta.roep ?? "");
     if (meta.domein) setDomeinVeld(meta.domein);
     if (meta.rol) setRolVeld(meta.rol);
-  }, [meta.domein, meta.naam, meta.rol]);
+  }, [meta.domein, meta.roep, meta.rol]);
 
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-5">
@@ -415,13 +417,13 @@ function Profiel() {
           if (!sb) return;
           setFout("");
           setMelding("");
-          void sb.auth.updateUser({ data: { naam: naarPv(naam) || naam, domein, rol } }).then(async ({ error }) => {
+          void sb.auth.updateUser({ data: { naam: zichtbareNaam(naam) || naam, roep: naam.trim(), domein, rol } }).then(async ({ error }) => {
             if (error) {
               setFout(mapAuthError(error.message));
               return;
             }
-            const pv = naarPv(naam) || naam;
-            const { data, error: rpcFout } = await sb.rpc("boa_zet_pv_naam", { p_naam: pv, p_organisatie: null });
+            const pv = zichtbareNaam(naam) || naam;
+            const { data, error: rpcFout } = await sb.rpc("boa_zet_pv_naam", { p_naam: naam.trim() || pv, p_organisatie: null });
             if (!rpcFout && data && typeof data === "object") setIdentiteit(data as typeof identiteit);
             if (domein !== "algemeen") setDomein(domein);
             setRol(rol);
@@ -430,8 +432,9 @@ function Profiel() {
         }}
       >
         <label className="field">
-          PV-naam
-          <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="BOSMA, J." />
+          Je naam
+          <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="Jasper de Graaff" />
+          <span className="text-xs text-muted">Collega's zien {naam.trim() ? zichtbareNaam(naam) : "Jasper, D G."}</span>
         </label>
         <label className="field">
           Standaarddomein

@@ -34,26 +34,38 @@ export function naarPv(raw: string): string {
   return init ? `${achternaam}, ${init}.` : `${achternaam}, .`;
 }
 
-const TUSSEN = /^(de|van|der|den|ten|ter|het|t)$/i;
+function mooiWoord(woord: string): string {
+  const s = woord.replace(/\./g, "");
+  if (!s) return "";
+  return s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase();
+}
 
 export function zichtbareNaam(ruw: string): string {
   const t = String(ruw || "").trim().replace(/\s+/g, " ");
   if (!t || t === "Anoniem" || t === "collega") return t;
   if (t.includes(",")) {
     const [links, rechts] = t.split(",", 2);
-    const init = (rechts || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase();
-    const woorden = links.trim().split(" ").filter((woord) => woord && !TUSSEN.test(woord));
-    const letter = (woorden[0] || links.trim()).slice(0, 1).toUpperCase();
-    if (init && letter) return `${init}. ${letter}.`;
-    return t;
+    const linksT = links.trim();
+    const rechtsT = (rechts || "").trim();
+    const letters = rechtsT.replace(/[^A-Za-z]/g, "");
+    const rechtsInit = /^[A-Za-z](?:[.\s]*[A-Za-z])*\.?$/.test(rechtsT);
+    if (rechtsInit && letters) {
+      if (linksT === linksT.toUpperCase()) {
+        const delen = linksT.split(/\s+/).filter(Boolean).map((woord) => woord.slice(0, 1).toUpperCase());
+        return `${letters.slice(0, 1).toUpperCase()}., ${delen.join(" ")}.`;
+      }
+      const delen = letters.split("").map((letter) => letter.toUpperCase());
+      return `${mooiWoord(linksT)}, ${delen.join(" ")}.`;
+    }
   }
-  const delen = t.split(" ");
-  const voorRaw = delen[0].replace(/\./g, "");
-  const voor = voorRaw.slice(0, 1).toUpperCase() + voorRaw.slice(1).toLowerCase();
-  const rest = delen.slice(1).filter((woord) => woord && !TUSSEN.test(woord.replace(/\./g, "")));
-  const bron = (rest[0] || "").replace(/\./g, "");
-  if (!bron) return voor;
-  return `${voor} ${bron.slice(0, 1).toUpperCase()}.`;
+  const parts = t.split(/\s+/).filter(Boolean);
+  const voor = mooiWoord(parts[0]);
+  const rest = parts
+    .slice(1)
+    .map((woord) => woord.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase())
+    .filter(Boolean);
+  if (!rest.length) return voor;
+  return `${voor}, ${rest.join(" ")}.`;
 }
 
 export function noteerInlog(token: string, email: string) {
@@ -88,10 +100,11 @@ export function useIdentiteit() {
         return;
       }
       let rij = data as Identiteit;
-      const metaNaam = String((user.user_metadata as { naam?: string } | undefined)?.naam || "");
-      const hersteld = naarPv(metaNaam);
-      if ((rij.pv_naam === "ONBEKEND, ." || !rij.pv_naam) && hersteld && hersteld !== "ONBEKEND, .") {
-        const gezet = await sb.rpc("boa_zet_pv_naam", { p_naam: metaNaam, p_organisatie: null });
+      const meta = (user.user_metadata ?? {}) as { naam?: string; roep?: string };
+      const bron = meta.roep || (rij.pv_naam === "ONBEKEND, ." ? meta.naam || "" : "");
+      const hersteld = zichtbareNaam(bron);
+      if (hersteld && hersteld !== "ONBEKEND, ." && rij.pv_naam !== hersteld && (rij.pv_naam === "ONBEKEND, ." || Boolean(meta.roep))) {
+        const gezet = await sb.rpc("boa_zet_pv_naam", { p_naam: bron, p_organisatie: null });
         if (!weg && !gezet.error && gezet.data && typeof gezet.data === "object") rij = gezet.data as Identiteit;
       }
       if (weg) return;

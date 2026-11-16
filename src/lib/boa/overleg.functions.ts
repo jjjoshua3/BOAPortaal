@@ -6,12 +6,25 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/client";
 function zichtbareNaam(ruw: string): string {
   const t = String(ruw || "").trim().replace(/\s+/g, " ");
   if (!t) return "collega";
-  if (!t.includes(",")) return t;
-  const [links, rechts] = t.split(",", 2);
-  const init = (rechts || "").trim().replace(/\./g, "").slice(0, 1).toUpperCase();
-  const woorden = links.trim().split(" ").filter((woord) => woord && !/^(de|van|der|den|ten|ter|het|t)$/i.test(woord));
-  const letter = (woorden[0] || links.trim()).slice(0, 1).toUpperCase();
-  return init && letter ? `${init}. ${letter}.` : t;
+  if (t.includes(",")) {
+    const [links, rechts] = t.split(",", 2);
+    const linksT = links.trim();
+    const rechtsT = (rechts || "").trim();
+    const letters = rechtsT.replace(/[^A-Za-z]/g, "");
+    if (letters && /^[A-Za-z](?:[.\s]*[A-Za-z])*\.?$/.test(rechtsT)) {
+      if (linksT === linksT.toUpperCase()) {
+        const delen = linksT.split(/\s+/).filter(Boolean).map((woord) => woord.slice(0, 1).toUpperCase());
+        return `${letters.slice(0, 1).toUpperCase()}., ${delen.join(" ")}.`;
+      }
+      const voor = linksT.slice(0, 1).toUpperCase() + linksT.slice(1).toLowerCase();
+      return `${voor}, ${letters.split("").map((letter) => letter.toUpperCase()).join(" ")}.`;
+    }
+  }
+  const parts = t.split(/\s+/).filter(Boolean);
+  const eerst = parts[0].replace(/\./g, "");
+  const voor = eerst.slice(0, 1).toUpperCase() + eerst.slice(1).toLowerCase();
+  const rest = parts.slice(1).map((woord) => woord.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase()).filter(Boolean);
+  return rest.length ? `${voor}, ${rest.join(" ")}.` : voor;
 }
 
 export type OverlegBericht = {
