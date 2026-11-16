@@ -20,7 +20,7 @@ import { FeedbackDock } from "@/components/feedback";
 import { FILTERS, ROLLEN, type DomeinFilter, type Rol } from "@/lib/boa/meta";
 import { usePrefs, pasWeergave } from "@/lib/boa/prefs";
 import { useBoaAuth } from "@/lib/supabase/auth";
-import { useIdentiteit, zichtbareNaam } from "@/lib/boa/identiteit";
+import { useIdentiteit, zichtbareNaam, collegasNaam } from "@/lib/boa/identiteit";
 
 const ICONS = {
   "/feitcodes": Search,
@@ -280,7 +280,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <div>
               <p className="text-xs font-semibold text-muted">Zichtbaar voor collega's</p>
-              <p className="text-sm">{identiteit?.pv_naam ? zichtbareNaam(identiteit.pv_naam) : "—"}</p>
+              <p className="text-sm">{collegasNaam(String((user?.user_metadata as { voornaam?: string } | undefined)?.voornaam || ""), String((user?.user_metadata as { achternaam?: string } | undefined)?.achternaam || "")) || (identiteit?.pv_naam ? zichtbareNaam(identiteit.pv_naam) : "—")}</p>
             </div>
             <Link to="/account" className="btn btn-brand" onClick={() => setInfo(false)}>
               Account openen

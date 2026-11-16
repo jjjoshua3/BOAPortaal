@@ -9,7 +9,7 @@ import { useBoaAuth } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount, bevestigCode } from "@/lib/supabase/client";
 import { seo } from "@/lib/seo";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
-import { useIdentiteit, noteerInlog, zichtbareNaam } from "@/lib/boa/identiteit";
+import { useIdentiteit, noteerInlog, zichtbareNaam, collegasNaam } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
 import { onthoudSessie } from "@/lib/supabase/auth";
 
@@ -136,7 +136,9 @@ function LoginForm() {
 }
 
 function RegisterForm() {
-  const [naam, setNaam] = useState("");
+  const [pv, setPv] = useState("");
+  const [voornaam, setVoornaam] = useState("");
+  const [achternaam, setAchternaam] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [again, setAgain] = useState("");
@@ -148,7 +150,8 @@ function RegisterForm() {
   const [bezig, setBezig] = useState(false);
   const domeinFout = email ? emailDomainError(email) : null;
   const issues = passwordIssues(password);
-  const disabled = Boolean(domeinFout) || issues.length > 0 || password !== again || !akkoord || bezig;
+  const zicht = collegasNaam(voornaam, achternaam);
+  const disabled = Boolean(domeinFout) || issues.length > 0 || password !== again || !akkoord || bezig || pv.trim().length < 3 || !zicht;
 
   return (
     <form
@@ -162,8 +165,10 @@ function RegisterForm() {
         void registreerAccount({
           email,
           password,
-          naam: zichtbareNaam(naam) || naam,
-          roep: naam.trim(),
+          naam: pv.trim(),
+          roep: zicht,
+          voornaam: voornaam.trim(),
+          achternaam: achternaam.trim(),
           domein,
           rol,
           redirectTo: `${window.location.origin}/account`,
@@ -182,10 +187,19 @@ function RegisterForm() {
       }}
     >
       <label className="field">
-        Je naam
-        <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="Jasper de Graaff" required />
-        <span className="text-xs text-muted">Collega's zien {naam.trim() ? zichtbareNaam(naam) : "Jasper, D G."}</span>
+        PV-naam
+        <input value={pv} onChange={(event) => setPv(event.target.value)} placeholder="BOSMA, B." required />
       </label>
+      <label className="field">
+        Voornaam
+        <input value={voornaam} onChange={(event) => setVoornaam(event.target.value)} placeholder="Bas" required />
+      </label>
+      <label className="field">
+        Achternaam
+        <input value={achternaam} onChange={(event) => setAchternaam(event.target.value)} placeholder="Jansen" required />
+        <span className="text-xs text-muted">Op de site en in de community zien collega's {zicht || "Bas, J."}</span>
+      </label>
+      <p className="text-xs text-muted">Deze gegevens kunnen gebruikt worden om u te verifiëren als u contact opneemt met onze servicedesk.</p>
       <Mail email={email} setEmail={setEmail} fout={domeinFout} />
       <label className="field">
         Wachtwoord
@@ -361,8 +375,10 @@ function Profiel() {
   const setRol = usePrefs((state) => state.setRol);
   const theme = usePrefs((state) => state.theme);
   const setTheme = usePrefs((state) => state.setTheme);
-  const meta = (user?.user_metadata ?? {}) as { naam?: string; roep?: string; domein?: DomeinId; rol?: Rol };
-  const [naam, setNaam] = useState(meta.roep ?? "");
+  const meta = (user?.user_metadata ?? {}) as { naam?: string; voornaam?: string; achternaam?: string; domein?: DomeinId; rol?: Rol };
+  const [pv, setPv] = useState(meta.naam ?? "");
+  const [voornaam, setVoornaam] = useState(meta.voornaam ?? "");
+  const [achternaam, setAchternaam] = useState(meta.achternaam ?? "");
   const [domein, setDomeinVeld] = useState<DomeinId>(meta.domein ?? "I");
   const [rol, setRolVeld] = useState<Rol>(meta.rol ?? "boa");
   const [password, setPassword] = useState("");
@@ -373,17 +389,21 @@ function Profiel() {
   const issues = password ? passwordIssues(password) : [];
 
   useEffect(() => {
-    setNaam(meta.roep ?? "");
+    if (meta.naam) setPv(meta.naam);
+    else if (identiteit?.pv_naam && identiteit.pv_naam !== "ONBEKEND, .") setPv(identiteit.pv_naam);
+    setVoornaam(meta.voornaam ?? "");
+    setAchternaam(meta.achternaam ?? "");
     if (meta.domein) setDomeinVeld(meta.domein);
     if (meta.rol) setRolVeld(meta.rol);
-  }, [meta.domein, meta.roep, meta.rol]);
+  }, [identiteit?.pv_naam, meta.domein, meta.naam, meta.voornaam, meta.achternaam, meta.rol]);
+  const zicht = collegasNaam(voornaam, achternaam) || (identiteit?.pv_naam ? zichtbareNaam(identiteit.pv_naam) : "");
 
   return (
     <div className="mx-auto w-full max-w-xl px-4 py-5">
       <PageHead
         kicker="ACCOUNT"
         title="Mijn profiel"
-        lede={identiteit ? `${zichtbareNaam(identiteit.pv_naam)} · ${identiteit.client_id}` : "Client-ID wordt uitgegeven zodra het identiteitsregister actief is."}
+        lede={identiteit ? `${zicht || "naam nog niet vastgelegd"} · ${identiteit.client_id}` : "Client-ID wordt uitgegeven zodra het identiteitsregister actief is."}
       />
       <div className="panel mb-4 grid gap-2 p-3">
         <p className="text-xs font-semibold text-muted">Client-ID</p>
@@ -392,7 +412,8 @@ function Profiel() {
           <CopyButton text={identiteit?.client_id ?? ""} label="Kopieer Client-ID" />
         </div>
         <p className="text-sm">PV-naam: {identiteit?.pv_naam || "nog niet vastgelegd"}</p>
-        <p className="text-sm">Zichtbaar voor collega's: {identiteit?.pv_naam ? zichtbareNaam(identiteit.pv_naam) : "nog niet vastgelegd"}</p>
+        <p className="text-sm">Zichtbaar voor collega's: {zicht || "nog niet vastgelegd"}</p>
+        <p className="text-sm text-muted">Deze gegevens kunnen gebruikt worden om u te verifiëren als u contact opneemt met onze servicedesk.</p>
         <p className="text-sm text-muted">
           Medewerkersmail staat op mail.boaportaal.nl. Log in met je Client-ID, joshua.bosma of account. Zonder @boaportaal.nl. Niet via de mailserver zelf.
         </p>
@@ -417,13 +438,12 @@ function Profiel() {
           if (!sb) return;
           setFout("");
           setMelding("");
-          void sb.auth.updateUser({ data: { naam: zichtbareNaam(naam) || naam, roep: naam.trim(), domein, rol } }).then(async ({ error }) => {
+          void sb.auth.updateUser({ data: { naam: pv.trim(), voornaam: voornaam.trim(), achternaam: achternaam.trim(), roep: collegasNaam(voornaam, achternaam), domein, rol } }).then(async ({ error }) => {
             if (error) {
               setFout(mapAuthError(error.message));
               return;
             }
-            const pv = zichtbareNaam(naam) || naam;
-            const { data, error: rpcFout } = await sb.rpc("boa_zet_pv_naam", { p_naam: naam.trim() || pv, p_organisatie: null });
+            const { data, error: rpcFout } = await sb.rpc("boa_zet_pv_naam", { p_naam: pv.trim(), p_organisatie: null });
             if (!rpcFout && data && typeof data === "object") setIdentiteit(data as typeof identiteit);
             if (domein !== "algemeen") setDomein(domein);
             setRol(rol);
@@ -432,10 +452,19 @@ function Profiel() {
         }}
       >
         <label className="field">
-          Je naam
-          <input value={naam} onChange={(event) => setNaam(event.target.value)} placeholder="Jasper de Graaff" />
-          <span className="text-xs text-muted">Collega's zien {naam.trim() ? zichtbareNaam(naam) : "Jasper, D G."}</span>
+          PV-naam
+          <input value={pv} onChange={(event) => setPv(event.target.value)} placeholder="BOSMA, B." required />
         </label>
+        <label className="field">
+          Voornaam
+          <input value={voornaam} onChange={(event) => setVoornaam(event.target.value)} placeholder="Bas" required />
+        </label>
+        <label className="field">
+          Achternaam
+          <input value={achternaam} onChange={(event) => setAchternaam(event.target.value)} placeholder="Jansen" required />
+          <span className="text-xs text-muted">Op de site en in de community zien collega's {collegasNaam(voornaam, achternaam) || "Bas, J."}</span>
+        </label>
+        <p className="text-xs text-muted">Deze gegevens kunnen gebruikt worden om u te verifiëren als u contact opneemt met onze servicedesk.</p>
         <label className="field">
           Standaarddomein
           <select value={domein} onChange={(event) => setDomeinVeld(event.target.value as DomeinId)}>

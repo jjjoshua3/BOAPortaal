@@ -53,6 +53,18 @@ function alleenInitialen(tekst: string): boolean {
   return delen.length > 0 && delen.every((woord) => /^[A-Za-z]\.?$/.test(woord));
 }
 
+const DEELTJES_NAAM = /^(de|van|der|den|ten|ter|het|t)$/i;
+
+export function collegasNaam(voornaam: string, achternaam: string): string {
+  const voorRaw = voornaam.trim().split(/\s+/)[0] || "";
+  const voor = mooiWoord(voorRaw);
+  if (!voor) return "";
+  const delen = achternaam.trim().split(/\s+/).filter(Boolean);
+  const kern = [...delen].reverse().find((woord) => !DEELTJES_NAAM.test(woord.replace(/\./g, ""))) || "";
+  const letter = kern.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase();
+  return letter ? `${voor}, ${letter}.` : voor;
+}
+
 export function zichtbareNaam(ruw: string): string {
   const t = String(ruw || "").trim().replace(/\s+/g, " ");
   if (!t || t === "Anoniem" || t === "collega") return t;
@@ -107,13 +119,6 @@ export function useIdentiteit() {
         return;
       }
       let rij = data as Identiteit;
-      const meta = (user.user_metadata ?? {}) as { naam?: string; roep?: string };
-      const bron = meta.roep || (rij.pv_naam === "ONBEKEND, ." ? meta.naam || "" : "");
-      const hersteld = zichtbareNaam(bron);
-      if (hersteld && hersteld !== "ONBEKEND, ." && rij.pv_naam !== hersteld && (rij.pv_naam === "ONBEKEND, ." || Boolean(meta.roep))) {
-        const gezet = await sb.rpc("boa_zet_pv_naam", { p_naam: bron, p_organisatie: null });
-        if (!weg && !gezet.error && gezet.data && typeof gezet.data === "object") rij = gezet.data as Identiteit;
-      }
       if (weg) return;
       setFout("");
       setIdentiteit({

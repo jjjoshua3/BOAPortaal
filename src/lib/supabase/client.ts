@@ -33,6 +33,8 @@ export async function registreerAccount(input: {
   password: string;
   naam: string;
   roep?: string;
+  voornaam?: string;
+  achternaam?: string;
   domein: string;
   rol: string;
   redirectTo: string;
@@ -52,7 +54,14 @@ export async function registreerAccount(input: {
       body: JSON.stringify({
         email: input.email.trim(),
         password: input.password,
-        data: { naam: input.naam, roep: input.roep || input.naam, domein: input.domein, rol: input.rol },
+        data: {
+          naam: input.naam,
+          roep: input.roep || input.naam,
+          voornaam: input.voornaam || "",
+          achternaam: input.achternaam || "",
+          domein: input.domein,
+          rol: input.rol,
+        },
       }),
     });
     status = res.status;

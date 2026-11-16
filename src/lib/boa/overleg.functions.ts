@@ -3,6 +3,17 @@ import { createClient } from "@supabase/supabase-js";
 import { scanPii } from "@/lib/boa/privacy";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase/client";
 
+function collegasNaam(voornaam: string, achternaam: string): string {
+  const deeltjes = /^(de|van|der|den|ten|ter|het|t)$/i;
+  const voorRaw = voornaam.trim().split(/\s+/)[0]?.replace(/\./g, "") || "";
+  if (!voorRaw) return "";
+  const voor = voorRaw.slice(0, 1).toUpperCase() + voorRaw.slice(1).toLowerCase();
+  const delen = achternaam.trim().split(/\s+/).filter(Boolean);
+  const kern = [...delen].reverse().find((woord) => !deeltjes.test(woord.replace(/\./g, ""))) || "";
+  const letter = kern.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase();
+  return letter ? `${voor}, ${letter}.` : voor;
+}
+
 function zichtbareNaam(ruw: string): string {
   const t = String(ruw || "").trim().replace(/\s+/g, " ");
   if (!t) return "collega";
@@ -111,7 +122,14 @@ async function gebruiker(token: string) {
   const email = data.user.email.toLowerCase();
   const domein = email.split("@")[1] ?? "";
   if (email !== "joshua.bosma@kpnmail.nl" && (!domein || GRATIS.has(domein))) return null;
-  return { id: data.user.id, email, organisatie: domein, weergave: email.split("@")[0] || "collega" };
+  return {
+    id: data.user.id,
+    email,
+    organisatie: domein,
+    weergave: email.split("@")[0] || "collega",
+    voornaam: String((data.user.user_metadata as { voornaam?: string } | undefined)?.voornaam || ""),
+    achternaam: String((data.user.user_metadata as { achternaam?: string } | undefined)?.achternaam || ""),
+  };
 }
 
 function leesInvoer(data: unknown): {
@@ -243,7 +261,7 @@ export const plaatsOverleg = createServerFn({ method: "POST" })
         domein: invoer.domein,
         titel: invoer.titel,
         tekst: invoer.tekst,
-        weergave: zichtbareNaam(ident?.pv_naam || "collega"),
+        weergave: collegasNaam(user.voornaam, user.achternaam) || zichtbareNaam(ident?.pv_naam || "collega"),
         organisatie: ident?.client_id || user.organisatie,
       })
       .select("id")
