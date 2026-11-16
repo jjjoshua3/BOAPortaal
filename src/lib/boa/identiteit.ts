@@ -40,6 +40,19 @@ function mooiWoord(woord: string): string {
   return s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase();
 }
 
+function initialen(tekst: string): string[] {
+  return tekst
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((woord) => woord.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase())
+    .filter(Boolean);
+}
+
+function alleenInitialen(tekst: string): boolean {
+  const delen = tekst.split(/\s+/).filter(Boolean);
+  return delen.length > 0 && delen.every((woord) => /^[A-Za-z]\.?$/.test(woord));
+}
+
 export function zichtbareNaam(ruw: string): string {
   const t = String(ruw || "").trim().replace(/\s+/g, " ");
   if (!t || t === "Anoniem" || t === "collega") return t;
@@ -47,25 +60,19 @@ export function zichtbareNaam(ruw: string): string {
     const [links, rechts] = t.split(",", 2);
     const linksT = links.trim();
     const rechtsT = (rechts || "").trim();
-    const letters = rechtsT.replace(/[^A-Za-z]/g, "");
-    const rechtsInit = /^[A-Za-z](?:[.\s]*[A-Za-z])*\.?$/.test(rechtsT);
-    if (rechtsInit && letters) {
-      if (linksT === linksT.toUpperCase()) {
-        const delen = linksT.split(/\s+/).filter(Boolean).map((woord) => woord.slice(0, 1).toUpperCase());
-        return `${letters.slice(0, 1).toUpperCase()}., ${delen.join(" ")}.`;
-      }
-      const delen = letters.split("").map((letter) => letter.toUpperCase());
-      return `${mooiWoord(linksT)}, ${delen.join(" ")}.`;
+    if (!/[A-Za-z]/.test(rechtsT)) return mooiWoord(linksT);
+    if (alleenInitialen(rechtsT)) {
+      const inits = rechtsT.split(/\s+/).map((woord) => woord.replace(/\./g, "").slice(0, 1).toUpperCase());
+      if (linksT === linksT.toUpperCase()) return `${inits[0]}., ${initialen(linksT).join(" ")}.`;
+      return `${mooiWoord(linksT)}, ${inits.join(" ")}.`;
     }
+    const letters = initialen(linksT);
+    return letters.length ? `${mooiWoord(rechtsT)}, ${letters.join(" ")}.` : mooiWoord(rechtsT);
   }
   const parts = t.split(/\s+/).filter(Boolean);
-  const voor = mooiWoord(parts[0]);
-  const rest = parts
-    .slice(1)
-    .map((woord) => woord.replace(/[^A-Za-z]/g, "").slice(0, 1).toUpperCase())
-    .filter(Boolean);
-  if (!rest.length) return voor;
-  return `${voor}, ${rest.join(" ")}.`;
+  const rest = initialen(parts.slice(1).join(" "));
+  if (!rest.length) return mooiWoord(parts[0]);
+  return `${mooiWoord(parts[0])}, ${rest.join(" ")}.`;
 }
 
 export function noteerInlog(token: string, email: string) {
