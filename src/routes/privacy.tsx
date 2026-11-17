@@ -7,7 +7,7 @@ export const Route = createFileRoute("/privacy")({
     seo(
       "/privacy",
       "Privacy | BOA Portaal",
-      "Wat BOA Portaal bewaart, wie een account mag inzien, hoe de medewerkersmail werkt en wat buiten beeld blijft.",
+      "Wat BOA Portaal bewaart, wie een account mag inzien en wat buiten beeld blijft.",
     ),
   component: PrivacyPage,
 });
@@ -18,7 +18,7 @@ function PrivacyPage() {
       <PageHead
         kicker="PRIVACY | OPEN"
         title="Wat we bewaren, en wat niet"
-        lede="Dit is een onafhankelijke naslag. Geen systeem van het Openbaar Ministerie, de politie, het CJIB of een gemeente. Hier staat in gewone taal wat er van een account, een ticket en de medewerkersmail wordt bewaard."
+        lede="Dit is een onafhankelijke naslag. Geen systeem van het Openbaar Ministerie, de politie, het CJIB of een gemeente. Hier staat in gewone taal wat er van een account en een ticket wordt bewaard."
       />
       <div className="grid gap-3 text-sm">
         <section className="panel p-3">
@@ -76,25 +76,6 @@ function PrivacyPage() {
           </p>
           <p className="mt-2">
             Het wachtwoord van een medewerkerspostbus is hetzelfde als dat van systeem.boaportaal.nl. Een medewerker wijzigt dat wachtwoord niet zelf. Dat doet alleen de hoofdbeheerder, in systeem.boaportaal.nl. Ook die wijziging wordt gelogd, zonder het wachtwoord zelf.
-          </p>
-        </section>
-
-        <section className="panel p-3">
-          <h2 className="font-semibold">Medewerkersmail</h2>
-          <p className="mt-2">
-            Medewerkers lezen en versturen post op mail.boaportaal.nl. Niet op de site van de mailserver. Je logt in met voornaam.achternaam, zonder @boaportaal.nl erachter. Een gedeelde bus zoals info of support blijft een vaste naam.
-          </p>
-          <p className="mt-2">
-            Elke medewerker heeft een eigen postbus. Het adres is voornaam.achternaam@boaportaal.nl, bijvoorbeeld jurensly.nurse@boaportaal.nl. Privépost op die postbus ziet alleen jij. Collega's zoeken je op voornaam of achternaam. Het adres dat dan verschijnt, is die naam. Typ je in het veld Aan een stukje van een naam, zoals jurensly of nurse, dan verschijnt het adres vanzelf.
-          </p>
-          <p className="mt-2">
-            support@boaportaal.nl en info@boaportaal.nl zijn gemeenschappelijk. Iedere medewerker kan die post lezen. Een antwoord dat je daarop stuurt, is ook zichtbaar voor de andere medewerkers, omdat het vanaf je eigen adres gaat en een kopie in de gemeenschappelijke bus terugkomt. Je claimt een bericht voordat je antwoordt, zodat niet iedereen tegelijk terugmailt. Claimen kan, en de claim weer loslaten ook. Alleen privépost blijft privé.
-          </p>
-          <p className="mt-2">
-            account@boaportaal.nl stuurt automatische post, zoals een wachtwoordherstel. Die bus is zichtbaar voor joshua.bosma@boaportaal.nl en voor de hoofdbeheerder. beheerder@boaportaal.nl is een eigen postbus.
-          </p>
-          <p className="mt-2">
-            Inloggen, verzenden, claimen en een claim loslaten komt in het auditlog van systeem.boaportaal.nl, onder de bron mail.boaportaal.nl. De tekst van een privébericht komt daar niet in. Wel dát er iets is verstuurd of geclaimd, en door welke loginnaam.
           </p>
         </section>
 
