@@ -415,7 +415,7 @@ function Profiel() {
         <p className="text-sm">Zichtbaar voor collega's: {zicht || "nog niet vastgelegd"}</p>
         <p className="text-sm text-muted">Deze gegevens kunnen gebruikt worden om u te verifiëren als u contact opneemt met onze servicedesk.</p>
         <p className="text-sm text-muted">
-          Medewerkersmail staat op mail.boaportaal.nl. Log in met je Client-ID, joshua.bosma of account. Zonder @boaportaal.nl. Niet via de mailserver zelf.
+          Medewerkersmail staat op mail.boaportaal.nl. Log in met voornaam.achternaam, zonder @boaportaal.nl. Bijvoorbeeld jurensly.nurse.
         </p>
         {idFout ? <p className="text-xs text-muted">Het identiteitsregister is nog niet actief in de database. Je e-mailadres blijft verborgen.</p> : null}
       </div>

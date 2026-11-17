@@ -82,10 +82,10 @@ function PrivacyPage() {
         <section className="panel p-3">
           <h2 className="font-semibold">Medewerkersmail</h2>
           <p className="mt-2">
-            Medewerkers lezen en versturen post op mail.boaportaal.nl. Niet op de site van de mailserver. Je logt in met je loginnaam, zonder @boaportaal.nl erachter. Dat is je Client-ID, of een vaste naam zoals joshua.bosma of account. Voorbeeld van zo'n korte naam: info.
+            Medewerkers lezen en versturen post op mail.boaportaal.nl. Niet op de site van de mailserver. Je logt in met voornaam.achternaam, zonder @boaportaal.nl erachter. Een gedeelde bus zoals info of support blijft een vaste naam.
           </p>
           <p className="mt-2">
-            Elke medewerker heeft een eigen postbus. Het adres is de Client-ID, bijvoorbeeld bp-3200-ye@boaportaal.nl. Privépost op die postbus ziet alleen jij. Collega's vinden je standaard op die Client-ID. Je kunt zelf aanzetten dat ze je ook op voor- en achternaam vinden. Het adres dat ze dan zien, blijft de Client-ID. Typ je in het veld Aan een stukje van een naam, zoals claudia of beh, dan verschijnt het adres vanzelf.
+            Elke medewerker heeft een eigen postbus. Het adres is voornaam.achternaam@boaportaal.nl, bijvoorbeeld jurensly.nurse@boaportaal.nl. Privépost op die postbus ziet alleen jij. Collega's zoeken je op voornaam of achternaam. Het adres dat dan verschijnt, is die naam. Typ je in het veld Aan een stukje van een naam, zoals jurensly of nurse, dan verschijnt het adres vanzelf.
           </p>
           <p className="mt-2">
             support@boaportaal.nl en info@boaportaal.nl zijn gemeenschappelijk. Iedere medewerker kan die post lezen. Een antwoord dat je daarop stuurt, is ook zichtbaar voor de andere medewerkers, omdat het vanaf je eigen adres gaat en een kopie in de gemeenschappelijke bus terugkomt. Je claimt een bericht voordat je antwoordt, zodat niet iedereen tegelijk terugmailt. Claimen kan, en de claim weer loslaten ook. Alleen privépost blijft privé.
