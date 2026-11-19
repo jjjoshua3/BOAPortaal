@@ -1,3 +1,5 @@
+import zxcvbn from "zxcvbn";
+
 const BLOCKED = new Set([
   "gmail.com",
   "googlemail.com",
@@ -59,17 +61,27 @@ export function emailDomainError(email: string): string | null {
   return null;
 }
 
-export function passwordIssues(password: string): string[] {
+export function passwordIssues(password: string, extra: string[] = []): string[] {
   const issues: string[] = [];
-  if (password.length < 10) issues.push("minimaal 10 tekens");
-  if (!/[A-Z]/.test(password)) issues.push("één hoofdletter");
-  if (!/[0-9]/.test(password)) issues.push("één cijfer");
-  if (!/[^A-Za-z0-9]/.test(password)) issues.push("één speciaal teken");
+  if (password.length < 12) issues.push("minimaal 12 tekens");
+  if (password.length > 200) issues.push("maximaal 200 tekens");
+  if (password.length < 4) return issues;
+  const score = zxcvbn(password, extra.map((deel) => String(deel || "")).filter((deel) => deel.length > 1));
+  const dagen = Math.floor(Number(score.crack_times_seconds?.offline_fast_hashing_1e10_per_second || 0) / 86400);
+  if (dagen < 30) issues.push(`minstens 30 dagen kraaktijd, nu ${dagen}. Een zin van vier willekeurige woorden`);
   return issues;
 }
 
-export function passwordScore(password: string): number {
-  return 4 - passwordIssues(password).length;
+export function passwordScore(password: string, extra: string[] = []): number {
+  if (!password) return 0;
+  if (password.length < 8) return 0;
+  if (password.length < 12) return 1;
+  const score = zxcvbn(password, extra.map((deel) => String(deel || "")).filter((deel) => deel.length > 1));
+  const dagen = Math.floor(Number(score.crack_times_seconds?.offline_fast_hashing_1e10_per_second || 0) / 86400);
+  if (dagen < 1) return 1;
+  if (dagen < 7) return 2;
+  if (dagen < 30) return 3;
+  return 4;
 }
 
 export function mapAuthError(message: string, email = ""): string {
@@ -79,7 +91,7 @@ export function mapAuthError(message: string, email = ""): string {
     return "Onjuist e-mailadres of wachtwoord.";
   }
   if (m.includes("email not confirmed")) {
-    return "Bevestig eerst het adres via de link in je postvak.";
+    return "Bevestig eerst het adres met de code uit de mail van account@boaportaal.nl.";
   }
   if (m.includes("already registered") || m.includes("already been registered")) {
     return "Dit adres is al geregistreerd. Log in of stel het wachtwoord opnieuw in.";
@@ -92,6 +104,9 @@ export function mapAuthError(message: string, email = ""): string {
       return "Niet aangemaakt. De database wijst joshua.bosma@kpnmail.nl zelf af. In reject_free_email moet dat adres return new; doen, vóór de blokkade op kpnmail.nl. Nu staat daar een raise.";
     }
     return "Niet aangemaakt. Dit adres wordt door de database geweigerd. Gebruik het domein van je organisatie, vervoerder of school.";
+  }
+  if (m.includes("otp") || m.includes("token") || m.includes("expired")) {
+    return "De code klopt niet of is verlopen. Vraag een nieuwe mail aan bij account@boaportaal.nl.";
   }
   if (m.includes("password")) {
     return "Het wachtwoord voldoet niet aan de eisen van de server of van dit portaal.";

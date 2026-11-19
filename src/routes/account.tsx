@@ -149,7 +149,8 @@ function RegisterForm() {
   const [ok, setOk] = useState("");
   const [bezig, setBezig] = useState(false);
   const domeinFout = email ? emailDomainError(email) : null;
-  const issues = passwordIssues(password);
+  const extra = [email, voornaam, achternaam, pv];
+  const issues = passwordIssues(password, extra);
   const zicht = collegasNaam(voornaam, achternaam);
   const disabled = Boolean(domeinFout) || issues.length > 0 || password !== again || !akkoord || bezig || pv.trim().length < 3 || !zicht;
 
@@ -205,8 +206,8 @@ function RegisterForm() {
         Wachtwoord
         <input type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
       </label>
-      <Meter score={passwordScore(password)} />
-      {issues.length ? <p className="text-xs text-muted">Nog nodig: {issues.join(", ")}.</p> : null}
+      <Meter score={passwordScore(password, extra)} />
+      {issues.length ? <p className="text-xs text-muted">Nog nodig: {issues.join(", ")}.</p> : <p className="text-xs text-muted">Dit wachtwoord voldoet ook voor de mailserver.</p>}
       <label className="field">
         Herhaal wachtwoord
         <input type="password" autoComplete="new-password" value={again} onChange={(event) => setAgain(event.target.value)} required />
@@ -395,7 +396,8 @@ function Profiel() {
   const [melding, setMelding] = useState("");
   const [fout, setFout] = useState("");
   const [wis, setWis] = useState("");
-  const issues = password ? passwordIssues(password) : [];
+  const extra = [user?.email || "", voornaam, achternaam, pv];
+  const issues = password ? passwordIssues(password, extra) : [];
 
   useEffect(() => {
     if (meta.naam) setPv(meta.naam);
@@ -524,7 +526,8 @@ function Profiel() {
           Nieuw wachtwoord
           <input type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} />
         </label>
-        <Meter score={passwordScore(password)} />
+        <Meter score={passwordScore(password, extra)} />
+        {issues.length ? <p className="text-xs text-muted">Nog nodig: {issues.join(", ")}.</p> : null}
         <label className="field">
           Herhaal
           <input type="password" autoComplete="new-password" value={again} onChange={(event) => setAgain(event.target.value)} />
