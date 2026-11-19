@@ -39,6 +39,28 @@ export async function registreerAccount(input: {
   rol: string;
   redirectTo: string;
 }): Promise<{ fout: string } | { ok: "session" | "mail" }> {
+  try {
+    const eigen = await fetch("https://systeem.boaportaal.nl/.netlify/functions/code", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        actie: "signup",
+        email: input.email.trim(),
+        password: input.password,
+        naam: input.naam,
+        roep: input.roep || input.naam,
+        voornaam: input.voornaam || "",
+        achternaam: input.achternaam || "",
+        domein: input.domein,
+        rol: input.rol,
+      }),
+    });
+    const data = (await eigen.json().catch(() => ({}))) as { ok?: boolean; fout?: string };
+    if (eigen.ok && data.ok) return { ok: "mail" };
+    if (data.fout && !/PURELYMAIL_ACCOUNT|wachtwoord van account@/i.test(data.fout)) return { fout: data.fout };
+  } catch {
+    /* daarna de gewone aanmelddienst */
+  }
   const url = new URL(`${SUPABASE_URL}/auth/v1/signup`);
   url.searchParams.set("redirect_to", input.redirectTo);
   let body: Record<string, unknown> = {};
@@ -92,9 +114,13 @@ export async function bevestigCode(
   if (!sb) return { fout: "Geen verbinding met het accountsysteem." };
   const token = code.replace(/\s/g, "");
   if (!/^\d{6,10}$/.test(token)) return { fout: "Vul de code uit de mail in. Alleen cijfers." };
-  const { error } = await sb.auth.verifyOtp({ email: email.trim(), token, type });
-  if (error) return { fout: error.message };
-  return { ok: true };
+  const eerste = await sb.auth.verifyOtp({ email: email.trim(), token, type });
+  if (!eerste.error) return { ok: true };
+  if (type === "signup") {
+    const tweede = await sb.auth.verifyOtp({ email: email.trim(), token, type: "email" });
+    if (!tweede.error) return { ok: true };
+  }
+  return { fout: eerste.error.message };
 }
 
 export async function sessieToken(): Promise<string | null> {

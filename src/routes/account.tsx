@@ -277,14 +277,23 @@ function ResetForm() {
         setBezig(true);
         setFout("");
         setOk("");
-        const redirectTo = `${window.location.origin}/account#reset-wachtwoord`;
-        void sb.auth.resetPasswordForEmail(email.trim(), { redirectTo }).then(({ error }) => {
+        void fetch("https://systeem.boaportaal.nl/.netlify/functions/code", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ actie: "herstel", email: email.trim() }),
+        }).then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) return;
+          const sb = getSupabase();
+          if (!sb) throw new Error(data.fout || "De mail ging niet weg.");
+          const { error } = await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/account#reset-wachtwoord` });
+          if (error && !/user|not found|signups?/i.test(error.message)) throw new Error(error.message);
+        }).then(() => {
           setBezig(false);
-          if (error && !/user|not found|signups?/i.test(error.message)) {
-            setFout(mapAuthError(error.message, email));
-            return;
-          }
           setOk("Als dit zakelijke adres bij ons bekend is, staat de code onderweg vanaf account@boaportaal.nl. Vul die hier in. Open geen link uit de mail: een scanner van Microsoft 365 kan die anders al verbruiken.");
+        }).catch((error) => {
+          setBezig(false);
+          setFout(mapAuthError(error.message || "De mail ging niet weg.", email));
         });
       }}
     >
@@ -414,9 +423,6 @@ function Profiel() {
         <p className="text-sm">PV-naam: {identiteit?.pv_naam || "nog niet vastgelegd"}</p>
         <p className="text-sm">Zichtbaar voor collega's: {zicht || "nog niet vastgelegd"}</p>
         <p className="text-sm text-muted">Deze gegevens kunnen gebruikt worden om u te verifiëren als u contact opneemt met onze servicedesk.</p>
-        <p className="text-sm text-muted">
-          Medewerkersmail staat op mail.boaportaal.nl. Log in met voornaam.achternaam, zonder @boaportaal.nl. Bijvoorbeeld jurensly.nurse.
-        </p>
         {idFout ? <p className="text-xs text-muted">Het identiteitsregister is nog niet actief in de database. Je e-mailadres blijft verborgen.</p> : null}
       </div>
       <div className="mb-4">
