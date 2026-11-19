@@ -65,6 +65,9 @@ export function passwordIssues(password: string, extra: string[] = []): string[]
   const issues: string[] = [];
   if (password.length < 12) issues.push("minimaal 12 tekens");
   if (password.length > 200) issues.push("maximaal 200 tekens");
+  if (!/[A-Z]/.test(password)) issues.push("één hoofdletter");
+  if (!/[0-9]/.test(password)) issues.push("één cijfer");
+  if (!/[^A-Za-z0-9]/.test(password)) issues.push("één speciaal teken");
   if (password.length < 4) return issues;
   const score = zxcvbn(password, extra.map((deel) => String(deel || "")).filter((deel) => deel.length > 1));
   const dagen = Math.floor(Number(score.crack_times_seconds?.offline_fast_hashing_1e10_per_second || 0) / 86400);
@@ -74,14 +77,18 @@ export function passwordIssues(password: string, extra: string[] = []): string[]
 
 export function passwordScore(password: string, extra: string[] = []): number {
   if (!password) return 0;
-  if (password.length < 8) return 0;
-  if (password.length < 12) return 1;
+  const classes = [/[A-Z]/, /[0-9]/, /[^A-Za-z0-9]/].filter((re) => re.test(password)).length;
+  if (password.length < 8 || classes === 0) return 0;
+  if (password.length < 12 || classes < 2) return 1;
   const score = zxcvbn(password, extra.map((deel) => String(deel || "")).filter((deel) => deel.length > 1));
   const dagen = Math.floor(Number(score.crack_times_seconds?.offline_fast_hashing_1e10_per_second || 0) / 86400);
-  if (dagen < 1) return 1;
-  if (dagen < 7) return 2;
+  if (dagen < 1 || classes < 3) return 2;
   if (dagen < 30) return 3;
   return 4;
+}
+
+export function wachtwoordIsZwak(password: string, extra: string[] = []): boolean {
+  return passwordIssues(password, extra).length > 0;
 }
 
 export function mapAuthError(message: string, email = ""): string {

@@ -5,13 +5,12 @@ import { usePrefs } from "@/lib/boa/prefs";
 import { Meter } from "@/components/recovery-modal";
 import { PageHead } from "@/components/bits";
 import { useKluis } from "@/lib/kluis/provider";
-import { useBoaAuth } from "@/lib/supabase/auth";
+import { useBoaAuth, onthoudSessie, markeerWachtwoord } from "@/lib/supabase/auth";
 import { getSupabase, registreerAccount, bevestigCode } from "@/lib/supabase/client";
 import { seo } from "@/lib/seo";
 import { emailDomainError, mapAuthError, passwordIssues, passwordScore } from "@/lib/supabase/guards";
 import { useIdentiteit, noteerInlog, zichtbareNaam, collegasNaam } from "@/lib/boa/identiteit";
 import { CopyButton } from "@/components/bits";
-import { onthoudSessie } from "@/lib/supabase/auth";
 
 export const Route = createFileRoute("/account")({
   head: () =>
@@ -98,6 +97,7 @@ function LoginForm() {
               setFout(mapAuthError(error?.message ?? "Aanmelden lukt niet.", email));
               return;
             }
+            markeerWachtwoord(password, email.trim());
             onthoudSessie(onthoud ? "30" : "12");
             return;
           }
@@ -113,6 +113,7 @@ function LoginForm() {
             setFout("Aanmelden lukt niet.");
             return;
           }
+          markeerWachtwoord(password, email.trim());
           onthoudSessie(onthoud ? "30" : "12");
         })();
       }}
