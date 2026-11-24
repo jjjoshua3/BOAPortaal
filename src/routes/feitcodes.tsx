@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Star, X } from "lucide-react";
 import { ARTIKELEN } from "@/lib/boa/artikelen";
-import { FEITEN, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
+import { FEITEN, boeteKop, boekjeToelichting, heeftEuro, moetInRelaas, tariefRegel, zoekFeiten, type Feit } from "@/lib/boa/feitcodes";
 import { bedragRegels, regelVanCode, zoekBoekje, type BoekjeRegel } from "@/lib/boa/boekje-zoek";
 import { DOMEIN_INFO, afdoeningToon, domeinLabel, tagClass, toonClass, type DomeinId } from "@/lib/boa/meta";
 import { usePrefs } from "@/lib/boa/prefs";
@@ -10,6 +10,7 @@ import { seo } from "@/lib/seo";
 import { CopyButton, PageHead } from "@/components/bits";
 import { FeedbackKnop } from "@/components/feedback";
 import { useLiveTick } from "@/lib/boa/live-poort";
+import { useKluis } from "@/lib/kluis/provider";
 
 type Search = { q?: string };
 
@@ -211,8 +212,8 @@ function BoekjeResultaten({ query }: { query: string }) {
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
               </div>
-              <p className="font-semibold leading-snug break-normal">{feit.titel}</p>
-              {regel?.toelichting ? <p className="mt-1 text-sm leading-relaxed break-normal">{regel.toelichting}</p> : <p className="mt-1 text-sm leading-relaxed break-normal">{boekjeToelichting(feit)}</p>}
+              <p className="font-semibold leading-snug break-words">{feit.titel}</p>
+              {regel?.toelichting ? <p className="mt-1 text-sm leading-relaxed break-words">{regel.toelichting}</p> : <p className="mt-1 text-sm leading-relaxed break-words">{boekjeToelichting(feit)}</p>}
               {regel ? <Bedrag regel={regel} /> : null}
             </li>
           );
@@ -222,8 +223,8 @@ function BoekjeResultaten({ query }: { query: string }) {
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{regel.code}</span>
             </div>
-            <p className="font-semibold leading-snug break-normal">{regel.titel}</p>
-            {regel.toelichting ? <p className="mt-1 text-sm leading-relaxed break-normal">{regel.toelichting}</p> : null}
+            <p className="font-semibold leading-snug break-words">{regel.titel}</p>
+            {regel.toelichting ? <p className="mt-1 text-sm leading-relaxed break-words">{regel.toelichting}</p> : null}
             <Bedrag regel={regel} />
           </li>
         ))}
@@ -324,16 +325,30 @@ function FeitTabel({
   );
 }
 
+function prijsLabel(feit: Feit): string {
+  if (!heeftEuro(feit)) return "OM-feit";
+  return feit.tarief?.match(/€\s*\d[\d.]*/)?.[0] ?? "OM-feit";
+}
+
+function tariefUitleg(feit: Feit): string | null {
+  const kop = boeteKop(feit);
+  const kort = prijsLabel(feit);
+  if (!kop || kop === "Geen vast bedrag" || kop === kort) return null;
+  return kop;
+}
+
 function CompactKaart({ feit, open, onToggle, student }: { feit: Feit; open: boolean; onToggle: () => void; student: boolean }) {
+  const uitleg = tariefUitleg(feit);
   return (
-    <article className="panel overflow-hidden">
-      <button type="button" className="block w-full p-3 text-left" onClick={onToggle}>
-        <div className="mb-1 flex flex-wrap items-center gap-2">
+    <article className="panel min-w-0 max-w-full overflow-hidden">
+      <button type="button" className="block w-full max-w-full whitespace-normal p-3 text-left" onClick={onToggle}>
+        <div className="flex max-w-full items-start gap-2">
           <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
-          <span className="text-xs text-muted leading-snug">{feit.artikel}</span>
-          <span className="ml-auto shrink-0 text-right text-base font-semibold">{heeftEuro(feit) ? tariefRegel(feit).split("·")[0]?.trim() : "OM-feit"}</span>
+          <span className="min-w-0 flex-1 text-xs leading-snug text-muted">{feit.artikel}</span>
+          <span className="shrink-0 text-right text-base font-semibold">{prijsLabel(feit)}</span>
         </div>
-        <span className="block text-sm font-semibold leading-snug break-normal">{feit.titel}</span>
+        <span className="mt-2 block max-w-full text-sm font-semibold leading-snug break-words">{feit.titel}</span>
+        {uitleg ? <span className="mt-1 block max-w-full text-sm leading-snug break-words">{uitleg}</span> : null}
       </button>
       {open ? (
         <div className="border-t border-line px-3 pb-3">
@@ -347,14 +362,16 @@ function CompactKaart({ feit, open, onToggle, student }: { feit: Feit; open: boo
 
 function FeitKaart({ feit, student }: { feit: Feit; student: boolean }) {
   const toon = afdoeningToon(feit.afdoening);
+  const uitleg = tariefUitleg(feit);
   return (
-    <article className={`panel border-l-4 border-l-[#1D4ED8] p-3 ${toonClass(toon)}`}>
+    <article className={`panel min-w-0 max-w-full border-l-4 border-l-[#1D4ED8] p-3 ${toonClass(toon)}`}>
       <div className="flex items-start justify-between gap-2">
         <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
-        <span className="shrink-0 text-right text-base font-semibold">{heeftEuro(feit) ? tariefRegel(feit).split("·")[0]?.trim() : feit.afdoeningLabel}</span>
+        <span className="shrink-0 text-right text-base font-semibold">{prijsLabel(feit)}</span>
       </div>
-      <h3 className="mt-2 font-semibold leading-snug">{feit.titel}</h3>
-      <p className="mt-1 text-xs text-muted leading-snug">{feit.artikel}</p>
+      <h3 className="mt-2 max-w-full font-semibold leading-snug break-words">{feit.titel}</h3>
+      <p className="mt-1 max-w-full text-xs leading-snug text-muted break-words">{feit.artikel}</p>
+      {uitleg ? <p className="mt-1 max-w-full text-sm leading-snug break-words">{uitleg}</p> : null}
       {student ? <p className="mt-2 text-sm font-semibold">Kwalificatie: {feit.kwalificatie}</p> : null}
       <Detail feit={feit} />
     </article>
@@ -386,7 +403,7 @@ function Detail({ feit }: { feit: Feit }) {
   const regel = regelVanCode(feit.code);
   return (
     <div className="mt-3 grid gap-2 text-sm">
-      <p className="bg-inset p-2">
+      <p className="bg-inset p-2 break-words">
         <span className="font-semibold">Tarief (2026) | </span>
         {tariefRegel(feit)}
       </p>

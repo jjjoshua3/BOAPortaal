@@ -5,6 +5,7 @@ import { PageHead } from "@/components/bits";
 import { JARGON, type Woord } from "@/lib/boa/jargon";
 import { useLiveTick } from "@/lib/boa/live-poort";
 import { useKluis } from "@/lib/kluis/provider";
+import { seo } from "@/lib/seo";
 
 type Search = { q?: string };
 

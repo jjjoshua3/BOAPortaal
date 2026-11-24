@@ -290,7 +290,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         ) : null}
       </header>
       <div className="flex min-h-0 flex-1 flex-col">
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="min-w-0 max-w-full flex-1 overflow-x-hidden">{children}</main>
         <footer className="no-print mb-[4.5rem] border-t border-line px-4 py-3 text-xs text-muted">
           <p>Onafhankelijke naslag. Geen publicatie van het OM, de politie of een gemeente. De akte en de geldende wettekst gaan voor.</p>
           <p className="mt-1">
