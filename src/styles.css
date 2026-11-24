@@ -74,6 +74,11 @@ html.night {
     border-radius: 2px;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   }
+  .panel p,
+  .panel span,
+  .panel li {
+    overflow-wrap: break-word;
+  }
   fieldset.panel {
     margin: 0;
     min-inline-size: 0;
