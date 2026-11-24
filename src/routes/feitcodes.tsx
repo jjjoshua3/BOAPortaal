@@ -208,27 +208,23 @@ function BoekjeResultaten({ query }: { query: string }) {
           const regel = regelVanCode(feit.code);
           return (
             <li key={feit.id} className="panel p-3">
-              <div className="flex items-start gap-3">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
                 <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold leading-snug">{feit.titel}</p>
-                  {regel?.toelichting ? <p className="mt-1 text-sm leading-relaxed">{regel.toelichting}</p> : <p className="mt-1 text-sm leading-relaxed">{boekjeToelichting(feit)}</p>}
-                  {regel ? <Bedrag regel={regel} /> : null}
-                </div>
               </div>
+              <p className="font-semibold leading-snug break-normal">{feit.titel}</p>
+              {regel?.toelichting ? <p className="mt-1 text-sm leading-relaxed break-normal">{regel.toelichting}</p> : <p className="mt-1 text-sm leading-relaxed break-normal">{boekjeToelichting(feit)}</p>}
+              {regel ? <Bedrag regel={regel} /> : null}
             </li>
           );
         })}
         {rest.map((regel, index) => (
           <li key={`${regel.code}-${index}`} className="panel p-3">
-            <div className="flex items-start gap-3">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{regel.code}</span>
-              <div className="min-w-0 flex-1">
-                <p className="font-semibold leading-snug">{regel.titel}</p>
-                {regel.toelichting ? <p className="mt-1 text-sm leading-relaxed">{regel.toelichting}</p> : null}
-                <Bedrag regel={regel} />
-              </div>
             </div>
+            <p className="font-semibold leading-snug break-normal">{regel.titel}</p>
+            {regel.toelichting ? <p className="mt-1 text-sm leading-relaxed break-normal">{regel.toelichting}</p> : null}
+            <Bedrag regel={regel} />
           </li>
         ))}
       </ul>
@@ -331,15 +327,13 @@ function FeitTabel({
 function CompactKaart({ feit, open, onToggle, student }: { feit: Feit; open: boolean; onToggle: () => void; student: boolean }) {
   return (
     <article className="panel overflow-hidden">
-      <button type="button" className="flex w-full items-start gap-3 p-3 text-left" onClick={onToggle}>
-        <span className="min-w-0 flex-1">
-          <span className="flex flex-wrap items-center gap-2">
-            <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
-            <span className="min-w-0 text-xs text-muted leading-snug">{feit.artikel}</span>
-          </span>
-          <span className="mt-1 block text-sm font-semibold leading-snug">{feit.titel}</span>
-        </span>
-        <span className="shrink-0 text-right text-base font-semibold">{heeftEuro(feit) ? tariefRegel(feit).split("·")[0]?.trim() : "OM-feit"}</span>
+      <button type="button" className="block w-full p-3 text-left" onClick={onToggle}>
+        <div className="mb-1 flex flex-wrap items-center gap-2">
+          <span className="code shrink-0 rounded-sm bg-inset px-1.5 py-0.5 text-sm leading-none">{feit.code}</span>
+          <span className="text-xs text-muted leading-snug">{feit.artikel}</span>
+          <span className="ml-auto shrink-0 text-right text-base font-semibold">{heeftEuro(feit) ? tariefRegel(feit).split("·")[0]?.trim() : "OM-feit"}</span>
+        </div>
+        <span className="block text-sm font-semibold leading-snug break-normal">{feit.titel}</span>
       </button>
       {open ? (
         <div className="border-t border-line px-3 pb-3">
