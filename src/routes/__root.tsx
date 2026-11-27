@@ -12,6 +12,7 @@ import appCss from "../styles.css?url";
 
 const THEME_BOOT = `try{var raw=localStorage.getItem("boa-prefs");if(raw){var s=JSON.parse(raw).state;if(s&&s.theme==="night")document.documentElement.classList.add("night");if(s&&s.tekst==="groot")document.documentElement.classList.add("lees-groot");}}catch(e){}`;
 const IP_WACHT = `(function(){fetch("https://systeem.boaportaal.nl/.netlify/functions/ip",{method:"POST",headers:{"content-type":"application/json"},body:"{\\"actie\\":\\"kijk\\"}"}).then(function(r){return r.json()}).then(function(d){if(d&&d.blok)location.replace("https://ip.boaportaal.nl/");}).catch(function(){});})();`;
+const INSTALL_BOOT = `(function(){var w=window;w.__boaInstall=w.__boaInstall||null;w.addEventListener("beforeinstallprompt",function(e){e.preventDefault();w.__boaInstall=e;w.dispatchEvent(new Event("boa-install-klaar"));});w.addEventListener("appinstalled",function(){w.__boaInstall=null;try{localStorage.setItem("boa-install","gezet");}catch(err){}w.dispatchEvent(new Event("boa-install-weg"));});if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").catch(function(){});}})();`;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -59,6 +60,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="nl" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: INSTALL_BOOT }} />
         <script dangerouslySetInnerHTML={{ __html: IP_WACHT }} />
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
